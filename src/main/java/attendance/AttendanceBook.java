@@ -32,6 +32,10 @@ public class AttendanceBook {
         return new AttendanceEditResponse();
     }
 
+    public Set<LocalDateTime> getLog(final String name) {
+        return values.get(new Crew(name));
+    }
+
     private void validateAttendance(Crew crew, LocalDateTime time) {
         LocalDate covertTime = time.toLocalDate();
         boolean isAlreadyAttendance = values.get(crew).stream().anyMatch(value ->
