@@ -1,6 +1,7 @@
 package attendance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -32,5 +33,16 @@ public class AttendanceTest {
 
         Set<LocalDateTime> value = attendanceBook.getValue().get(new Crew(crewName));
         assertThat(value).contains(attendanceTime);
+    }
+
+    // 이미 출석한 경우, 다시 출석할 수 없으며 수정 기능을 이용하도록 안내한다.
+    @Test
+    void 이미_출석한_경우_다시_출석할_수_없으며_수정_기능을_이용하도록_안내한다() {
+        AttendanceBook attendanceBook = new AttendanceBook();
+        attendanceBook.attendance(crewName, attendanceTime);
+
+        assertThatIllegalStateException()
+                .isThrownBy(() -> attendanceBook.attendance(crewName, attendanceTime))
+                .withMessage("금일 출석 기록이 이미 존재합니다.");
     }
 }
