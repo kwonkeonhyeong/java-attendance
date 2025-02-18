@@ -26,8 +26,10 @@ public class AttendanceBook {
         return Collections.unmodifiableMap(values);
     }
 
-    public void edit(final String name, final LocalDateTime timeToEdit) {
+    public AttendanceEditResponse edit(final String name, final LocalDateTime timeToEdit) {
         values.get(new Crew(name)).add(timeToEdit);
+
+        return new AttendanceEditResponse();
     }
 
     private void validateAttendance(Crew crew, LocalDateTime time) {
