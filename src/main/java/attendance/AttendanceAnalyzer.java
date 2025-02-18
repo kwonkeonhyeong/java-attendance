@@ -35,7 +35,8 @@ public class AttendanceAnalyzer {
     }
 
     private boolean isLate(LocalDateTime time, LocalTime startTime) {
-        return time.toLocalTime().isAfter(startTime.plusMinutes(5));
+        return time.toLocalTime().isAfter(startTime.plusMinutes(5))
+                && time.toLocalTime().isBefore(startTime.plusMinutes(31));
     }
 
 }
