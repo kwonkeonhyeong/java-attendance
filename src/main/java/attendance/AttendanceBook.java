@@ -28,9 +28,10 @@ public class AttendanceBook {
     }
 
     public AttendanceEditResponse edit(final String name, final LocalDateTime timeToEdit) {
+        LocalDateTime before = values.get(new Crew(name)).stream().findFirst().get();
         values.get(new Crew(name)).add(timeToEdit);
 
-        return new AttendanceEditResponse();
+        return new AttendanceEditResponse(before, timeToEdit);
     }
 
     public Set<LocalDateTime> getLog(final String name) {
