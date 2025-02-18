@@ -54,6 +54,9 @@ public class AttendanceTest {
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
         attendanceBook.edit(crewName, timeToEdit);
+
+        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        assertThat(values).contains(timeToEdit);
     }
 
     // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.
@@ -64,6 +67,9 @@ public class AttendanceTest {
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
         AttendanceEditResponse attendanceEditResponse = attendanceBook.edit(crewName, timeToEdit);
+
+        assertThat(attendanceEditResponse.getBefore()).isEqualTo(attendanceTime);
+        assertThat(attendanceEditResponse.getAfter()).isEqualTo(timeToEdit);
     }
 
     // 닉네임을 입력하면 전날까지의 크루 출석 기록을 확인할 수 있다.
