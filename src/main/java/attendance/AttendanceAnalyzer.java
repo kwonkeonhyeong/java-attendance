@@ -12,7 +12,7 @@ public class AttendanceAnalyzer {
     // Set<LocalDateTime> 받아서 결석, 지각 횟수 응답.
     // 결석, 지각 횟수, 위험 상태를 관리하는 도메인 구현
 
-    public CrewStatus analyzeAttendance(Set<LocalDateTime> times) {
+    public AttendanceStatus analyzeAttendance(Set<LocalDateTime> times) {
         int absenceCount = (int) times.stream().filter(time -> {
             if (time.getDayOfWeek() == DayOfWeek.MONDAY) {
                 return isAbsence(time, MONDAY_START_TIME);
@@ -27,7 +27,7 @@ public class AttendanceAnalyzer {
             return isLate(time, START_TIME);
         }).count();
 
-        return CrewStatus.of(absenceCount, lateCount);
+        return AttendanceStatus.of(absenceCount, lateCount);
     }
 
     private boolean isAbsence(LocalDateTime time, LocalTime startTime) {

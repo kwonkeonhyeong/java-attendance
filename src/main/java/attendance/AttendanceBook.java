@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 public class AttendanceBook {
@@ -38,12 +37,21 @@ public class AttendanceBook {
         return values.get(new Crew(name));
     }
 
-    public List<Crew> getDangerCrews() {
+    public List<DangerCrewResponse> getDangerCrews(DangerCrewSorter dangerCrewSorter) {
         AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
 
+        return getSortedCrewStatusByAttendance(attendanceAnalyzer, dangerCrewSorter).stream()
+                .map(DangerCrewResponse::from)
+                .toList();
+    }
+
+    private List<CrewAttendance> getSortedCrewStatusByAttendance(AttendanceAnalyzer attendanceAnalyzer,
+                                                                 DangerCrewSorter dangerCrewSorter) {
         return values.entrySet().stream()
                 .filter(value -> attendanceAnalyzer.analyzeAttendance(value.getValue()).isDanger())
-                .map(Entry::getKey)
+                .map(value -> new CrewAttendance(value.getKey(),
+                        attendanceAnalyzer.analyzeAttendance(value.getValue())))
+                .sorted(dangerCrewSorter::compare)
                 .toList();
     }
 
