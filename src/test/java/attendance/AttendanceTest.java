@@ -63,6 +63,13 @@ public class AttendanceTest {
         AttendanceEditResponse attendanceEditResponse = attendanceBook.edit(crewName, timeToEdit);
     }
 
+    // 닉네임을 입력하면 전날까지의 크루 출석 기록을 확인할 수 있다.
+    void 닉네임을_통해_전날까지의_크루_출석_기록_확인() {
+        AttendanceBook attendanceBook = init();
+
+        Set<LocalDateTime> attendanceLog = attendanceBook.getLog(crewName);
+    }
+
     private AttendanceBook init() {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
