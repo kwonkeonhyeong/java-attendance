@@ -103,17 +103,10 @@ public class AttendanceTest {
     }
 
     // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
-    @Test
-    void 전날까지의_크루_출석_기록을_통해_제적_위험자_파악() {
-        AttendanceBook attendanceBook = init();
-
-        List<DangerCrewResponse> dangerCrews = attendanceBook.getDangerCrews(new DangerCrewSorter());
-    }
-
     // 제적 위험자는 제적 대상자, 면담 대상자, 경고 대상자순으로 출력하며, 대상 항목별 정렬 순서는 지각을 결석으로 간주하여 내림차순한다.
     // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.
     @Test
-    void 제적_위험자_정렬해서_반환() {
+    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환() {
         AttendanceBook attendanceBook = new AttendanceBook();
         setTestData(attendanceBook);
 
