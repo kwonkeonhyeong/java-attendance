@@ -23,4 +23,14 @@ public class AttendanceTest {
         Set<LocalDateTime> value = attendanceBook.getValue().get(new Crew(crewName));
         assertThat(value).contains(attendanceTime);
     }
+
+    // 출석 후 출석 기록을 확인할 수 있다.
+    @Test
+    void 출석_후_출석_기록을_확인할_수_있다() {
+        AttendanceBook attendanceBook = new AttendanceBook();
+        attendanceBook.attendance(crewName, attendanceTime);
+
+        Set<LocalDateTime> value = attendanceBook.getValue().get(new Crew(crewName));
+        assertThat(value).contains(attendanceTime);
+    }
 }
