@@ -53,6 +53,16 @@ public class AttendanceTest {
         attendanceBook.edit(crewName, timeToEdit);
     }
 
+    // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.
+    @Test
+    void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
+        AttendanceBook attendanceBook = init();
+
+        LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
+
+        AttendanceEditResponse attendanceEditResponse = attendanceBook.edit(crewName, timeToEdit);
+    }
+
     private AttendanceBook init() {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
