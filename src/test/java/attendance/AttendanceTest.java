@@ -2,6 +2,7 @@ package attendance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,7 +10,11 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceTest {
 
@@ -17,6 +22,16 @@ public class AttendanceTest {
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
             LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20));
+
+    static Stream<Arguments> 닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스() {
+        return Stream.of(
+                Arguments.of("pobi", List.of(
+                        LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20)),
+                        LocalDateTime.of(LocalDate.of(2024, 12, 15), LocalTime.of(15, 20)),
+                        LocalDateTime.of(LocalDate.of(2024, 12, 13), LocalTime.of(15, 20)))
+                )
+        );
+    }
 
     // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
     @Test
@@ -73,11 +88,18 @@ public class AttendanceTest {
     }
 
     // 닉네임을 입력하면 전날까지의 크루 출석 기록을 확인할 수 있다.
-    @Test
-    void 닉네임을_통해_전날까지의_크루_출석_기록_확인() {
-        AttendanceBook attendanceBook = init();
+    @ParameterizedTest
+    @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
+    void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times) {
+        AttendanceBook attendanceBook = new AttendanceBook();
+        times.forEach(time -> attendanceBook.attendance(crewName, time));
 
-        Set<LocalDateTime> attendanceLog = attendanceBook.getLog(crewName);
+        AttendanceLogResponse attendanceLog = attendanceBook.getLog(crewName);
+
+        assertAll(
+                () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
+                () -> assertThat(attendanceLog.getTimeLogs()).isSorted()
+        );
     }
 
     // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
