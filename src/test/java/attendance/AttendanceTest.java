@@ -43,6 +43,16 @@ public class AttendanceTest {
                 .withMessage("금일 출석 기록이 이미 존재합니다.");
     }
 
+    // 출석 확인을 수정하려면 닉네임, 수정하려는 날짜, 등교 시간을 입력하여 기록을 수정할 수 있다.
+    @Test
+    void 출석을_수정할_수_있다() {
+        AttendanceBook attendanceBook = init();
+
+        LocalDateTime timeToModify = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
+
+        attendanceBook.edit(crewName, timeToModify);
+    }
+
     private AttendanceBook init() {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
