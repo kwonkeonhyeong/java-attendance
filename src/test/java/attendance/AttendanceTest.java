@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
@@ -70,6 +71,15 @@ public class AttendanceTest {
 
         Set<LocalDateTime> attendanceLog = attendanceBook.getLog(crewName);
     }
+
+    // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
+    @Test
+    void 전날까지의_크루_출석_기록을_통해_제적_위험자_파악() {
+        AttendanceBook attendanceBook = init();
+
+        List<Crew> dangerCrews = attendanceBook.getDangerCrews();
+    }
+
 
     private AttendanceBook init() {
         AttendanceBook attendanceBook = new AttendanceBook();
