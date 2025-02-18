@@ -8,7 +8,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -31,6 +34,44 @@ public class AttendanceTest {
                         LocalDateTime.of(LocalDate.of(2024, 12, 13), LocalTime.of(15, 20)))
                 )
         );
+    }
+
+    static Stream<Arguments> 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(
+                                new AttendanceData("pobi", getAbsenceTimes(0, 1), (getLateTimes(1, 5))),
+                                new AttendanceData("anni", getAbsenceTimes(0, 2), (getLateTimes(2, 4)))
+                        ),
+                        List.of(new SimpleImmutableEntry<>("anni", "경고"), new SimpleImmutableEntry<>("pobi", "경고"))
+                ),
+                Arguments.of(
+                        List.of(
+                                new AttendanceData("abd", getAbsenceTimes(0, 4), (getLateTimes(4, 5))),
+                                new AttendanceData("abc", getAbsenceTimes(0, 4), (getLateTimes(4, 5)))
+                        ),
+                        List.of(new SimpleImmutableEntry<>("abc", "면담"), new SimpleImmutableEntry<>("abd", "면담"))
+                ),
+                Arguments.of(
+                        List.of(
+                                new AttendanceData("pobi", getAbsenceTimes(0, 4), (getLateTimes(4, 8))),
+                                new AttendanceData("anni", getAbsenceTimes(0, 5), (getLateTimes(5, 6)))
+                        ),
+                        List.of(new SimpleImmutableEntry<>("anni", "제적"), new SimpleImmutableEntry<>("pobi", "제적"))
+                )
+        );
+    }
+
+    static List<LocalDateTime> getAbsenceTimes(int start, int end) {
+        return Calender.WEEKDAY.getDays().subList(start, end).stream()
+                .map(day -> LocalDateTime.of(day, LocalTime.of(10, 32)))
+                .toList();
+    }
+
+    static List<LocalDateTime> getLateTimes(int start, int end) {
+        return Calender.WEEKDAY.getDays().subList(start, end).stream()
+                .map(day -> LocalDateTime.of(day, LocalTime.of(10, 7)))
+                .toList();
     }
 
     // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
@@ -105,72 +146,38 @@ public class AttendanceTest {
     // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
     // 제적 위험자는 제적 대상자, 면담 대상자, 경고 대상자순으로 출력하며, 대상 항목별 정렬 순서는 지각을 결석으로 간주하여 내림차순한다.
     // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.
-    @Test
-    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환() {
+    @ParameterizedTest
+    @MethodSource("전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트")
+    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData, List<Entry<String, String>> expected) {
         AttendanceBook attendanceBook = new AttendanceBook();
-        setTestData(attendanceBook);
-
-        List<DangerCrewResponse> dangerCrewResponses = attendanceBook.getDangerCrews(new DangerCrewSorter());
-
-    }
-
-    private void setTestData(AttendanceBook attendanceBook) {
-        List<String> data = List.of(
-                "쿠키,2024-12-13 10:08",
-                "빙봉,2024-12-13 10:07",
-                "빙티,2024-12-13 10:07",
-                "이든,2024-12-13 10:07",
-                "빙봉,2024-12-12 11:11",
-                "이든,2024-12-12 10:06",
-                "짱수,2024-12-12 10:00",
-                "빙봉,2024-12-11 10:02",
-                "쿠키,2024-12-11 10:02",
-                "빙티,2024-12-10 10:08",
-                "빙봉,2024-12-10 10:06",
-                "이든,2024-12-10 10:02",
-                "쿠키,2024-12-10 10:01",
-                "짱수,2024-12-10 10:00",
-                "쿠키,2024-12-09 13:03",
-                "빙봉,2024-12-09 13:02",
-                "이든,2024-12-09 13:01",
-                "짱수,2024-12-09 13:00",
-                "빙봉,2024-12-06 10:08",
-                "이든,2024-12-06 10:07",
-                "빙티,2024-12-06 10:01",
-                "짱수,2024-12-06 10:00",
-                "쿠키,2024-12-05 10:07",
-                "빙봉,2024-12-05 10:06",
-                "빙티,2024-12-05 10:06",
-                "짱수,2024-12-05 10:00",
-                "이든,2024-12-04 10:08",
-                "빙봉,2024-12-04 10:07",
-                "빙티,2024-12-04 10:02",
-                "쿠키,2024-12-04 10:02",
-                "짱수,2024-12-04 10:00",
-                "빙티,2024-12-03 10:07",
-                "이든,2024-12-03 10:06",
-                "쿠키,2024-12-03 10:06",
-                "빙봉,2024-12-03 10:03",
-                "짱수,2024-12-03 10:00",
-                "빙봉,2024-12-02 13:06",
-                "이든,2024-12-02 13:02",
-                "쿠키,2024-12-02 13:01",
-                "빙티,2024-12-02 13:00",
-                "짱수,2024-12-02 13:00"
+        attendanceData.forEach(data ->
+                data.times.forEach(
+                        time -> attendanceBook.attendance(data.crewName, time)
+                )
         );
 
-        for (String entry : data) {
-            String[] parts = entry.split(",");
-            String crewName = parts[0];
-            LocalDateTime attendanceTime = LocalDateTime.parse(parts[1], formatter);
-            attendanceBook.attendance(crewName, attendanceTime);
-        }
-    }
+        List<DangerCrewResponse> dangerCrewResponses = attendanceBook.getDangerCrews(new DangerCrewSorter());
+        List<String> dangerCrewNames = dangerCrewResponses.stream().map(DangerCrewResponse::getName).toList();
 
+        assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
+
+        // 제적, 면담, 경고를 Status 반환해 주는 무언가 구현 (enum) 예상
+    }
 
     private AttendanceBook init() {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
         return attendanceBook;
+    }
+
+    private static class AttendanceData {
+        private final String crewName;
+        private final List<LocalDateTime> times;
+
+        public AttendanceData(String crewName, List<LocalDateTime> absenceTimes, List<LocalDateTime> lateTimes) {
+            this.crewName = crewName;
+            this.times = new LinkedList<>(absenceTimes);
+            this.times.addAll(lateTimes);
+        }
     }
 }
