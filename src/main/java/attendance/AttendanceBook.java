@@ -26,6 +26,10 @@ public class AttendanceBook {
         return Collections.unmodifiableMap(values);
     }
 
+    public void edit(final String name, final LocalDateTime timeToEdit) {
+        values.get(new Crew(name)).add(timeToEdit);
+    }
+
     private void validateAttendance(Crew crew, LocalDateTime time) {
         LocalDate covertTime = time.toLocalDate();
         boolean isAlreadyAttendance = values.get(crew).stream().anyMatch(value ->
