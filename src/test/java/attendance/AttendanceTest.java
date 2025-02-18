@@ -48,9 +48,9 @@ public class AttendanceTest {
     void 출석을_수정할_수_있다() {
         AttendanceBook attendanceBook = init();
 
-        LocalDateTime timeToModify = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
+        LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        attendanceBook.edit(crewName, timeToModify);
+        attendanceBook.edit(crewName, timeToEdit);
     }
 
     private AttendanceBook init() {
