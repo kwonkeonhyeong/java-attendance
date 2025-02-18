@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 public class AttendanceBook {
@@ -34,6 +36,15 @@ public class AttendanceBook {
 
     public Set<LocalDateTime> getLog(final String name) {
         return values.get(new Crew(name));
+    }
+
+    public List<Crew> getDangerCrews() {
+        AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
+
+        return values.entrySet().stream()
+                .filter(value -> attendanceAnalyzer.analyzeAttendance(value.getValue()).isDanger())
+                .map(Entry::getKey)
+                .toList();
     }
 
     private void validateAttendance(Crew crew, LocalDateTime time) {
