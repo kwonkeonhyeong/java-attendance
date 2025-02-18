@@ -21,8 +21,8 @@ public class AttendanceTest {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
 
-        Set<LocalDateTime> value = attendanceBook.getValue().get(new Crew(crewName));
-        assertThat(value).contains(attendanceTime);
+        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        assertThat(values).contains(attendanceTime);
     }
 
     // 출석 후 출석 기록을 확인할 수 있다.
@@ -31,8 +31,8 @@ public class AttendanceTest {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceBook.attendance(crewName, attendanceTime);
 
-        Set<LocalDateTime> value = attendanceBook.getValue().get(new Crew(crewName));
-        assertThat(value).contains(attendanceTime);
+        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        assertThat(values).contains(attendanceTime);
     }
 
     // 이미 출석한 경우, 다시 출석할 수 없으며 수정 기능을 이용하도록 안내한다.
