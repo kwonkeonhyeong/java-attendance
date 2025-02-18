@@ -6,12 +6,14 @@ import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 public class AttendanceTest {
 
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
             LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20));
@@ -77,7 +79,71 @@ public class AttendanceTest {
     void 전날까지의_크루_출석_기록을_통해_제적_위험자_파악() {
         AttendanceBook attendanceBook = init();
 
-        List<Crew> dangerCrews = attendanceBook.getDangerCrews();
+        List<DangerCrewResponse> dangerCrews = attendanceBook.getDangerCrews(new DangerCrewSorter());
+    }
+
+    // 제적 위험자는 제적 대상자, 면담 대상자, 경고 대상자순으로 출력하며, 대상 항목별 정렬 순서는 지각을 결석으로 간주하여 내림차순한다.
+    // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.
+    @Test
+    void 제적_위험자_정렬해서_반환() {
+        AttendanceBook attendanceBook = new AttendanceBook();
+        setTestData(attendanceBook);
+
+        List<DangerCrewResponse> dangerCrewResponses = attendanceBook.getDangerCrews(new DangerCrewSorter());
+
+    }
+
+    private void setTestData(AttendanceBook attendanceBook) {
+        List<String> data = List.of(
+                "쿠키,2024-12-13 10:08",
+                "빙봉,2024-12-13 10:07",
+                "빙티,2024-12-13 10:07",
+                "이든,2024-12-13 10:07",
+                "빙봉,2024-12-12 11:11",
+                "이든,2024-12-12 10:06",
+                "짱수,2024-12-12 10:00",
+                "빙봉,2024-12-11 10:02",
+                "쿠키,2024-12-11 10:02",
+                "빙티,2024-12-10 10:08",
+                "빙봉,2024-12-10 10:06",
+                "이든,2024-12-10 10:02",
+                "쿠키,2024-12-10 10:01",
+                "짱수,2024-12-10 10:00",
+                "쿠키,2024-12-09 13:03",
+                "빙봉,2024-12-09 13:02",
+                "이든,2024-12-09 13:01",
+                "짱수,2024-12-09 13:00",
+                "빙봉,2024-12-06 10:08",
+                "이든,2024-12-06 10:07",
+                "빙티,2024-12-06 10:01",
+                "짱수,2024-12-06 10:00",
+                "쿠키,2024-12-05 10:07",
+                "빙봉,2024-12-05 10:06",
+                "빙티,2024-12-05 10:06",
+                "짱수,2024-12-05 10:00",
+                "이든,2024-12-04 10:08",
+                "빙봉,2024-12-04 10:07",
+                "빙티,2024-12-04 10:02",
+                "쿠키,2024-12-04 10:02",
+                "짱수,2024-12-04 10:00",
+                "빙티,2024-12-03 10:07",
+                "이든,2024-12-03 10:06",
+                "쿠키,2024-12-03 10:06",
+                "빙봉,2024-12-03 10:03",
+                "짱수,2024-12-03 10:00",
+                "빙봉,2024-12-02 13:06",
+                "이든,2024-12-02 13:02",
+                "쿠키,2024-12-02 13:01",
+                "빙티,2024-12-02 13:00",
+                "짱수,2024-12-02 13:00"
+        );
+
+        for (String entry : data) {
+            String[] parts = entry.split(",");
+            String crewName = parts[0];
+            LocalDateTime attendanceTime = LocalDateTime.parse(parts[1], formatter);
+            attendanceBook.attendance(crewName, attendanceTime);
+        }
     }
 
 
