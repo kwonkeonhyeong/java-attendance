@@ -14,7 +14,9 @@ public class AttendanceBook {
 
     public void attendance(final String name, final LocalDateTime time) {
         Crew crew = new Crew(name);
-
+        if (values.containsKey(crew)) {
+            validateAttendance(crew, time);
+        }
         Set<LocalDateTime> times = values.getOrDefault(crew, new HashSet<>());
         times.add(time);
         values.put(crew, times);
@@ -23,4 +25,15 @@ public class AttendanceBook {
     public Map<Crew, Set<LocalDateTime>> getValues() {
         return Collections.unmodifiableMap(values);
     }
+
+    private void validateAttendance(Crew crew, LocalDateTime time) {
+        LocalDate covertTime = time.toLocalDate();
+        boolean isAlreadyAttendance = values.get(crew).stream().anyMatch(value ->
+                value.toLocalDate().equals(covertTime)
+        );
+        if (isAlreadyAttendance) {
+            throw new IllegalStateException("금일 출석 기록이 이미 존재합니다.");
+        }
+    }
+
 }
