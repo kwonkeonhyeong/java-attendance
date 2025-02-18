@@ -34,8 +34,12 @@ public class AttendanceBook {
         return new AttendanceEditResponse(before, timeToEdit);
     }
 
-    public Set<LocalDateTime> getLog(final String name) {
-        return values.get(new Crew(name));
+    public AttendanceLogResponse getLog(final String name) {
+        Crew crew = new Crew(name);
+        List<LocalDateTime> timeLogs = values.get(crew).stream()
+                .sorted().toList();
+
+        return AttendanceLogResponse.of(crew, timeLogs);
     }
 
     public List<DangerCrewResponse> getDangerCrews(DangerCrewSorter dangerCrewSorter) {
