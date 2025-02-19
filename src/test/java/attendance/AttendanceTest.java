@@ -12,7 +12,7 @@ import attendance.dto.TimeLogResponse;
 import attendance.model.Calender;
 import attendance.model.DangerCrewSorter;
 import attendance.model.crew.Crew;
-import attendance.model.repository.AttendanceBook;
+import attendance.model.repository.AttendanceRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -88,41 +88,41 @@ public class AttendanceTest {
     // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
     @Test
     void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
-        AttendanceBook attendanceBook = init();
+        AttendanceRepository attendanceRepository = init();
 
-        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
     // 출석 후 출석 기록을 확인할 수 있다.
     @Test
     void 출석_후_출석_기록을_확인할_수_있다() {
-        AttendanceBook attendanceBook = init();
+        AttendanceRepository attendanceRepository = init();
 
-        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
     // 이미 출석한 경우, 다시 출석할 수 없으며 수정 기능을 이용하도록 안내한다.
     @Test
     void 이미_출석한_경우_다시_출석할_수_없으며_수정_기능을_이용하도록_안내한다() {
-        AttendanceBook attendanceBook = init();
+        AttendanceRepository attendanceRepository = init();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> attendanceBook.attendance(crewName, attendanceTime))
+                .isThrownBy(() -> attendanceRepository.attendance(crewName, attendanceTime))
                 .withMessage("금일 출석 기록이 이미 존재합니다.");
     }
 
     // 출석 확인을 수정하려면 닉네임, 수정하려는 날짜, 등교 시간을 입력하여 기록을 수정할 수 있다.
     @Test
     void 출석을_수정할_수_있다() {
-        AttendanceBook attendanceBook = init();
+        AttendanceRepository attendanceRepository = init();
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        attendanceBook.edit(crewName, timeToEdit);
+        attendanceRepository.edit(crewName, timeToEdit);
 
-        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
 
         assertThat(values).contains(timeToEdit);
         assertThat(values).hasSize(1);
@@ -131,11 +131,11 @@ public class AttendanceTest {
     // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.
     @Test
     void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
-        AttendanceBook attendanceBook = init();
+        AttendanceRepository attendanceRepository = init();
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        AttendanceEditResponse attendanceEditResponse = attendanceBook.edit(crewName, timeToEdit);
+        AttendanceEditResponse attendanceEditResponse = attendanceRepository.edit(crewName, timeToEdit);
 
         assertThat(attendanceEditResponse.getBefore()).isEqualTo(attendanceTime);
         assertThat(attendanceEditResponse.getAfter()).isEqualTo(timeToEdit);
@@ -145,10 +145,10 @@ public class AttendanceTest {
     @ParameterizedTest
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
-        AttendanceBook attendanceBook = new AttendanceBook();
-        times.forEach(time -> attendanceBook.attendance(crewName, time));
+        AttendanceRepository attendanceRepository = new AttendanceRepository();
+        times.forEach(time -> attendanceRepository.attendance(crewName, time));
 
-        AttendanceLogResponse attendanceLog = attendanceBook.getLog(crewName);
+        AttendanceLogResponse attendanceLog = attendanceRepository.getLog(crewName);
 
         assertAll(
                 () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
@@ -167,14 +167,14 @@ public class AttendanceTest {
     @MethodSource("전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트")
     void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
                                            List<SimpleImmutableEntry<String, String>> expected) {
-        AttendanceBook attendanceBook = new AttendanceBook();
+        AttendanceRepository attendanceRepository = new AttendanceRepository();
         attendanceData.forEach(data ->
                 data.times.forEach(
-                        time -> attendanceBook.attendance(data.crewName, time)
+                        time -> attendanceRepository.attendance(data.crewName, time)
                 )
         );
 
-        List<DangerCrewResponse> dangerCrewResponses = attendanceBook.getDangerCrews(new DangerCrewSorter());
+        List<DangerCrewResponse> dangerCrewResponses = attendanceRepository.getDangerCrews(new DangerCrewSorter());
         List<String> dangerCrewNames = dangerCrewResponses.stream().map(DangerCrewResponse::getName).toList();
 
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
@@ -188,10 +188,10 @@ public class AttendanceTest {
 
     }
 
-    private AttendanceBook init() {
-        AttendanceBook attendanceBook = new AttendanceBook();
-        attendanceBook.attendance(crewName, attendanceTime);
-        return attendanceBook;
+    private AttendanceRepository init() {
+        AttendanceRepository attendanceRepository = new AttendanceRepository();
+        attendanceRepository.attendance(crewName, attendanceTime);
+        return attendanceRepository;
     }
 
     private static class AttendanceData {

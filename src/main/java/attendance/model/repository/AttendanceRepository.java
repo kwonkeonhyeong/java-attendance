@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class AttendanceBook {
+public class AttendanceRepository {
 
     public final Map<Crew, List<LocalDateTime>> values = new HashMap<>();
 
