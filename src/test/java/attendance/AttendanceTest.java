@@ -109,7 +109,7 @@ public class AttendanceTest {
         AttendanceRepository attendanceRepository = init();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> attendanceRepository.attendance(crewName, attendanceTime))
+                .isThrownBy(() -> attendanceRepository.save(new Crew(crewName), attendanceTime))
                 .withMessage("금일 출석 기록이 이미 존재합니다.");
     }
 
@@ -120,7 +120,7 @@ public class AttendanceTest {
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        attendanceRepository.edit(crewName, timeToEdit);
+        attendanceRepository.update(new Crew(crewName), timeToEdit);
 
         List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
 
@@ -135,7 +135,7 @@ public class AttendanceTest {
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        AttendanceEditResponse attendanceEditResponse = attendanceRepository.edit(crewName, timeToEdit);
+        AttendanceEditResponse attendanceEditResponse = attendanceRepository.update(new Crew(crewName), timeToEdit);
 
         assertThat(attendanceEditResponse.getBefore()).isEqualTo(attendanceTime);
         assertThat(attendanceEditResponse.getAfter()).isEqualTo(timeToEdit);
@@ -146,7 +146,7 @@ public class AttendanceTest {
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
-        times.forEach(time -> attendanceRepository.attendance(crewName, time));
+        times.forEach(time -> attendanceRepository.save(new Crew(crewName), time));
 
         AttendanceLogResponse attendanceLog = attendanceRepository.getLog(crewName);
 
@@ -170,7 +170,7 @@ public class AttendanceTest {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
         attendanceData.forEach(data ->
                 data.times.forEach(
-                        time -> attendanceRepository.attendance(data.crewName, time)
+                        time -> attendanceRepository.save(new Crew(data.crewName), time)
                 )
         );
 
@@ -190,7 +190,7 @@ public class AttendanceTest {
 
     private AttendanceRepository init() {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
-        attendanceRepository.attendance(crewName, attendanceTime);
+        attendanceRepository.save(new Crew(crewName), attendanceTime);
         return attendanceRepository;
     }
 
