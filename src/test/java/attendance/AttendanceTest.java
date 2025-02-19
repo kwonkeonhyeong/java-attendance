@@ -116,7 +116,9 @@ public class AttendanceTest {
         attendanceBook.edit(crewName, timeToEdit);
 
         Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+
         assertThat(values).contains(timeToEdit);
+        assertThat(values).hasSize(1);
     }
 
     // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.
