@@ -6,7 +6,7 @@ import attendance.dto.DangerCrewResponse;
 import attendance.model.AttendanceAnalyzer;
 import attendance.model.CrewAttendance;
 import attendance.model.DangerCrewSorter;
-import attendance.model.crew.Crew;
+import attendance.model.domain.crew.Crew;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

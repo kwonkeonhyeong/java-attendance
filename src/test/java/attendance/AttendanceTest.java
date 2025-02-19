@@ -11,7 +11,7 @@ import attendance.dto.DangerCrewResponse;
 import attendance.dto.TimeLogResponse;
 import attendance.model.Calender;
 import attendance.model.DangerCrewSorter;
-import attendance.model.crew.Crew;
+import attendance.model.domain.crew.Crew;
 import attendance.model.repository.AttendanceRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

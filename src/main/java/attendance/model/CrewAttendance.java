@@ -1,6 +1,6 @@
 package attendance.model;
 
-import attendance.model.crew.Crew;
+import attendance.model.domain.crew.Crew;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
