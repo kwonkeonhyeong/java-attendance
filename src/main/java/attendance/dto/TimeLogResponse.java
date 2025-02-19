@@ -1,7 +1,9 @@
-package attendance;
+package attendance.dto;
 
-import static attendance.AttendanceStatus.ABSENCE;
+import static attendance.model.AttendanceStatus.ABSENCE;
 
+import attendance.model.AttendanceAnalyzer;
+import attendance.model.AttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

@@ -1,5 +1,8 @@
-package attendance;
+package attendance.dto;
 
+import attendance.model.AttendanceAnalyzer;
+import attendance.model.Calender;
+import attendance.model.crew.Crew;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;

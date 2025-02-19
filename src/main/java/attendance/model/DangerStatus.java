@@ -1,4 +1,4 @@
-package attendance;
+package attendance.model;
 
 public enum DangerStatus {
     EXPULSION("제적"),

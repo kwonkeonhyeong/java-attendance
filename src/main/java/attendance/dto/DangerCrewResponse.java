@@ -1,4 +1,6 @@
-package attendance;
+package attendance.dto;
+
+import attendance.model.CrewAttendance;
 
 public class DangerCrewResponse {
     private final String name;

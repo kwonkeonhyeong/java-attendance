@@ -1,4 +1,4 @@
-package attendance;
+package attendance.dto;
 
 import java.time.LocalDateTime;
 

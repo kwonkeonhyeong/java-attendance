@@ -1,4 +1,4 @@
-package attendance;
+package attendance.model.crew;
 
 import java.util.Objects;
 

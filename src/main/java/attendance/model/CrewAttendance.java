@@ -1,5 +1,6 @@
-package attendance;
+package attendance.model;
 
+import attendance.model.crew.Crew;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
