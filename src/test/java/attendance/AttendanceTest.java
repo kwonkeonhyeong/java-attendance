@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -91,7 +90,7 @@ public class AttendanceTest {
     void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
         AttendanceBook attendanceBook = init();
 
-        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
@@ -100,7 +99,7 @@ public class AttendanceTest {
     void 출석_후_출석_기록을_확인할_수_있다() {
         AttendanceBook attendanceBook = init();
 
-        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
@@ -123,7 +122,7 @@ public class AttendanceTest {
 
         attendanceBook.edit(crewName, timeToEdit);
 
-        Set<LocalDateTime> values = attendanceBook.getValues().get(new Crew(crewName));
+        List<LocalDateTime> values = attendanceBook.findByCrew(new Crew(crewName));
 
         assertThat(values).contains(timeToEdit);
         assertThat(values).hasSize(1);

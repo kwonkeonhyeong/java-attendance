@@ -9,29 +9,27 @@ import attendance.model.DangerCrewSorter;
 import attendance.model.crew.Crew;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class AttendanceBook {
 
-    public final Map<Crew, Set<LocalDateTime>> values = new HashMap<>();
+    public final Map<Crew, List<LocalDateTime>> values = new HashMap<>();
 
     public void attendance(final String name, final LocalDateTime time) {
         Crew crew = new Crew(name);
         if (values.containsKey(crew)) {
             validateAttendance(crew, time);
         }
-        Set<LocalDateTime> times = values.getOrDefault(crew, new HashSet<>());
+        List<LocalDateTime> times = values.getOrDefault(crew, new ArrayList<>());
         times.add(time);
         values.put(crew, times);
     }
 
-    public Map<Crew, Set<LocalDateTime>> getValues() {
-        return Collections.unmodifiableMap(values);
+    public List<LocalDateTime> findByCrew(Crew crew) {
+        return values.get(crew);
     }
 
     public AttendanceEditResponse edit(final String name, final LocalDateTime timeToEdit) {
