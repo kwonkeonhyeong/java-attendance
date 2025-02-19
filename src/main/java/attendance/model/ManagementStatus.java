@@ -1,6 +1,6 @@
 package attendance.model;
 
-public enum DangerStatus {
+public enum ManagementStatus {
     EXPULSION("제적"),
     COUNSELING("면담"),
     WARNING("경고"),
@@ -8,11 +8,11 @@ public enum DangerStatus {
 
     private final String name;
 
-    DangerStatus(String name) {
+    ManagementStatus(String name) {
         this.name = name;
     }
 
-    public static DangerStatus of(final int absenceCount, final int lateCount) {
+    public static ManagementStatus of(final int absenceCount, final int lateCount) {
         int realAbsenceCount = getRealAbsenceCount(absenceCount, lateCount);
         if (realAbsenceCount > 5) {
             return EXPULSION;
@@ -30,7 +30,7 @@ public enum DangerStatus {
         return absenceCount + (lateCount / 3);
     }
 
-    public boolean isDanger() {
+    public boolean requiresManagement() {
         return this != NONE;
     }
 

@@ -7,16 +7,16 @@ public class CrewAttendanceStatus {
 
     private final int absenceCount;
     private final int lateCount;
-    private final DangerStatus dangerStatus;
+    private final ManagementStatus managementStatus;
 
-    private CrewAttendanceStatus(int absenceCount, int lateCount, DangerStatus dangerStatus) {
+    private CrewAttendanceStatus(int absenceCount, int lateCount, ManagementStatus managementStatus) {
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
-        this.dangerStatus = dangerStatus;
+        this.managementStatus = managementStatus;
     }
 
     public static CrewAttendanceStatus of(int absenceCount, int lateCount) {
-        return new CrewAttendanceStatus(absenceCount, lateCount, DangerStatus.of(absenceCount, lateCount));
+        return new CrewAttendanceStatus(absenceCount, lateCount, ManagementStatus.of(absenceCount, lateCount));
     }
 
     public static CrewAttendanceStatus of(Collection<LocalDateTime> times, AttendanceAnalyzer attendanceAnalyzer) {
@@ -26,8 +26,8 @@ public class CrewAttendanceStatus {
         return CrewAttendanceStatus.of(absenceCount, lateCount);
     }
 
-    public boolean isDanger() {
-        return dangerStatus.isDanger();
+    public boolean requiresManagement() {
+        return managementStatus.requiresManagement();
     }
 
     public int getRealAbsenceCount() {
@@ -46,7 +46,7 @@ public class CrewAttendanceStatus {
         return lateCount;
     }
 
-    public DangerStatus getDangerStatus() {
-        return dangerStatus;
+    public ManagementStatus getDangerStatus() {
+        return managementStatus;
     }
 }

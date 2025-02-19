@@ -1,11 +1,5 @@
 package attendance.model.repository;
 
-import attendance.dto.AttendanceEditResponse;
-import attendance.dto.AttendanceLogResponse;
-import attendance.dto.DangerCrewResponse;
-import attendance.model.AttendanceAnalyzer;
-import attendance.model.CrewAttendance;
-import attendance.model.DangerCrewSorter;
 import attendance.model.domain.crew.Crew;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,7 +14,9 @@ public class AttendanceRepository {
     public final Map<Crew, List<LocalDateTime>> values = new HashMap<>();
 
     public List<LocalDateTime> findByCrew(Crew crew) {
-        return values.get(crew);
+        validateCrewExistence(crew);
+        return values.get(crew).stream()
+                .toList();
     }
 
     public void save(Crew crew, LocalDateTime dateTime) {
@@ -36,48 +32,43 @@ public class AttendanceRepository {
         return values.containsKey(crew);
     }
 
-    public AttendanceEditResponse update(Crew crew, LocalDateTime dateTimeToUpdate) {
-        LocalDateTime before = findDateTimeByCrewAndDate(crew, dateTimeToUpdate.toLocalDate())
-                .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일자의 출석 기록이 없습니다."));
-        values.get(crew).add(dateTimeToUpdate);
-        deleteAttendanceByCrew(crew, before);
-        return new AttendanceEditResponse(before, dateTimeToUpdate);
+    public void update(Crew crew, LocalDateTime previousTime, LocalDateTime updatedTime) {
+        validateCrewExistence(crew);
+        validateDateTimeExistenceByCrew(crew, previousTime);
+
+        values.get(crew).add(updatedTime);
+        deleteAttendanceByCrew(crew, previousTime);
     }
 
     public void deleteAttendanceByCrew(Crew crew, LocalDateTime dateTimeToDelete) {
+        validateCrewExistence(crew);
         values.get(crew).remove(dateTimeToDelete);
     }
 
-    private Optional<LocalDateTime> findDateTimeByCrewAndDate(Crew crew, LocalDate date) {
+    public Optional<LocalDateTime> findDateTimeByCrewAndDate(Crew crew, LocalDate date) {
+        validateCrewExistence(crew);
+
         return values.get(crew).stream()
                 .filter(time -> time.toLocalDate().equals(date))
                 .findFirst();
     }
 
-    public AttendanceLogResponse getLog(final String name) {
-        AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
-        Crew crew = new Crew(name);
-        List<LocalDateTime> timeLogs = values.get(crew).stream().toList();
-
-        return AttendanceLogResponse.of(crew, timeLogs, attendanceAnalyzer);
-    }
-
-    public List<DangerCrewResponse> getDangerCrews(DangerCrewSorter dangerCrewSorter) {
-        AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
-
-        return getSortedCrewStatusByAttendance(attendanceAnalyzer, dangerCrewSorter).stream()
-                .map(DangerCrewResponse::from)
+    public List<Crew> findAllCrews() {
+        return values.keySet().stream()
                 .toList();
     }
 
-    private List<CrewAttendance> getSortedCrewStatusByAttendance(AttendanceAnalyzer attendanceAnalyzer,
-                                                                 DangerCrewSorter dangerCrewSorter) {
+    private void validateCrewExistence(Crew crew) {
+        if (!existsByCrew(crew)) {
+            throw new IllegalArgumentException("존재하지 않는 크루입니다.");
+        }
+    }
 
-        return values.entrySet().stream()
-                .map(value -> CrewAttendance.of(value.getKey(), value.getValue(), attendanceAnalyzer))
-                .filter(CrewAttendance::isDanger)
-                .sorted(dangerCrewSorter::compare)
-                .toList();
+    private void validateDateTimeExistenceByCrew(Crew crew, LocalDateTime dateTime) {
+        values.get(crew).stream()
+                .filter(value -> value.isEqual(dateTime))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다."));
     }
 
     private void validateConflict(Crew crew, LocalDateTime dateTime) {

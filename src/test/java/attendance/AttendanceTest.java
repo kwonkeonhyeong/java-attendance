@@ -9,10 +9,13 @@ import attendance.dto.AttendanceEditResponse;
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.DangerCrewResponse;
 import attendance.dto.TimeLogResponse;
+import attendance.model.AttendanceAnalyzer;
 import attendance.model.Calender;
-import attendance.model.DangerCrewSorter;
 import attendance.model.domain.crew.Crew;
+import attendance.model.domain.crew.CrewAttendanceComparator;
+import attendance.model.domain.crew.DefaultCrewAttendanceComparator;
 import attendance.model.repository.AttendanceRepository;
+import attendance.model.service.AttendanceService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -29,6 +32,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceTest {
 
+    private static final AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
+    private static final CrewAttendanceComparator crewAttendanceComparator = new DefaultCrewAttendanceComparator();
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
             LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20));
@@ -117,10 +122,12 @@ public class AttendanceTest {
     @Test
     void 출석을_수정할_수_있다() {
         AttendanceRepository attendanceRepository = init();
+        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
+                crewAttendanceComparator);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        attendanceRepository.update(new Crew(crewName), timeToEdit);
+        service.updateAttendance(new Crew(crewName), timeToEdit);
 
         List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
 
@@ -132,10 +139,12 @@ public class AttendanceTest {
     @Test
     void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
         AttendanceRepository attendanceRepository = init();
+        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
+                crewAttendanceComparator);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        AttendanceEditResponse attendanceEditResponse = attendanceRepository.update(new Crew(crewName), timeToEdit);
+        AttendanceEditResponse attendanceEditResponse = service.updateAttendance(new Crew(crewName), timeToEdit);
 
         assertThat(attendanceEditResponse.getBefore()).isEqualTo(attendanceTime);
         assertThat(attendanceEditResponse.getAfter()).isEqualTo(timeToEdit);
@@ -146,9 +155,11 @@ public class AttendanceTest {
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
+        AttendanceService attendanceService = new AttendanceService(attendanceRepository, attendanceAnalyzer,
+                crewAttendanceComparator);
         times.forEach(time -> attendanceRepository.save(new Crew(crewName), time));
 
-        AttendanceLogResponse attendanceLog = attendanceRepository.getLog(crewName);
+        AttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(new Crew(crewName));
 
         assertAll(
                 () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
@@ -168,13 +179,15 @@ public class AttendanceTest {
     void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
                                            List<SimpleImmutableEntry<String, String>> expected) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
+        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
+                crewAttendanceComparator);
         attendanceData.forEach(data ->
                 data.times.forEach(
                         time -> attendanceRepository.save(new Crew(data.crewName), time)
                 )
         );
 
-        List<DangerCrewResponse> dangerCrewResponses = attendanceRepository.getDangerCrews(new DangerCrewSorter());
+        List<DangerCrewResponse> dangerCrewResponses = service.getDangerCrews();
         List<String> dangerCrewNames = dangerCrewResponses.stream().map(DangerCrewResponse::getName).toList();
 
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());

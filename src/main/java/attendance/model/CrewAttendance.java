@@ -25,7 +25,7 @@ public class CrewAttendance {
         return crewAttendanceStatus;
     }
 
-    public boolean isDanger() {
-        return crewAttendanceStatus.isDanger();
+    public boolean requiresManagement() {
+        return crewAttendanceStatus.requiresManagement();
     }
 }

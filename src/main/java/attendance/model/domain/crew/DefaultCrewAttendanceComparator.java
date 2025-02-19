@@ -1,7 +1,10 @@
-package attendance.model;
+package attendance.model.domain.crew;
 
-public class DangerCrewSorter {
+import attendance.model.CrewAttendance;
 
+public class DefaultCrewAttendanceComparator implements CrewAttendanceComparator {
+
+    @Override
     public int compare(CrewAttendance o1, CrewAttendance o2) {
         if (o1.getAttendanceStatus().getRealAbsenceCount() == o2.getAttendanceStatus().getRealAbsenceCount()) {
             if (o1.getAttendanceStatus().getRealLateCount() == o2.getAttendanceStatus().getRealLateCount()) {
