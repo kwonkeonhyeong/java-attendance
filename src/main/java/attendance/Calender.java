@@ -5,8 +5,7 @@ import java.time.Month;
 import java.util.List;
 
 public enum Calender {
-    MONDAY(List.of(2, 9, 16, 23, 30)),
-    WEEKDAY(List.of(3, 4, 5, 6, 10, 11, 12, 13, 17, 18, 19, 20, 24, 26, 27, 31)),
+    WEEKDAY(List.of(2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24, 26, 27, 30, 31)),
     WEEKEND(List.of(1, 7, 8, 14, 15, 21, 22, 28, 29)),
     HOLIDAY(List.of(25));
 
