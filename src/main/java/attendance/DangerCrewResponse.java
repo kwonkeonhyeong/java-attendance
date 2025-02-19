@@ -18,7 +18,7 @@ public class DangerCrewResponse {
                 crewAttendance.getCrew().getName(),
                 crewAttendance.getAttendanceStatus().getAbsenceCount(),
                 crewAttendance.getAttendanceStatus().getLateCount(),
-                crewAttendance.getAttendanceStatus().getDangerStatus()
+                crewAttendance.getAttendanceStatus().getDangerStatus().getName()
         );
     }
 
