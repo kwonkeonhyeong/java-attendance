@@ -3,6 +3,7 @@ package attendance;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Set;
 
 public enum Calender {
     WEEKDAY(List.of(2, 3, 4, 5, 6, 9, 10, 11, 12, 13, 16, 17, 18, 19, 20, 23, 24, 26, 27, 30, 31)),
@@ -15,6 +16,19 @@ public enum Calender {
 
     Calender(List<Integer> days) {
         this.days = days;
+    }
+
+    public static List<LocalDate> getNotExistsDatesBeforeToday(List<LocalDate> dates) {
+        Set<LocalDate> datesSet = Set.copyOf(dates);
+        return getDatesBefore(LocalDate.of(2024, 12, 14)).stream()
+                .filter(date -> !datesSet.contains(date))
+                .toList();
+    }
+
+    private static List<LocalDate> getDatesBefore(LocalDate date) {
+        return WEEKDAY.getDays().stream()
+                .filter(result -> result.isBefore(date))
+                .toList();
     }
 
     public List<LocalDate> getDays() {
