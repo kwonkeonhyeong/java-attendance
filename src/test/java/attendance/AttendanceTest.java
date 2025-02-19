@@ -52,8 +52,8 @@ public class AttendanceTest {
                 ),
                 Arguments.of(
                         List.of(
-                                new AttendanceData("pobi", getAbsenceTimes(0, 4), (getLateTimes(4, 8))),
-                                new AttendanceData("anni", getAbsenceTimes(0, 5), (getLateTimes(5, 6)))
+                                new AttendanceData("pobi", getAbsenceTimes(0, 5), (getLateTimes(5, 8))),
+                                new AttendanceData("anni", getAbsenceTimes(0, 6), (getLateTimes(6, 6)))
                         ),
                         List.of(new SimpleImmutableEntry<>("anni", "제적"), new SimpleImmutableEntry<>("pobi", "제적"))
                 )
@@ -146,7 +146,8 @@ public class AttendanceTest {
     // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.
     @ParameterizedTest
     @MethodSource("전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트")
-    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData, List<Entry<String, String>> expected) {
+    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
+                                           List<SimpleImmutableEntry<String, String>> expected) {
         AttendanceBook attendanceBook = new AttendanceBook();
         attendanceData.forEach(data ->
                 data.times.forEach(
@@ -160,6 +161,12 @@ public class AttendanceTest {
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
 
         // 제적, 면담, 경고를 Status 반환해 주는 무언가 구현 (enum) 예상
+        List<SimpleImmutableEntry<String, String>> actual = dangerCrewResponses.stream()
+                .map(value -> new SimpleImmutableEntry<>(value.getName(), value.getDangerStatus()))
+                .toList();
+
+        assertThat(actual).containsExactlyElementsOf(expected);
+
     }
 
     private AttendanceBook init() {
