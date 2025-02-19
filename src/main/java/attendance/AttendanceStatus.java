@@ -1,42 +1,26 @@
 package attendance;
 
-public class AttendanceStatus {
+import java.time.LocalDateTime;
 
-    private final int absenceCount;
-    private final int lateCount;
-    private final DangerStatus dangerStatus;
+public enum AttendanceStatus {
 
-    private AttendanceStatus(int absenceCount, int lateCount, DangerStatus dangerStatus) {
-        this.absenceCount = absenceCount;
-        this.lateCount = lateCount;
-        this.dangerStatus = dangerStatus;
+    ABSENCE("결석"),
+    LATE("지각"),
+    ATTENDANCE("출석");
+
+    private final String name;
+
+    AttendanceStatus(String name) {
+        this.name = name;
     }
 
-    public static AttendanceStatus of(int absenceCount, int lateCount) {
-        return new AttendanceStatus(absenceCount, lateCount, DangerStatus.of(absenceCount, lateCount));
-    }
-
-    public boolean isDanger() {
-        return true;
-    }
-
-    public int getRealAbsenceCount() {
-        return absenceCount + (lateCount / 3);
-    }
-
-    public int getRealLateCount() {
-        return lateCount % 3;
-    }
-
-    public int getAbsenceCount() {
-        return absenceCount;
-    }
-
-    public int getLateCount() {
-        return lateCount;
-    }
-
-    public DangerStatus getDangerStatus() {
-        return dangerStatus;
+    public static AttendanceStatus of(LocalDateTime time, AttendanceAnalyzer attendanceAnalyzer) {
+        if (attendanceAnalyzer.isAbsence(time)) {
+            return ABSENCE;
+        }
+        if (attendanceAnalyzer.isLate(time)) {
+            return LATE;
+        }
+        return ATTENDANCE;
     }
 }
