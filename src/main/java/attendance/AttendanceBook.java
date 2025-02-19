@@ -35,11 +35,11 @@ public class AttendanceBook {
     }
 
     public AttendanceLogResponse getLog(final String name) {
+        AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
         Crew crew = new Crew(name);
-        List<LocalDateTime> timeLogs = values.get(crew).stream()
-                .sorted().toList();
+        List<LocalDateTime> timeLogs = values.get(crew).stream().toList();
 
-        return AttendanceLogResponse.of(crew, timeLogs);
+        return AttendanceLogResponse.of(crew, timeLogs, attendanceAnalyzer);
     }
 
     public List<DangerCrewResponse> getDangerCrews(DangerCrewSorter dangerCrewSorter) {
@@ -52,10 +52,10 @@ public class AttendanceBook {
 
     private List<CrewAttendance> getSortedCrewStatusByAttendance(AttendanceAnalyzer attendanceAnalyzer,
                                                                  DangerCrewSorter dangerCrewSorter) {
+
         return values.entrySet().stream()
-                .filter(value -> attendanceAnalyzer.analyzeAttendance(value.getValue()).isDanger())
-                .map(value -> new CrewAttendance(value.getKey(),
-                        attendanceAnalyzer.analyzeAttendance(value.getValue())))
+                .map(value -> CrewAttendance.of(value.getKey(), value.getValue(), attendanceAnalyzer))
+                .filter(CrewAttendance::isDanger)
                 .sorted(dangerCrewSorter::compare)
                 .toList();
     }

@@ -30,6 +30,10 @@ public enum DangerStatus {
         return absenceCount + (lateCount / 3);
     }
 
+    public boolean isDanger() {
+        return this != NONE;
+    }
+
     public String getName() {
         return name;
     }

@@ -1,19 +1,30 @@
 package attendance;
 
+import java.time.LocalDateTime;
+import java.util.Collection;
+
 public class CrewAttendance {
     private final Crew crew;
-    private final AttendanceStatus attendanceStatus;
+    private final CrewAttendanceStatus crewAttendanceStatus;
 
-    public CrewAttendance(Crew crew, AttendanceStatus attendanceStatus) {
+    private CrewAttendance(Crew crew, CrewAttendanceStatus crewAttendanceStatus) {
         this.crew = crew;
-        this.attendanceStatus = attendanceStatus;
+        this.crewAttendanceStatus = crewAttendanceStatus;
+    }
+
+    public static CrewAttendance of(Crew crew, Collection<LocalDateTime> times, AttendanceAnalyzer attendanceAnalyzer) {
+        return new CrewAttendance(crew, CrewAttendanceStatus.of(times, attendanceAnalyzer));
     }
 
     public Crew getCrew() {
         return crew;
     }
 
-    public AttendanceStatus getAttendanceStatus() {
-        return attendanceStatus;
+    public CrewAttendanceStatus getAttendanceStatus() {
+        return crewAttendanceStatus;
+    }
+
+    public boolean isDanger() {
+        return crewAttendanceStatus.isDanger();
     }
 }
