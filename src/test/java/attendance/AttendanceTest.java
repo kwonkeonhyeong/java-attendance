@@ -1,5 +1,6 @@
 package attendance;
 
+import static java.time.DayOfWeek.MONDAY;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -11,6 +12,7 @@ import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -27,10 +29,10 @@ public class AttendanceTest {
     static Stream<Arguments> 닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스() {
         return Stream.of(
                 Arguments.of("pobi", List.of(
-                        LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20)),
-                        LocalDateTime.of(LocalDate.of(2024, 12, 15), LocalTime.of(15, 20)),
-                        LocalDateTime.of(LocalDate.of(2024, 12, 13), LocalTime.of(15, 20)))
-                )
+                                LocalDateTime.of(LocalDate.of(2024, 12, 10), LocalTime.of(13, 20)),
+                                LocalDateTime.of(LocalDate.of(2024, 12, 13), LocalTime.of(15, 20)),
+                                LocalDateTime.of(LocalDate.of(2024, 12, 12), LocalTime.of(15, 20)))
+                        , 3, 7)
         );
     }
 
@@ -61,15 +63,19 @@ public class AttendanceTest {
     }
 
     static List<LocalDateTime> getAbsenceTimes(int start, int end) {
-        return Calender.WEEKDAY.getDays().subList(start, end).stream()
+        return Calender.WEEKDAY.getDays().stream()
+                .filter(day -> day.getDayOfWeek() != MONDAY)
                 .map(day -> LocalDateTime.of(day, LocalTime.of(10, 32)))
-                .toList();
+                .toList()
+                .subList(start, end);
     }
 
     static List<LocalDateTime> getLateTimes(int start, int end) {
-        return Calender.WEEKDAY.getDays().subList(start, end).stream()
+        return Calender.WEEKDAY.getDays().stream()
+                .filter(day -> day.getDayOfWeek() != MONDAY)
                 .map(day -> LocalDateTime.of(day, LocalTime.of(10, 7)))
-                .toList();
+                .toList()
+                .subList(start, end);
     }
 
     // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
@@ -129,7 +135,7 @@ public class AttendanceTest {
     // 닉네임을 입력하면 전날까지의 크루 출석 기록을 확인할 수 있다.
     @ParameterizedTest
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
-    void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times) {
+    void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
         AttendanceBook attendanceBook = new AttendanceBook();
         times.forEach(time -> attendanceBook.attendance(crewName, time));
 
@@ -137,7 +143,11 @@ public class AttendanceTest {
 
         assertAll(
                 () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
-                () -> assertThat(attendanceLog.getTimeLogs()).isSorted()
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getDate)).isSorted(),
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getTime)
+                        .filter(Objects::isNull).count()).isEqualTo(nonExistCount),
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getTime)
+                        .filter(Objects::nonNull).count()).isEqualTo(existCount)
         );
     }
 
