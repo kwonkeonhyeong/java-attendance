@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceTest {
 
-    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
             LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20));
