@@ -81,4 +81,9 @@ public class AttendanceRepository {
                 });
     }
 
+    public Optional<Crew> findCrewByName(String crewName) {
+        return values.keySet().stream()
+                .filter(crew -> crew.getName().equals(crewName))
+                .findFirst();
+    }
 }
