@@ -93,7 +93,7 @@ public class AttendanceTest {
     void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
         AttendanceRepository attendanceRepository = init();
 
-        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(Crew.from(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
@@ -102,7 +102,7 @@ public class AttendanceTest {
     void 출석_후_출석_기록을_확인할_수_있다() {
         AttendanceRepository attendanceRepository = init();
 
-        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(Crew.from(crewName));
         assertThat(values).contains(attendanceTime);
     }
 
@@ -112,7 +112,7 @@ public class AttendanceTest {
         AttendanceRepository attendanceRepository = init();
 
         assertThatIllegalStateException()
-                .isThrownBy(() -> attendanceRepository.save(new Crew(crewName), attendanceTime))
+                .isThrownBy(() -> attendanceRepository.save(Crew.from(crewName), attendanceTime))
                 .withMessage("금일 출석 기록이 이미 존재합니다.");
     }
 
@@ -124,9 +124,9 @@ public class AttendanceTest {
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        service.updateAttendance(new Crew(crewName), timeToEdit);
+        service.updateAttendance(Crew.from(crewName), timeToEdit);
 
-        List<LocalDateTime> values = attendanceRepository.findByCrew(new Crew(crewName));
+        List<LocalDateTime> values = attendanceRepository.findByCrew(Crew.from(crewName));
 
         assertThat(values).contains(timeToEdit);
         assertThat(values).hasSize(1);
@@ -140,7 +140,7 @@ public class AttendanceTest {
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        UpdateAttendanceResponse updateAttendanceResponse = service.updateAttendance(new Crew(crewName), timeToEdit);
+        UpdateAttendanceResponse updateAttendanceResponse = service.updateAttendance(Crew.from(crewName), timeToEdit);
 
         assertThat(updateAttendanceResponse.getBefore()).isEqualTo(attendanceTime);
         assertThat(updateAttendanceResponse.getAfter()).isEqualTo(timeToEdit);
@@ -152,9 +152,9 @@ public class AttendanceTest {
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
         AttendanceService attendanceService = new AttendanceService(attendanceRepository, crewAttendanceComparator);
-        times.forEach(time -> attendanceRepository.save(new Crew(crewName), time));
+        times.forEach(time -> attendanceRepository.save(Crew.from(crewName), time));
 
-        CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(new Crew(crewName));
+        CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(Crew.from(crewName));
 
         assertAll(
                 () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
@@ -177,7 +177,7 @@ public class AttendanceTest {
         AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
         attendanceData.forEach(data ->
                 data.times.forEach(
-                        time -> attendanceRepository.save(new Crew(data.crewName), time)
+                        time -> attendanceRepository.save(Crew.from(data.crewName), time)
                 )
         );
 
@@ -198,7 +198,7 @@ public class AttendanceTest {
 
     private AttendanceRepository init() {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
-        attendanceRepository.save(new Crew(crewName), attendanceTime);
+        attendanceRepository.save(Crew.from(crewName), attendanceTime);
         return attendanceRepository;
     }
 

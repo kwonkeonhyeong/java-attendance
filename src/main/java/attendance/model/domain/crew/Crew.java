@@ -4,14 +4,18 @@ import java.util.Objects;
 
 public class Crew {
 
-    private final String name;
+    private final CrewName name;
 
-    public Crew(String name) {
+    private Crew(CrewName name) {
         this.name = name;
     }
 
+    public static Crew from(String name) {
+        return new Crew(CrewName.from(name));
+    }
+
     public String getName() {
-        return name;
+        return name.getValue();
     }
 
     @Override
