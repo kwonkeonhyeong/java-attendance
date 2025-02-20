@@ -4,7 +4,6 @@ import attendance.dto.AttendanceEditResponse;
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.DangerCrewResponse;
 import attendance.dto.TimeLogResponse;
-import attendance.model.AttendanceAnalyzer;
 import attendance.model.Calender;
 import attendance.model.CrewAttendance;
 import attendance.model.domain.crew.Crew;
@@ -18,13 +17,11 @@ import java.util.stream.Stream;
 
 public class AttendanceService {
     private final AttendanceRepository attendanceRepository;
-    private final AttendanceAnalyzer attendanceAnalyzer;
     private final CrewAttendanceComparator crewAttendanceComparator;
 
-    public AttendanceService(AttendanceRepository attendanceRepository, AttendanceAnalyzer attendanceAnalyzer,
+    public AttendanceService(AttendanceRepository attendanceRepository,
                              CrewAttendanceComparator crewAttendanceComparator) {
         this.attendanceRepository = attendanceRepository;
-        this.attendanceAnalyzer = attendanceAnalyzer;
         this.crewAttendanceComparator = crewAttendanceComparator;
     }
 
@@ -49,7 +46,7 @@ public class AttendanceService {
 
     private List<TimeLogResponse> makeExistsTimeLogResponses(List<LocalDateTime> attendanceLogs) {
         return attendanceLogs.stream()
-                .map(timeLog -> TimeLogResponse.of(timeLog, attendanceAnalyzer))
+                .map(TimeLogResponse::of)
                 .toList();
     }
 
@@ -65,16 +62,16 @@ public class AttendanceService {
                 .toList();
     }
 
-    public List<DangerCrewResponse> getDangerCrews() {
-        return getSortedDangerCrewAttendance().stream()
+    public List<DangerCrewResponse> getRequiresManagementCrews() {
+        return getSortedCrewAttendance().stream()
+                .filter(CrewAttendance::requiresManagement)
                 .map(DangerCrewResponse::from)
                 .toList();
     }
 
-    private List<CrewAttendance> getSortedDangerCrewAttendance() {
+    private List<CrewAttendance> getSortedCrewAttendance() {
         return attendanceRepository.findAllCrews().stream()
-                .map(crew -> CrewAttendance.of(crew, attendanceRepository.findByCrew(crew), attendanceAnalyzer))
-                .filter(CrewAttendance::requiresManagement)
+                .map(crew -> CrewAttendance.of(crew, attendanceRepository.findByCrew(crew)))
                 .sorted(crewAttendanceComparator)
                 .toList();
     }

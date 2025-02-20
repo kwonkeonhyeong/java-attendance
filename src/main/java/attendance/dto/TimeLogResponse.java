@@ -2,7 +2,6 @@ package attendance.dto;
 
 import static attendance.model.AttendanceStatus.ABSENCE;
 
-import attendance.model.AttendanceAnalyzer;
 import attendance.model.AttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -26,8 +25,8 @@ public class TimeLogResponse {
         this.attendanceStatus = attendanceStatus;
     }
 
-    public static TimeLogResponse of(LocalDateTime dateTime, AttendanceAnalyzer attendanceAnalyzer) {
-        return new TimeLogResponse(dateTime, AttendanceStatus.of(dateTime, attendanceAnalyzer));
+    public static TimeLogResponse of(LocalDateTime dateTime) {
+        return new TimeLogResponse(dateTime, AttendanceStatus.from(dateTime));
     }
 
     public static TimeLogResponse of(LocalDate date) {

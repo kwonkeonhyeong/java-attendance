@@ -13,8 +13,8 @@ public class CrewAttendance {
         this.crewAttendanceStatus = crewAttendanceStatus;
     }
 
-    public static CrewAttendance of(Crew crew, Collection<LocalDateTime> times, AttendanceAnalyzer attendanceAnalyzer) {
-        return new CrewAttendance(crew, CrewAttendanceStatus.of(times, attendanceAnalyzer));
+    public static CrewAttendance of(Crew crew, Collection<LocalDateTime> times) {
+        return new CrewAttendance(crew, CrewAttendanceStatus.of(times));
     }
 
     public Crew getCrew() {

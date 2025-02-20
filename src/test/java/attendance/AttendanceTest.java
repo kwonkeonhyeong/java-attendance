@@ -9,7 +9,6 @@ import attendance.dto.AttendanceEditResponse;
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.DangerCrewResponse;
 import attendance.dto.TimeLogResponse;
-import attendance.model.AttendanceAnalyzer;
 import attendance.model.Calender;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.CrewAttendanceComparator;
@@ -32,7 +31,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceTest {
 
-    private static final AttendanceAnalyzer attendanceAnalyzer = new AttendanceAnalyzer();
     private static final CrewAttendanceComparator crewAttendanceComparator = new DefaultCrewAttendanceComparator();
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
@@ -122,8 +120,7 @@ public class AttendanceTest {
     @Test
     void 출석을_수정할_수_있다() {
         AttendanceRepository attendanceRepository = init();
-        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
-                crewAttendanceComparator);
+        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
@@ -139,8 +136,7 @@ public class AttendanceTest {
     @Test
     void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
         AttendanceRepository attendanceRepository = init();
-        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
-                crewAttendanceComparator);
+        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
@@ -155,8 +151,7 @@ public class AttendanceTest {
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
-        AttendanceService attendanceService = new AttendanceService(attendanceRepository, attendanceAnalyzer,
-                crewAttendanceComparator);
+        AttendanceService attendanceService = new AttendanceService(attendanceRepository, crewAttendanceComparator);
         times.forEach(time -> attendanceRepository.save(new Crew(crewName), time));
 
         AttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(new Crew(crewName));
@@ -179,15 +174,14 @@ public class AttendanceTest {
     void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
                                            List<SimpleImmutableEntry<String, String>> expected) {
         AttendanceRepository attendanceRepository = new AttendanceRepository();
-        AttendanceService service = new AttendanceService(attendanceRepository, attendanceAnalyzer,
-                crewAttendanceComparator);
+        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
         attendanceData.forEach(data ->
                 data.times.forEach(
                         time -> attendanceRepository.save(new Crew(data.crewName), time)
                 )
         );
 
-        List<DangerCrewResponse> dangerCrewResponses = service.getDangerCrews();
+        List<DangerCrewResponse> dangerCrewResponses = service.getRequiresManagementCrews();
         List<String> dangerCrewNames = dangerCrewResponses.stream().map(DangerCrewResponse::getName).toList();
 
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());

@@ -19,9 +19,17 @@ public class CrewAttendanceStatus {
         return new CrewAttendanceStatus(absenceCount, lateCount, ManagementStatus.of(absenceCount, lateCount));
     }
 
-    public static CrewAttendanceStatus of(Collection<LocalDateTime> times, AttendanceAnalyzer attendanceAnalyzer) {
-        int absenceCount = (int) times.stream().filter(attendanceAnalyzer::isAbsence).count();
-        int lateCount = (int) times.stream().filter(attendanceAnalyzer::isLate).count();
+    public static CrewAttendanceStatus of(Collection<LocalDateTime> times) {
+        int absenceCount = Math.toIntExact(
+                times.stream()
+                        .filter(time -> AttendanceStatus.from(time) == AttendanceStatus.ABSENCE)
+                        .count()
+        );
+        int lateCount = Math.toIntExact(
+                times.stream()
+                        .filter(time -> AttendanceStatus.from(time) == AttendanceStatus.LATE)
+                        .count()
+        );
 
         return CrewAttendanceStatus.of(absenceCount, lateCount);
     }
