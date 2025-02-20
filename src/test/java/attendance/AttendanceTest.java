@@ -14,7 +14,9 @@ import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.CrewAttendanceComparator;
 import attendance.model.domain.crew.DefaultCrewAttendanceComparator;
 import attendance.model.repository.AttendanceRepository;
+import attendance.model.repository.CrewAttendanceDeserializer;
 import attendance.model.service.AttendanceService;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -35,6 +37,8 @@ public class AttendanceTest {
     private static final String crewName = "pobi";
     private static final LocalDateTime attendanceTime =
             LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(13, 20));
+    private final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
+    private final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances.csv");
 
     static Stream<Arguments> 닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스() {
         return Stream.of(
@@ -120,7 +124,7 @@ public class AttendanceTest {
     @Test
     void 출석을_수정할_수_있다() {
         AttendanceRepository attendanceRepository = init();
-        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
+        AttendanceService service = new AttendanceService(attendanceRepository);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
@@ -136,7 +140,7 @@ public class AttendanceTest {
     @Test
     void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
         AttendanceRepository attendanceRepository = init();
-        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
+        AttendanceService service = new AttendanceService(attendanceRepository);
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
@@ -150,8 +154,9 @@ public class AttendanceTest {
     @ParameterizedTest
     @MethodSource("닉네임을_통해_전날까지의_크루_출석_기록_확인_테스트_케이스")
     void 닉네임을_통해_전날까지의_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount, int nonExistCount) {
-        AttendanceRepository attendanceRepository = new AttendanceRepository();
-        AttendanceService attendanceService = new AttendanceService(attendanceRepository, crewAttendanceComparator);
+        AttendanceRepository attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+                crewAttendanceDataPath);
+        AttendanceService attendanceService = new AttendanceService(attendanceRepository);
         times.forEach(time -> attendanceRepository.save(Crew.from(crewName), time));
 
         CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(Crew.from(crewName));
@@ -173,15 +178,17 @@ public class AttendanceTest {
     @MethodSource("전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트")
     void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
                                            List<SimpleImmutableEntry<String, String>> expected) {
-        AttendanceRepository attendanceRepository = new AttendanceRepository();
-        AttendanceService service = new AttendanceService(attendanceRepository, crewAttendanceComparator);
+        AttendanceRepository attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+                crewAttendanceDataPath);
+        AttendanceService service = new AttendanceService(attendanceRepository);
         attendanceData.forEach(data ->
                 data.times.forEach(
                         time -> attendanceRepository.save(Crew.from(data.crewName), time)
                 )
         );
 
-        List<RequiresManagementCrewResponse> requiresManagementCrewRespons = service.getRequiresManagementCrews();
+        List<RequiresManagementCrewResponse> requiresManagementCrewRespons = service.getRequiresManagementCrews(
+                crewAttendanceComparator);
         List<String> dangerCrewNames = requiresManagementCrewRespons.stream()
                 .map(RequiresManagementCrewResponse::getCrewName).toList();
 
@@ -197,7 +204,8 @@ public class AttendanceTest {
     }
 
     private AttendanceRepository init() {
-        AttendanceRepository attendanceRepository = new AttendanceRepository();
+        AttendanceRepository attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+                crewAttendanceDataPath);
         attendanceRepository.save(Crew.from(crewName), attendanceTime);
         return attendanceRepository;
     }
