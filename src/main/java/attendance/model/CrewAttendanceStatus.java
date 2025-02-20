@@ -11,13 +11,15 @@ public class CrewAttendanceStatus {
     private final Crew crew;
     private final AbsenceCount absenceCount;
     private final LateCount lateCount;
+    private final int attendanceCount;
     private final ManagementStatus managementStatus;
 
     private CrewAttendanceStatus(Crew crew, AbsenceCount absenceCount, LateCount lateCount,
-                                 ManagementStatus managementStatus) {
+                                 int attendanceCount, ManagementStatus managementStatus) {
         this.crew = crew;
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
+        this.attendanceCount = attendanceCount;
         this.managementStatus = managementStatus;
     }
 
@@ -27,7 +29,8 @@ public class CrewAttendanceStatus {
         LateCount lateCount = calculateLateCount(dateTimes);
         ManagementStatus managementStatus = ManagementStatus.of(absenceCount, lateCount);
 
-        return new CrewAttendanceStatus(crew, absenceCount, lateCount, managementStatus);
+        return new CrewAttendanceStatus(crew, absenceCount, lateCount,
+                dateTimes.size() - absenceCount.getValue() - lateCount.getValue(), managementStatus);
     }
 
     private static AbsenceCount calculateAbsenceCount(List<LocalDateTime> dateTimes) {
@@ -70,6 +73,10 @@ public class CrewAttendanceStatus {
 
     public int getLateCount() {
         return lateCount.getValue();
+    }
+
+    public int getAttendanceCount() {
+        return attendanceCount;
     }
 
     public ManagementStatus getManagementStatus() {
