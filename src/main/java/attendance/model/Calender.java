@@ -22,6 +22,7 @@ public enum Calender {
 
     public static List<LocalDate> getNotExistsDatesBeforeToday(List<LocalDate> dates) {
         Set<LocalDate> datesSet = Set.copyOf(dates);
+
         return getDatesBefore(LocalDate.of(2024, 12, 14)).stream()
                 .filter(date -> !datesSet.contains(date))
                 .toList();

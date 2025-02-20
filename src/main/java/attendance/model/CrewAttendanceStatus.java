@@ -1,60 +1,78 @@
 package attendance.model;
 
+import attendance.model.domain.crew.AbsenceCount;
+import attendance.model.domain.crew.Crew;
+import attendance.model.domain.crew.LateCount;
 import java.time.LocalDateTime;
-import java.util.Collection;
+import java.util.List;
 
 public class CrewAttendanceStatus {
 
-    private final int absenceCount;
-    private final int lateCount;
+    private final Crew crew;
+    private final AbsenceCount absenceCount;
+    private final LateCount lateCount;
     private final ManagementStatus managementStatus;
 
-    private CrewAttendanceStatus(int absenceCount, int lateCount, ManagementStatus managementStatus) {
+    private CrewAttendanceStatus(Crew crew, AbsenceCount absenceCount, LateCount lateCount,
+                                 ManagementStatus managementStatus) {
+        this.crew = crew;
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
         this.managementStatus = managementStatus;
     }
 
-    public static CrewAttendanceStatus of(int absenceCount, int lateCount) {
-        return new CrewAttendanceStatus(absenceCount, lateCount, ManagementStatus.of(absenceCount, lateCount));
+    public static CrewAttendanceStatus of(Crew crew, List<LocalDateTime> dateTimes) {
+
+        AbsenceCount absenceCount = calculateAbsenceCount(dateTimes);
+        LateCount lateCount = calculateLateCount(dateTimes);
+        ManagementStatus managementStatus = ManagementStatus.of(absenceCount, lateCount);
+
+        return new CrewAttendanceStatus(crew, absenceCount, lateCount, managementStatus);
     }
 
-    public static CrewAttendanceStatus of(Collection<LocalDateTime> times) {
-        int absenceCount = Math.toIntExact(
-                times.stream()
-                        .filter(time -> AttendanceStatus.from(time) == AttendanceStatus.ABSENCE)
+    private static AbsenceCount calculateAbsenceCount(List<LocalDateTime> dateTimes) {
+        int value = Math.toIntExact(
+                dateTimes.stream()
+                        .filter(dateTime -> AttendanceStatus.from(dateTime) == AttendanceStatus.ABSENCE)
                         .count()
         );
-        int lateCount = Math.toIntExact(
-                times.stream()
-                        .filter(time -> AttendanceStatus.from(time) == AttendanceStatus.LATE)
-                        .count()
-        );
+        return AbsenceCount.from(value);
+    }
 
-        return CrewAttendanceStatus.of(absenceCount, lateCount);
+    private static LateCount calculateLateCount(List<LocalDateTime> dateTimes) {
+        int value = Math.toIntExact(
+                dateTimes.stream()
+                        .filter(dateTime -> AttendanceStatus.from(dateTime) == AttendanceStatus.LATE)
+                        .count()
+        );
+        return LateCount.from(value);
     }
 
     public boolean requiresManagement() {
         return managementStatus.requiresManagement();
     }
 
-    public int getRealAbsenceCount() {
-        return absenceCount + (lateCount / 3);
+    public int getPolicyAppliedAbsenceCount() {
+        return absenceCount.getPolicyAppliedAbsenceCount(lateCount);
     }
 
-    public int getRealLateCount() {
-        return lateCount % 3;
+    public int getPolicyAppliedLateCount() {
+        return lateCount.calculatePolicyAppliedLateCount();
+    }
+
+    public Crew getCrew() {
+        return crew;
     }
 
     public int getAbsenceCount() {
-        return absenceCount;
+        return absenceCount.getValue();
     }
 
     public int getLateCount() {
-        return lateCount;
+        return lateCount.getValue();
     }
 
-    public ManagementStatus getDangerStatus() {
+    public ManagementStatus getManagementStatus() {
         return managementStatus;
     }
 }

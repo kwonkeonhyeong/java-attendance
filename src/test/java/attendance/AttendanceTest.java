@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import attendance.dto.AttendanceEditResponse;
 import attendance.dto.AttendanceLogResponse;
-import attendance.dto.DangerCrewResponse;
-import attendance.dto.TimeLogResponse;
+import attendance.dto.CrewAttendanceLogResponse;
+import attendance.dto.RequiresManagementCrewResponse;
+import attendance.dto.UpdateAttendanceResponse;
 import attendance.model.Calender;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.CrewAttendanceComparator;
@@ -140,10 +140,10 @@ public class AttendanceTest {
 
         LocalDateTime timeToEdit = LocalDateTime.of(LocalDate.of(2024, 12, 14), LocalTime.of(14, 20));
 
-        AttendanceEditResponse attendanceEditResponse = service.updateAttendance(new Crew(crewName), timeToEdit);
+        UpdateAttendanceResponse updateAttendanceResponse = service.updateAttendance(new Crew(crewName), timeToEdit);
 
-        assertThat(attendanceEditResponse.getBefore()).isEqualTo(attendanceTime);
-        assertThat(attendanceEditResponse.getAfter()).isEqualTo(timeToEdit);
+        assertThat(updateAttendanceResponse.getBefore()).isEqualTo(attendanceTime);
+        assertThat(updateAttendanceResponse.getAfter()).isEqualTo(timeToEdit);
     }
 
     // 닉네임을 입력하면 전날까지의 크루 출석 기록을 확인할 수 있다.
@@ -154,14 +154,14 @@ public class AttendanceTest {
         AttendanceService attendanceService = new AttendanceService(attendanceRepository, crewAttendanceComparator);
         times.forEach(time -> attendanceRepository.save(new Crew(crewName), time));
 
-        AttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(new Crew(crewName));
+        CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(new Crew(crewName));
 
         assertAll(
                 () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
-                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getDate)).isSorted(),
-                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getTime)
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getDate)).isSorted(),
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getTime)
                         .filter(Objects::isNull).count()).isEqualTo(nonExistCount),
-                () -> assertThat(attendanceLog.getTimeLogs().stream().map(TimeLogResponse::getTime)
+                () -> assertThat(attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getTime)
                         .filter(Objects::nonNull).count()).isEqualTo(existCount)
         );
     }
@@ -181,14 +181,15 @@ public class AttendanceTest {
                 )
         );
 
-        List<DangerCrewResponse> dangerCrewResponses = service.getRequiresManagementCrews();
-        List<String> dangerCrewNames = dangerCrewResponses.stream().map(DangerCrewResponse::getName).toList();
+        List<RequiresManagementCrewResponse> requiresManagementCrewRespons = service.getRequiresManagementCrews();
+        List<String> dangerCrewNames = requiresManagementCrewRespons.stream()
+                .map(RequiresManagementCrewResponse::getCrewName).toList();
 
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
 
         // 제적, 면담, 경고를 Status 반환해 주는 무언가 구현 (enum) 예상
-        List<SimpleImmutableEntry<String, String>> actual = dangerCrewResponses.stream()
-                .map(value -> new SimpleImmutableEntry<>(value.getName(), value.getDangerStatus()))
+        List<SimpleImmutableEntry<String, String>> actual = requiresManagementCrewRespons.stream()
+                .map(value -> new SimpleImmutableEntry<>(value.getCrewName(), value.getManagementStatus()))
                 .toList();
 
         assertThat(actual).containsExactlyElementsOf(expected);

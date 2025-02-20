@@ -1,8 +1,8 @@
 package attendance.model.domain.crew;
 
-import attendance.model.CrewAttendance;
+import attendance.model.CrewAttendanceStatus;
 import java.util.Comparator;
 
 @FunctionalInterface
-public interface CrewAttendanceComparator extends Comparator<CrewAttendance> {
+public interface CrewAttendanceComparator extends Comparator<CrewAttendanceStatus> {
 }

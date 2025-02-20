@@ -1,27 +1,45 @@
 package attendance.dto;
 
-import attendance.model.domain.crew.Crew;
-import java.util.List;
+import attendance.model.AttendanceStatus;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public class AttendanceLogResponse {
 
-    private final String crewName;
-    private final List<TimeLogResponse> timeLogs;
+    private final LocalDate date;
+    private final LocalTime time;
+    private final AttendanceStatusResponse attendanceStatusResponse;
 
-    private AttendanceLogResponse(String crewName, List<TimeLogResponse> timeLogs) {
-        this.crewName = crewName;
-        this.timeLogs = timeLogs;
+    private AttendanceLogResponse(LocalDateTime dateTime, AttendanceStatusResponse attendanceStatusResponse) {
+        this.date = dateTime.toLocalDate();
+        this.time = dateTime.toLocalTime();
+        this.attendanceStatusResponse = attendanceStatusResponse;
     }
 
-    public static AttendanceLogResponse of(Crew crew, List<TimeLogResponse> timeLogResponses) {
-        return new AttendanceLogResponse(crew.getName(), timeLogResponses);
+    private AttendanceLogResponse(LocalDate date, AttendanceStatusResponse attendanceStatusResponse) {
+        this.date = date;
+        this.time = null;
+        this.attendanceStatusResponse = attendanceStatusResponse;
     }
 
-    public String getCrewName() {
-        return crewName;
+    public static AttendanceLogResponse of(LocalDateTime dateTime, AttendanceStatus attendanceStatus) {
+        return new AttendanceLogResponse(dateTime, AttendanceStatusResponse.from(attendanceStatus));
     }
 
-    public List<TimeLogResponse> getTimeLogs() {
-        return timeLogs;
+    public static AttendanceLogResponse of(LocalDate date, AttendanceStatus attendanceStatus) {
+        return new AttendanceLogResponse(date, AttendanceStatusResponse.from(attendanceStatus));
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public AttendanceStatusResponse getAttendanceStatusResponse() {
+        return attendanceStatusResponse;
     }
 }

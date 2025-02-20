@@ -1,5 +1,8 @@
 package attendance.model;
 
+import attendance.model.domain.crew.AbsenceCount;
+import attendance.model.domain.crew.LateCount;
+
 public enum ManagementStatus {
     EXPULSION("제적"),
     COUNSELING("면담"),
@@ -12,8 +15,8 @@ public enum ManagementStatus {
         this.name = name;
     }
 
-    public static ManagementStatus of(final int absenceCount, final int lateCount) {
-        int realAbsenceCount = getRealAbsenceCount(absenceCount, lateCount);
+    public static ManagementStatus of(final AbsenceCount absenceCount, final LateCount lateCount) {
+        int realAbsenceCount = absenceCount.getPolicyAppliedAbsenceCount(lateCount);
         if (realAbsenceCount > 5) {
             return EXPULSION;
         }
@@ -24,10 +27,6 @@ public enum ManagementStatus {
             return WARNING;
         }
         return NONE;
-    }
-
-    public static int getRealAbsenceCount(final int absenceCount, final int lateCount) {
-        return absenceCount + (lateCount / 3);
     }
 
     public boolean requiresManagement() {

@@ -52,4 +52,8 @@ public enum AttendanceStatus {
     private static boolean isTimeBetween(LocalTime time, LocalTime startTime, LocalTime endTime) {
         return time.isAfter(startTime) && time.isBefore(endTime);
     }
+
+    public String getName() {
+        return name;
+    }
 }
