@@ -17,13 +17,21 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class AttendanceService {
-    private final AttendanceRepository attendanceRepository;
-    private final CrewAttendanceComparator crewAttendanceComparator;
 
-    public AttendanceService(AttendanceRepository attendanceRepository,
-                             CrewAttendanceComparator crewAttendanceComparator) {
+    private final AttendanceRepository attendanceRepository;
+
+    public AttendanceService(AttendanceRepository attendanceRepository) {
         this.attendanceRepository = attendanceRepository;
-        this.crewAttendanceComparator = crewAttendanceComparator;
+    }
+
+    public AttendanceLogResponse attendance(Crew crew, LocalDateTime attendanceTime) {
+        attendanceRepository.save(crew, attendanceTime);
+        return AttendanceLogResponse.of(attendanceTime, AttendanceStatus.from(attendanceTime));
+    }
+
+    public Crew findCrewByName(String crewName) {
+        return attendanceRepository.findCrewByName(crewName)
+                .orElseThrow(() -> new IllegalArgumentException("해당 크루는 존재하지 않습니다."));
     }
 
     public UpdateAttendanceResponse updateAttendance(Crew crew, LocalDateTime updatedTime) {
@@ -32,7 +40,8 @@ public class AttendanceService {
 
         attendanceRepository.update(crew, previousTime, updatedTime);
 
-        return new UpdateAttendanceResponse(previousTime, updatedTime);
+        return UpdateAttendanceResponse.of(previousTime, updatedTime, AttendanceStatus.from(previousTime),
+                AttendanceStatus.from(updatedTime));
     }
 
     public CrewAttendanceLogResponse getAttendanceLog(Crew crew) {
@@ -43,7 +52,11 @@ public class AttendanceService {
                         notExistTimeLogs.stream())
                 .sorted(Comparator.comparing(AttendanceLogResponse::getDate))
                 .toList();
-        return CrewAttendanceLogResponse.of(crew, attendanceLogResponses);
+        return CrewAttendanceLogResponse.of(
+                crew,
+                attendanceLogResponses,
+                CrewAttendanceStatus.of(crew, attendanceRepository.findByCrew(crew)).getManagementStatus()
+        );
     }
 
     private List<AttendanceLogResponse> makeExistsTimeLogResponses(List<LocalDateTime> attendanceLogs) {
@@ -64,14 +77,16 @@ public class AttendanceService {
                 .toList();
     }
 
-    public List<RequiresManagementCrewResponse> getRequiresManagementCrews() {
-        return getSortedCrewAttendance().stream()
+    public List<RequiresManagementCrewResponse> getRequiresManagementCrews(
+            CrewAttendanceComparator crewAttendanceComparator) {
+
+        return getSortedCrewAttendance(crewAttendanceComparator).stream()
                 .filter(CrewAttendanceStatus::requiresManagement)
                 .map(RequiresManagementCrewResponse::from)
                 .toList();
     }
 
-    private List<CrewAttendanceStatus> getSortedCrewAttendance() {
+    private List<CrewAttendanceStatus> getSortedCrewAttendance(CrewAttendanceComparator crewAttendanceComparator) {
         return attendanceRepository.findAllCrews().stream()
                 .map(crew -> CrewAttendanceStatus.of(crew, attendanceRepository.findByCrew(crew)))
                 .sorted(crewAttendanceComparator)
