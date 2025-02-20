@@ -1,17 +1,21 @@
 package attendance.model.repository;
 
 import attendance.model.domain.crew.Crew;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 public class AttendanceRepository {
 
-    public final Map<Crew, List<LocalDateTime>> values = new HashMap<>();
+    private final Map<Crew, List<LocalDateTime>> values;
+
+    public AttendanceRepository(CrewAttendanceDeserializer crewAttendanceDeserializer, Path path) {
+        this.values = crewAttendanceDeserializer.readAll(path);
+    }
 
     public List<LocalDateTime> findByCrew(Crew crew) {
         validateCrewExistence(crew);
