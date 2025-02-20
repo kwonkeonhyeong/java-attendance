@@ -2,18 +2,19 @@ package attendance.model;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Arrays;
 
 public enum AttendanceStatus {
-
-    ABSENCE("결석"),
+    
+    ATTENDANCE("출석"),
     LATE("지각"),
-    ATTENDANCE("출석");
+    ABSENCE("결석");
 
-    private static final LocalTime MONDAY_LATE_TIME = LocalTime.of(13, 6);
-    private static final LocalTime MONDAY_ABSENCE_TIME = LocalTime.of(13, 31);
+    private static final LocalTime MONDAY_LATE_TIME = LocalTime.of(13, 5);
+    private static final LocalTime MONDAY_ABSENCE_TIME = LocalTime.of(13, 30);
 
-    private static final LocalTime WEEKDAY_LATE_TIME = LocalTime.of(10, 6);
-    private static final LocalTime WEEKDAY_ABSENCE_TIME = LocalTime.of(10, 31);
+    private static final LocalTime WEEKDAY_LATE_TIME = LocalTime.of(10, 5);
+    private static final LocalTime WEEKDAY_ABSENCE_TIME = LocalTime.of(10, 30);
 
     private final String name;
 
@@ -29,6 +30,13 @@ public enum AttendanceStatus {
             return LATE;
         }
         return ATTENDANCE;
+    }
+
+    public static AttendanceStatus from(String name) {
+        return Arrays.stream(values())
+                .filter(attendanceStatus -> attendanceStatus.name.equals(name))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("해당하는 출석 상태가 없습니다."));
     }
 
     private static boolean isAbsence(LocalDateTime dateTime) {
