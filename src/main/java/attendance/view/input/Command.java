@@ -7,7 +7,7 @@ public enum Command {
     ATTENDANCE_CHECK("1", "출석 확인"),
     ATTENDANCE_MODIFY("2", "출석 수정"),
     CREW_ATTENDANCE_CHECK("3", "크루별 출석 기록 확인"),
-    EXPELLED_CREW_CHECK("4", "제적 위험자 확인"),
+    EXPULSION_CREW_CHECK("4", "제적 위험자 확인"),
     QUIT("Q", "종료");
 
     private final String option;
