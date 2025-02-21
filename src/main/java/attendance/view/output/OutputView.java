@@ -2,9 +2,11 @@ package attendance.view.output;
 
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.CrewAttendanceLogResponse;
+import attendance.dto.RequiresManagementCrewResponse;
 import attendance.dto.UpdateAttendanceResponse;
 import attendance.view.input.KoreaDayOfWeek;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Map;
 
 public class OutputView {
@@ -41,6 +43,24 @@ public class OutputView {
         attendanceStatusStatistics.forEach((status, count) -> System.out.printf("%s: %d회%n", status, count));
 
         System.out.printf("%n%s 대상자입니다.%n", crewAttendanceLogResponse.getManagementStatus());
+    }
+
+    public void printManagementCrews(List<RequiresManagementCrewResponse> responses) {
+        System.out.println("\n제적 위험자 조회 결과");
+        for (RequiresManagementCrewResponse response : responses) {
+            System.out.println(formatManagementCrew(response));
+        }
+        System.out.println();
+    }
+
+    private String formatManagementCrew(RequiresManagementCrewResponse response) {
+        return String.format(
+            "- %s: 결석 %d회, 지각 %d회 (%s)",
+            response.getCrewName(),
+            response.getAbsenceCount(),
+            response.getLateCount(),
+            response.getManagementStatus()
+        );
     }
 
     public String formatTime(LocalTime time) {

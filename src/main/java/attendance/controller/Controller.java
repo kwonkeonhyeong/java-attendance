@@ -1,6 +1,7 @@
 package attendance.controller;
 
 import attendance.dto.AttendanceLogResponse;
+import attendance.dto.RequiresManagementCrewResponse;
 import attendance.dto.UpdateAttendanceResponse;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.CrewAttendanceComparator;
@@ -13,6 +14,7 @@ import attendance.view.input.InputView;
 import attendance.view.output.OutputView;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class Controller {
 
@@ -43,6 +45,11 @@ public class Controller {
             if (command == Command.CREW_ATTENDANCE_CHECK) {
                 checkCrewAttendance();
             }
+
+            if (command == Command.EXPULSION_CREW_CHECK) {
+                searchManagementCrews();
+            }
+
         } while (command != Command.QUIT);
 
     }
@@ -89,4 +96,11 @@ public class Controller {
             System.out.println(runtimeException.getMessage());
         }
     }
+
+    public void searchManagementCrews() {
+        List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
+            crewAttendanceComparator);
+        outputView.printManagementCrews(requiresManagementCrewResponses);
+    }
+
 }
