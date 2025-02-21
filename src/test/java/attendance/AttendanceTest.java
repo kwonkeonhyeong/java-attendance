@@ -187,15 +187,15 @@ public class AttendanceTest {
                 )
         );
 
-        List<RequiresManagementCrewResponse> requiresManagementCrewRespons = service.getRequiresManagementCrews(
+        List<RequiresManagementCrewResponse> requiresManagementCrewResponses = service.getRequiresManagementCrews(
                 crewAttendanceComparator);
-        List<String> dangerCrewNames = requiresManagementCrewRespons.stream()
+        List<String> dangerCrewNames = requiresManagementCrewResponses.stream()
                 .map(RequiresManagementCrewResponse::getCrewName).toList();
 
         assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
 
         // 제적, 면담, 경고를 Status 반환해 주는 무언가 구현 (enum) 예상
-        List<SimpleImmutableEntry<String, String>> actual = requiresManagementCrewRespons.stream()
+        List<SimpleImmutableEntry<String, String>> actual = requiresManagementCrewResponses.stream()
                 .map(value -> new SimpleImmutableEntry<>(value.getCrewName(), value.getManagementStatus()))
                 .toList();
 
