@@ -6,8 +6,10 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.CrewAttendanceLogResponse;
+import attendance.dto.RequiresManagementCrewResponse;
 import attendance.dto.UpdateAttendanceResponse;
 import attendance.model.domain.crew.Crew;
+import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
 import attendance.model.domain.log.TimeLogs;
 import attendance.model.repository.AttendanceRepository;
 import attendance.model.repository.CrewAttendanceDeserializer;
@@ -15,7 +17,6 @@ import attendance.model.service.AttendanceService;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -159,47 +160,43 @@ public class AttendanceTest {
         )
     );
   }
-  /*
-    // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
-    // 제적 위험자는 제적 대상자, 면담 대상자, 경고 대상자순으로 출력하며, 대상 항목별 정렬 순서는 지각을 결석으로 간주하여 내림차순한다.
-    // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.
-    @ParameterizedTest
-    @MethodSource("전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환_테스트")
-    void 전날까지의_크루_출석_기록을_통해_제적_위험자_정렬해서_반환(List<AttendanceData> attendanceData,
-                                           List<SimpleImmutableEntry<String, String>> expected) {
-        AttendanceRepository attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
-                crewAttendanceDataPath);
-        AttendanceService service = new AttendanceService(attendanceRepository);
-        attendanceData.forEach(data ->
-                data.times.forEach(
-                        time -> attendanceRepository.save(Crew.from(data.crewName), time)
-                )
+
+  @ParameterizedTest
+  @MethodSource("getManagementCrewExpectedValue")
+  void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount, String managementStatus ) {
+
+    List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
+        new DefaultCrewAttendanceComparator());
+
+    for (RequiresManagementCrewResponse requiresManagementCrewResponse : requiresManagementCrewResponses) {
+      if(requiresManagementCrewResponse.getCrewName().equals(name)) {
+        assertAll(
+            () -> assertThat(requiresManagementCrewResponse.getCrewName()).isEqualTo(name),
+            () -> assertThat(requiresManagementCrewResponse.getLateCount()).isEqualTo(lateCount),
+            () -> assertThat(requiresManagementCrewResponse.getAbsenceCount()).isEqualTo(absenceCount),
+            () -> assertThat(requiresManagementCrewResponse.getManagementStatus()).isEqualTo(managementStatus)
         );
-
-        List<RequiresManagementCrewResponse> requiresManagementCrewResponses = service.getRequiresManagementCrews(
-                crewAttendanceComparator);
-        List<String> dangerCrewNames = requiresManagementCrewResponses.stream()
-                .map(RequiresManagementCrewResponse::getCrewName).toList();
-
-        assertThat(dangerCrewNames).containsExactlyElementsOf(expected.stream().map(Entry::getKey).toList());
-
-        // 제적, 면담, 경고를 Status 반환해 주는 무언가 구현 (enum) 예상
-        List<SimpleImmutableEntry<String, String>> actual = requiresManagementCrewResponses.stream()
-                .map(value -> new SimpleImmutableEntry<>(value.getCrewName(), value.getManagementStatus()))
-                .toList();
-
-        assertThat(actual).containsExactlyElementsOf(expected);
-
+      }
     }
-
-    private static class AttendanceData {
-        private final String crewName;
-        private final List<LocalDateTime> times;
-
-        public AttendanceData(String crewName, List<LocalDateTime> absenceTimes, List<LocalDateTime> lateTimes) {
-            this.crewName = crewName;
-            this.times = new LinkedList<>(absenceTimes);
-            this.times.addAll(lateTimes);
-        }
-    }*/
   }
+
+  static Stream<Arguments> getManagementCrewExpectedValue() {
+    return Stream.of(
+        Arguments.arguments(
+            "빙티", 4, 3, "면담"
+        ),
+        Arguments.arguments(
+            "이든", 5, 2, "면담"
+        ),
+        Arguments.arguments(
+            "빙봉", 6, 1, "면담"
+        ),
+        Arguments.arguments(
+            "쿠키", 3, 2, "면담"
+        ),
+        Arguments.arguments(
+            "짱수", 0, 2, "경고"
+        )
+    );
+  }
+}
