@@ -163,18 +163,21 @@ public class AttendanceTest {
 
   @ParameterizedTest
   @MethodSource("getManagementCrewExpectedValue")
-  void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount, String managementStatus ) {
+  void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount,
+      String managementStatus) {
 
     List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
         new DefaultCrewAttendanceComparator());
 
     for (RequiresManagementCrewResponse requiresManagementCrewResponse : requiresManagementCrewResponses) {
-      if(requiresManagementCrewResponse.getCrewName().equals(name)) {
+      if (requiresManagementCrewResponse.getCrewName().equals(name)) {
         assertAll(
             () -> assertThat(requiresManagementCrewResponse.getCrewName()).isEqualTo(name),
             () -> assertThat(requiresManagementCrewResponse.getLateCount()).isEqualTo(lateCount),
-            () -> assertThat(requiresManagementCrewResponse.getAbsenceCount()).isEqualTo(absenceCount),
-            () -> assertThat(requiresManagementCrewResponse.getManagementStatus()).isEqualTo(managementStatus)
+            () -> assertThat(requiresManagementCrewResponse.getAbsenceCount()).isEqualTo(
+                absenceCount),
+            () -> assertThat(requiresManagementCrewResponse.getManagementStatus()).isEqualTo(
+                managementStatus)
         );
       }
     }
