@@ -44,7 +44,7 @@ public class CrewAttendanceDeserializer {
     String datetime = line.split(",")[1];
     LocalDateTime parsedDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         .parse(datetime, LocalDateTime::from);
-    return new SimpleImmutableEntry<>(Crew.from(line.split(",")[0]), TimeLog.from(parsedDateTime));
+    return new SimpleImmutableEntry<>(new Crew(line.split(",")[0]), TimeLog.from(parsedDateTime));
   }
 
 }

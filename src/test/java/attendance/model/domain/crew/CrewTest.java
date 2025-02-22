@@ -13,7 +13,7 @@ class CrewTest {
   @ParameterizedTest
   @ValueSource(strings = {"히","히히히히히"})
   void crewNameTest(String name) {
-    Assertions.assertThatThrownBy(() -> Crew.from(""))
+    Assertions.assertThatThrownBy(() -> new Crew(name))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("크루 이름은 2 ~ 4글자 사이여야 합니다");
   }

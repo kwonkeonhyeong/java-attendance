@@ -42,7 +42,7 @@ public class AttendanceTest {
   @Test
   void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
 
-    Crew crew = Crew.from("이든");
+    Crew crew = new Crew("이든");
 
     LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 14, 10, 3);
 
@@ -73,7 +73,7 @@ public class AttendanceTest {
   @Test
   void 이미_출석한_경우_다시_출석할_수_없으며_수정_기능을_이용하도록_안내한다() {
 
-    Crew crew = Crew.from("이든");
+    Crew crew = new Crew("이든");
 
     LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 14, 10, 3);
 
@@ -88,7 +88,7 @@ public class AttendanceTest {
   @Test
   void 출석을_수정할_수_있다() {
 
-    Crew crew = Crew.from("이든");
+    Crew crew = new Crew("이든");
 
     LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 14, 14, 20);
 
@@ -107,7 +107,7 @@ public class AttendanceTest {
   @Test
   void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
 
-    Crew crew = Crew.from("이든");
+    Crew crew = new Crew("이든");
 
     LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 14, 10, 20);
 

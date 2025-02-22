@@ -4,18 +4,15 @@ import java.util.Objects;
 
 public class Crew {
 
-  private final CrewName name;
+  private final String name;
 
-  private Crew(CrewName name) {
+  public Crew(String name) {
+    validate(name);
     this.name = name;
   }
 
-  public static Crew from(String name) {
-    return new Crew(CrewName.from(name));
-  }
-
   public String getName() {
-    return name.getValue();
+    return name;
   }
 
   @Override
@@ -37,6 +34,12 @@ public class Crew {
     return "Crew{" +
         "name='" + name + '\'' +
         '}';
+  }
+
+  private void validate(String value) {
+    if (value.length() < 2 || value.length() > 4) {
+      throw new IllegalArgumentException("크루 이름은 2 ~ 4글자 사이여야 합니다");
+    }
   }
 
 }
