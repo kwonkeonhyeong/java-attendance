@@ -42,7 +42,7 @@ public class CrewName {
 
   private void validate(String value) {
     if (value.length() < 2 || value.length() > 4) {
-      throw new IllegalArgumentException("크루 이름은 2 ~ 4글자 사이여야 합니다.");
+      throw new IllegalArgumentException("크루 이름은 2 ~ 4글자 사이여야 합니다");
     }
   }
 
