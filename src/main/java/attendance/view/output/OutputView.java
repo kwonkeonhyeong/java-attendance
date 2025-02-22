@@ -17,7 +17,7 @@ public class OutputView {
                 response.getDate().getDayOfMonth(),
                 KoreaDayOfWeek.from(response.getDate().getDayOfWeek()).getName(),
                 formatTime(response.getTime()),
-                response.getAttendanceStatusResponse().getAttendanceStatus());
+                response.getAttendanceStatus());
         System.out.println(message);
     }
 
@@ -37,12 +37,14 @@ public class OutputView {
         System.out.printf("이번 달 %s의 출석 기록입니다.%n%n", crewAttendanceLogResponse.getCrewName());
 
         crewAttendanceLogResponse.getTimeLogs().forEach(this::printAttendanceLog);
-
-        Map<String, Integer> attendanceStatusStatistics = crewAttendanceLogResponse.getAttendanceStatusStatistics();
         System.out.println();
-        attendanceStatusStatistics.forEach((status, count) -> System.out.printf("%s: %d회%n", status, count));
+        System.out.printf("출석: %d회%n", crewAttendanceLogResponse.getAttendanceCount());
+        System.out.printf("지각: %d회%n", crewAttendanceLogResponse.getLateCount());
+        System.out.printf("결석: %d회%n", crewAttendanceLogResponse.getAbsenceCount());
 
-        System.out.printf("%n%s 대상자입니다.%n", crewAttendanceLogResponse.getManagementStatus());
+        if (!crewAttendanceLogResponse.getManagementStatus().equals("일반")) {
+            System.out.printf("%n%s 대상자입니다.%n", crewAttendanceLogResponse.getManagementStatus());
+        }
     }
 
     public void printManagementCrews(List<RequiresManagementCrewResponse> responses) {

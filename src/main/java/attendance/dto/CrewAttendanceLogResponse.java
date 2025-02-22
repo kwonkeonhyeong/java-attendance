@@ -1,51 +1,61 @@
 package attendance.dto;
 
-import attendance.model.AttendanceStatus;
-import attendance.model.ManagementStatus;
+import attendance.model.domain.crew.AbsenceCount;
+import attendance.model.domain.crew.AttendanceCount;
+import attendance.model.domain.crew.LateCount;
+import attendance.model.domain.crew.ManagementStatus;
 import attendance.model.domain.crew.Crew;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CrewAttendanceLogResponse {
 
-    private final String crewName;
-    private final List<AttendanceLogResponse> timeLogs;
-    private final String managementStatus;
+  private final String crewName;
+  private final int attendanceCount;
+  private final int lateCount;
+  private final int AbsenceCount;
+  private final List<AttendanceLogResponse> timeLogs;
+  private final String managementStatus;
 
-    private CrewAttendanceLogResponse(String crewName, List<AttendanceLogResponse> timeLogs, String managementStatus) {
-        this.crewName = crewName;
-        this.timeLogs = timeLogs;
-        this.managementStatus = managementStatus;
-    }
+  public CrewAttendanceLogResponse(String crewName, int attendanceCount, int lateCount,
+      int absenceCount, List<AttendanceLogResponse> timeLogs, String managementStatus) {
+    this.crewName = crewName;
+    this.attendanceCount = attendanceCount;
+    this.lateCount = lateCount;
+    AbsenceCount = absenceCount;
+    this.timeLogs = timeLogs;
+    this.managementStatus = managementStatus;
+  }
 
-    public static CrewAttendanceLogResponse of(Crew crew, List<AttendanceLogResponse> attendanceLogResponse,
-                                               ManagementStatus managementStatus) {
-        return new CrewAttendanceLogResponse(crew.getName(), attendanceLogResponse, managementStatus.getName());
-    }
+  public static CrewAttendanceLogResponse of(Crew crew, AttendanceCount attendanceCount,
+      LateCount lateCount, AbsenceCount absenceCount,
+      List<AttendanceLogResponse> attendanceLogResponse,
+      ManagementStatus managementStatus) {
+    return new CrewAttendanceLogResponse(crew.getName(), attendanceCount.getValue(),
+        lateCount.getValue(), absenceCount.getValue(), attendanceLogResponse,
+        managementStatus.getName());
+  }
 
-    public String getCrewName() {
-        return crewName;
-    }
+  public String getCrewName() {
+    return crewName;
+  }
 
-    public List<AttendanceLogResponse> getTimeLogs() {
-        return timeLogs;
-    }
+  public int getAttendanceCount() {
+    return attendanceCount;
+  }
 
-    public String getManagementStatus() {
-        return managementStatus;
-    }
+  public int getLateCount() {
+    return lateCount;
+  }
 
-    public Map<String, Integer> getAttendanceStatusStatistics() {
-        return Arrays.stream(AttendanceStatus.values())
-                .collect(Collectors.toMap(
-                        AttendanceStatus::getName,
-                        status -> (int) timeLogs.stream()
-                                .filter(timeLog -> AttendanceStatus.from(
-                                        timeLog.getAttendanceStatusResponse().getAttendanceStatus()) == status)
-                                .count(),
-                        (e1, e2) -> e1, LinkedHashMap::new));
-    }
+  public int getAbsenceCount() {
+    return AbsenceCount;
+  }
+
+  public List<AttendanceLogResponse> getTimeLogs() {
+    return timeLogs;
+  }
+
+  public String getManagementStatus() {
+    return managementStatus;
+  }
 }

@@ -1,6 +1,6 @@
-package attendance.model.domain.crew;
+package attendance.model.domain.crew.comprator;
 
-import attendance.model.CrewAttendanceStatus;
+import attendance.model.domain.crew.CrewAttendanceStatus;
 import java.util.Comparator;
 
 @FunctionalInterface

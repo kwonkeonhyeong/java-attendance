@@ -1,0 +1,128 @@
+package attendance.model.domain.log;
+
+import attendance.dto.AttendanceLogResponse;
+import attendance.model.domain.crew.AttendanceStatus;
+import attendance.model.domain.calender.Calender;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Comparator;
+import java.util.Objects;
+
+public class TimeLog implements Comparator<TimeLog> {
+
+  private static final LocalTime MONDAY_LATE_TIME = LocalTime.of(13, 5);
+  private static final LocalTime MONDAY_ABSENCE_TIME = LocalTime.of(13, 30);
+
+  private static final LocalTime WEEKDAY_LATE_TIME = LocalTime.of(10, 5);
+  private static final LocalTime WEEKDAY_ABSENCE_TIME = LocalTime.of(10, 30);
+
+  private final LocalDate date;
+  private final LocalTime time;
+
+  private TimeLog(LocalDate date, LocalTime time) {
+    this.date = date;
+    this.time = time;
+  }
+
+  public static TimeLog of(LocalDate localDate, LocalTime localTime) {
+    return new TimeLog(localDate, localTime);
+  }
+
+  public static TimeLog from(LocalDateTime dateTime) {
+    return new TimeLog(dateTime.toLocalDate(), dateTime.toLocalTime());
+  }
+
+  public boolean isSame(LocalDateTime dateTime) {
+    if(time == null) {
+      return false;
+    }
+    return getDateTime().equals(dateTime);
+  }
+
+  public boolean isSame(LocalDate date) {
+    return this.date.equals(date);
+  }
+
+  public LocalDate getDate() {
+    return date;
+  }
+
+  public LocalTime getTime() {
+    return time;
+  }
+
+  public LocalDateTime getDateTime() {
+    if(time == null) {
+      throw new IllegalStateException("출석 시간이 존재하지 않습니다.");
+    }
+    return LocalDateTime.of(date, time);
+  }
+
+  public AttendanceStatus getAttendanceStatus() {
+    if (time == null) {
+      return AttendanceStatus.ABSENCE;
+    }
+    if (isAbsence(getDateTime())) {
+      return AttendanceStatus.ABSENCE;
+    }
+    if (isLate(getDateTime())) {
+      return AttendanceStatus.LATE;
+    }
+    return AttendanceStatus.ATTENDANCE;
+  }
+
+  public AttendanceLogResponse getAttendanceLogResponse() {
+    return new AttendanceLogResponse(date, time, getAttendanceStatus().getName());
+  }
+
+  private boolean isAbsence(LocalDateTime dateTime) {
+    if (Calender.isMonday(dateTime.toLocalDate())) {
+      return isTimeAfter(dateTime.toLocalTime(), MONDAY_ABSENCE_TIME);
+    }
+    return isTimeAfter(dateTime.toLocalTime(), WEEKDAY_ABSENCE_TIME);
+  }
+
+  private boolean isLate(LocalDateTime dateTime) {
+    if (Calender.isMonday(dateTime.toLocalDate())) {
+      return isTimeBetween(dateTime.toLocalTime(), MONDAY_LATE_TIME, MONDAY_ABSENCE_TIME.plusMinutes(1));
+    }
+    return isTimeBetween(dateTime.toLocalTime(), WEEKDAY_LATE_TIME, WEEKDAY_ABSENCE_TIME.plusMinutes(1));
+  }
+
+  private boolean isTimeAfter(LocalTime time, LocalTime baseTime) {
+    return time.isAfter(baseTime);
+  }
+
+  private boolean isTimeBetween(LocalTime time, LocalTime startTime, LocalTime endTime) {
+    return time.isAfter(startTime) && time.isBefore(endTime);
+  }
+
+  @Override
+  public int compare(TimeLog o1, TimeLog o2) {
+    return o1.date.compareTo(o2.date);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TimeLog timeLog = (TimeLog) o;
+    return Objects.equals(date, timeLog.date) && Objects.equals(time,
+        timeLog.time);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(date, time);
+  }
+
+  @Override
+  public String toString() {
+    return "TimeLog{" +
+        "date=" + date +
+        ", time=" + time +
+        '}';
+  }
+}

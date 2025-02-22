@@ -1,6 +1,5 @@
 package attendance.dto;
 
-import attendance.model.AttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -9,26 +8,18 @@ public class AttendanceLogResponse {
 
     private final LocalDate date;
     private final LocalTime time;
-    private final AttendanceStatusResponse attendanceStatusResponse;
+    private final String attendanceStatus;
 
-    private AttendanceLogResponse(LocalDateTime dateTime, AttendanceStatusResponse attendanceStatusResponse) {
+    public AttendanceLogResponse(LocalDateTime dateTime, String attendanceStatus) {
         this.date = dateTime.toLocalDate();
         this.time = dateTime.toLocalTime();
-        this.attendanceStatusResponse = attendanceStatusResponse;
+        this.attendanceStatus = attendanceStatus;
     }
 
-    private AttendanceLogResponse(LocalDate date, AttendanceStatusResponse attendanceStatusResponse) {
+    public AttendanceLogResponse(LocalDate date, LocalTime time, String attendanceStatus) {
         this.date = date;
-        this.time = null;
-        this.attendanceStatusResponse = attendanceStatusResponse;
-    }
-
-    public static AttendanceLogResponse of(LocalDateTime dateTime, AttendanceStatus attendanceStatus) {
-        return new AttendanceLogResponse(dateTime, AttendanceStatusResponse.from(attendanceStatus));
-    }
-
-    public static AttendanceLogResponse of(LocalDate date, AttendanceStatus attendanceStatus) {
-        return new AttendanceLogResponse(date, AttendanceStatusResponse.from(attendanceStatus));
+        this.time = time;
+        this.attendanceStatus = attendanceStatus;
     }
 
     public LocalDate getDate() {
@@ -39,7 +30,7 @@ public class AttendanceLogResponse {
         return time;
     }
 
-    public AttendanceStatusResponse getAttendanceStatusResponse() {
-        return attendanceStatusResponse;
+    public String getAttendanceStatus() {
+        return attendanceStatus;
     }
 }

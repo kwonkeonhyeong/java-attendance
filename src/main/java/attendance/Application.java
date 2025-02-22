@@ -1,12 +1,12 @@
 package attendance;
 
-import attendance.controller.Controller;
+import attendance.controller.AttendanceController;
 
 public class Application {
 
     public static void main(String[] args) {
 
-        Controller controller = new Controller();
-        controller.run();
+        AttendanceController attendanceController = new AttendanceController();
+        attendanceController.run();
     }
 }

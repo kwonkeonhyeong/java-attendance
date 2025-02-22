@@ -7,6 +7,7 @@ import attendance.dto.AttendanceLogResponse;
 import attendance.dto.CrewAttendanceLogResponse;
 import attendance.dto.UpdateAttendanceResponse;
 import attendance.model.domain.crew.Crew;
+import attendance.model.domain.log.TimeLogs;
 import attendance.model.repository.AttendanceRepository;
 import attendance.model.repository.CrewAttendanceDeserializer;
 import attendance.model.service.AttendanceService;
@@ -40,9 +41,9 @@ public class AttendanceTest {
 
     attendanceService.attendance(crew, localDateTime);
 
-    List<LocalDateTime> values = attendanceRepository.findByCrew(crew);
+    TimeLogs values = attendanceRepository.findTimeLogsByCrew(crew);
 
-    assertThat(values).contains(localDateTime);
+    assertThat(values.isContain(localDateTime)).isTrue();
   }
 
   // 출석 기록을 확인할 수 있다.
@@ -51,9 +52,7 @@ public class AttendanceTest {
 
     String crewName = "이든";
 
-    Crew crew = Crew.from(crewName);
-
-    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(crew);
+    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(crewName);
 
     List<AttendanceLogResponse> searchTimeLogs = attendanceLog.getTimeLogs();
 
@@ -88,13 +87,13 @@ public class AttendanceTest {
 
     attendanceService.attendance(crew, attendanceTime);
 
-    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 14, 14, 20);
+    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 14, 14, 30);
 
     attendanceService.updateAttendance(crew, timeToEdit);
 
-    List<LocalDateTime> values = attendanceRepository.findByCrew(crew);
+    TimeLogs values = attendanceRepository.findTimeLogsByCrew(crew);
 
-    assertThat(values).contains(timeToEdit);
+    assertThat(values.isContain(timeToEdit)).isTrue();
   }
 
   // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.

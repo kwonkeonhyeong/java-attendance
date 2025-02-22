@@ -1,6 +1,6 @@
 package attendance.dto;
 
-import attendance.model.CrewAttendanceStatus;
+import attendance.model.domain.crew.CrewAttendanceStatus;
 
 public class RequiresManagementCrewResponse {
     private final String crewName;

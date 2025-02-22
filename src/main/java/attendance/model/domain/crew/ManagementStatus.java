@@ -1,7 +1,4 @@
-package attendance.model;
-
-import attendance.model.domain.crew.AbsenceCount;
-import attendance.model.domain.crew.LateCount;
+package attendance.model.domain.crew;
 
 public enum ManagementStatus {
     EXPULSION("제적"),
