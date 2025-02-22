@@ -2,6 +2,7 @@ package attendance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.CrewAttendanceLogResponse;
@@ -14,8 +15,13 @@ import attendance.model.service.AttendanceService;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceTest {
 
@@ -30,8 +36,8 @@ public class AttendanceTest {
         crewAttendanceDataPath);
     attendanceService = new AttendanceService(attendanceRepository);
   }
-  // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
 
+  // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
   @Test
   void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
 
@@ -115,25 +121,45 @@ public class AttendanceTest {
     assertThat(updateAttendanceResponse.getAfter()).isEqualTo(timeToEdit);
   }
 
-  /*
   // 닉네임을 입력하여 크루 출석 기록을 확인할 수 있다.
-  void 닉네임을_입력하여_크루_출석_기록_확인(String crewName, List<LocalDateTime> times, int existCount,
-      int nonExistCount) {
+  @ParameterizedTest
+  @MethodSource("getCrewAttendanceLogExpectedValue")
+  void 닉네임을_입력하여_크루_출석_기록_확인(String name, int attendanceCount, int lateCount, int absenceCount,
+      String managementStatus) {
 
-    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(
-        Crew.from(crewName));
+    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(name);
 
     assertAll(
-        () -> assertThat(attendanceLog.getCrewName()).isEqualTo(crewName),
+        () -> assertThat(attendanceLog.getCrewName()).isEqualTo(name),
+        () -> assertThat(attendanceLog.getAttendanceCount()).isEqualTo(attendanceCount),
+        () -> assertThat(attendanceLog.getLateCount()).isEqualTo(lateCount),
+        () -> assertThat(attendanceLog.getAbsenceCount()).isEqualTo(absenceCount),
+        () -> assertThat(attendanceLog.getManagementStatus()).isEqualTo(managementStatus),
         () -> assertThat(
-            attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getDate)).isSorted(),
-        () -> assertThat(attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getTime)
-            .filter(Objects::isNull).count()).isEqualTo(nonExistCount),
-        () -> assertThat(attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getTime)
-            .filter(Objects::nonNull).count()).isEqualTo(existCount)
+            attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getDate)).isSorted()
     );
   }
 
+  static Stream<Arguments> getCrewAttendanceLogExpectedValue() {
+    return Stream.of(
+        Arguments.arguments(
+            "빙티", 3, 4, 3, "면담"
+        ),
+        Arguments.arguments(
+            "이든", 3, 5, 2, "면담"
+        ),
+        Arguments.arguments(
+            "빙봉", 3, 6, 1, "면담"
+        ),
+        Arguments.arguments(
+            "쿠키", 5, 3, 2, "면담"
+        ),
+        Arguments.arguments(
+            "짱수", 8, 0, 2, "경고"
+        )
+    );
+  }
+  /*
     // 전날까지의 크루 출석 기록을 바탕으로 제적 위험자를 파악한다.
     // 제적 위험자는 제적 대상자, 면담 대상자, 경고 대상자순으로 출력하며, 대상 항목별 정렬 순서는 지각을 결석으로 간주하여 내림차순한다.
     // 출석 상태가 같으면 닉네임으로 오름차순 정렬한다.

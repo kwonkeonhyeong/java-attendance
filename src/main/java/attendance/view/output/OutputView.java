@@ -43,7 +43,7 @@ public class OutputView {
         System.out.printf("결석: %d회%n", crewAttendanceLogResponse.getAbsenceCount());
 
         if (!crewAttendanceLogResponse.getManagementStatus().equals("일반")) {
-            System.out.printf("%n%s 대상자입니다.%n", crewAttendanceLogResponse.getManagementStatus());
+            System.out.printf("%n%s 대상자입니다.%n%n", crewAttendanceLogResponse.getManagementStatus());
         }
     }
 

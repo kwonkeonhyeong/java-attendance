@@ -104,7 +104,7 @@ public class TimeLogs {
   public AttendanceCount calculateAttendanceCount() {
     int value = Math.toIntExact(
         logs.stream()
-            .filter(log -> log.getAttendanceStatus() == AttendanceStatus.LATE)
+            .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ATTENDANCE)
             .count()
     );
     return AttendanceCount.from(value);
