@@ -61,4 +61,5 @@ public class InputView {
                 dayOfWeek.getName()
         );
     }
+
 }

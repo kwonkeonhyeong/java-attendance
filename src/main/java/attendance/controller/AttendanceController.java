@@ -20,7 +20,6 @@ public class AttendanceController {
 
   private final InputView inputView = new InputView();
   private final OutputView outputView = new OutputView();
-
   private final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
   private final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances.csv");
   private final AttendanceRepository attendanceRepository = new AttendanceRepository(
@@ -30,7 +29,6 @@ public class AttendanceController {
   private final CrewAttendanceComparator crewAttendanceComparator = new DefaultCrewAttendanceComparator();
 
   public void run() {
-
     Command command;
     do {
       command = inputView.inputCommand();
@@ -72,7 +70,7 @@ public class AttendanceController {
 
   public void updateAttendance() {
     try {
-      String crewName = inputView.inputNickname();
+      String crewName = inputView.inputUpdateCrewName();
       Crew crew = attendanceService.findCrewByName(crewName);
 
       LocalDateTime updatedTime = LocalDateTime.of(inputView.inputUpdateAttendanceDate(),

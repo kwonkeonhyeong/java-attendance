@@ -46,5 +46,6 @@ public class CrewAttendanceDeserializer {
         .parse(datetime, LocalDateTime::from);
     return new SimpleImmutableEntry<>(Crew.from(line.split(",")[0]), TimeLog.from(parsedDateTime));
   }
+
 }
 

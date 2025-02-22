@@ -14,4 +14,5 @@ public class DefaultCrewAttendanceComparator implements CrewAttendanceComparator
         }
         return o2.getPolicyAppliedAbsenceCount() - o1.getPolicyAppliedAbsenceCount();
     }
+
 }

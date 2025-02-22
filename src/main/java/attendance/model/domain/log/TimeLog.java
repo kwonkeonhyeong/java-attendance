@@ -33,23 +33,8 @@ public class TimeLog implements Comparator<TimeLog> {
     return new TimeLog(dateTime.toLocalDate(), dateTime.toLocalTime());
   }
 
-  public boolean isSame(LocalDateTime dateTime) {
-    if(time == null) {
-      return false;
-    }
-    return getDateTime().equals(dateTime);
-  }
-
   public boolean isSame(LocalDate date) {
     return this.date.equals(date);
-  }
-
-  public LocalDate getDate() {
-    return date;
-  }
-
-  public LocalTime getTime() {
-    return time;
   }
 
   public LocalDateTime getDateTime() {
@@ -76,26 +61,12 @@ public class TimeLog implements Comparator<TimeLog> {
     return new AttendanceLogResponse(date, time, getAttendanceStatus().getName());
   }
 
-  private boolean isAbsence(LocalDateTime dateTime) {
-    if (Calender.isMonday(dateTime.toLocalDate())) {
-      return isTimeAfter(dateTime.toLocalTime(), MONDAY_ABSENCE_TIME);
-    }
-    return isTimeAfter(dateTime.toLocalTime(), WEEKDAY_ABSENCE_TIME);
+  public LocalDate getDate() {
+    return date;
   }
 
-  private boolean isLate(LocalDateTime dateTime) {
-    if (Calender.isMonday(dateTime.toLocalDate())) {
-      return isTimeBetween(dateTime.toLocalTime(), MONDAY_LATE_TIME, MONDAY_ABSENCE_TIME.plusMinutes(1));
-    }
-    return isTimeBetween(dateTime.toLocalTime(), WEEKDAY_LATE_TIME, WEEKDAY_ABSENCE_TIME.plusMinutes(1));
-  }
-
-  private boolean isTimeAfter(LocalTime time, LocalTime baseTime) {
-    return time.isAfter(baseTime);
-  }
-
-  private boolean isTimeBetween(LocalTime time, LocalTime startTime, LocalTime endTime) {
-    return time.isAfter(startTime) && time.isBefore(endTime);
+  public LocalTime getTime() {
+    return time;
   }
 
   @Override
@@ -125,4 +96,27 @@ public class TimeLog implements Comparator<TimeLog> {
         ", time=" + time +
         '}';
   }
+
+  private boolean isAbsence(LocalDateTime dateTime) {
+    if (Calender.isMonday(dateTime.toLocalDate())) {
+      return isTimeAfter(dateTime.toLocalTime(), MONDAY_ABSENCE_TIME);
+    }
+    return isTimeAfter(dateTime.toLocalTime(), WEEKDAY_ABSENCE_TIME);
+  }
+
+  private boolean isLate(LocalDateTime dateTime) {
+    if (Calender.isMonday(dateTime.toLocalDate())) {
+      return isTimeBetween(dateTime.toLocalTime(), MONDAY_LATE_TIME, MONDAY_ABSENCE_TIME.plusMinutes(1));
+    }
+    return isTimeBetween(dateTime.toLocalTime(), WEEKDAY_LATE_TIME, WEEKDAY_ABSENCE_TIME.plusMinutes(1));
+  }
+
+  private boolean isTimeAfter(LocalTime time, LocalTime baseTime) {
+    return time.isAfter(baseTime);
+  }
+
+  private boolean isTimeBetween(LocalTime time, LocalTime startTime, LocalTime endTime) {
+    return time.isAfter(startTime) && time.isBefore(endTime);
+  }
+
 }

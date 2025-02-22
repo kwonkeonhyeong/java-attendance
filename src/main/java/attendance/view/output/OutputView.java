@@ -71,4 +71,5 @@ public class OutputView {
         }
         return String.format("%2d:%2d", time.getHour(), time.getMinute());
     }
+
 }

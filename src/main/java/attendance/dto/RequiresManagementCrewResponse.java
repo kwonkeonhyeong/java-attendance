@@ -40,13 +40,4 @@ public class RequiresManagementCrewResponse {
         return managementStatus;
     }
 
-    @Override
-    public String toString() {
-        return "DangerCrewResponse{" +
-                "crewName='" + crewName + '\'' +
-                ", absenceCount=" + absenceCount +
-                ", lateCount=" + lateCount +
-                ", managementStatus='" + managementStatus + '\'' +
-                '}' + '\n';
-    }
 }

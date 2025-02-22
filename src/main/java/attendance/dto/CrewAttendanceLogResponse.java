@@ -12,7 +12,7 @@ public class CrewAttendanceLogResponse {
   private final String crewName;
   private final int attendanceCount;
   private final int lateCount;
-  private final int AbsenceCount;
+  private final int absenceCount;
   private final List<AttendanceLogResponse> timeLogs;
   private final String managementStatus;
 
@@ -21,7 +21,7 @@ public class CrewAttendanceLogResponse {
     this.crewName = crewName;
     this.attendanceCount = attendanceCount;
     this.lateCount = lateCount;
-    AbsenceCount = absenceCount;
+    this.absenceCount = absenceCount;
     this.timeLogs = timeLogs;
     this.managementStatus = managementStatus;
   }
@@ -48,7 +48,7 @@ public class CrewAttendanceLogResponse {
   }
 
   public int getAbsenceCount() {
-    return AbsenceCount;
+    return absenceCount;
   }
 
   public List<AttendanceLogResponse> getTimeLogs() {
@@ -58,4 +58,5 @@ public class CrewAttendanceLogResponse {
   public String getManagementStatus() {
     return managementStatus;
   }
+
 }

@@ -1,6 +1,7 @@
 package attendance.model.domain.crew;
 
 public enum ManagementStatus {
+
     EXPULSION("제적"),
     COUNSELING("면담"),
     WARNING("경고"),
@@ -33,4 +34,5 @@ public enum ManagementStatus {
     public String getName() {
         return name;
     }
+
 }

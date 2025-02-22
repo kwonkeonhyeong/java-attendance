@@ -61,7 +61,7 @@ public class TimeLogs {
 
   public boolean isContain(LocalDateTime dateTime) {
     return logs.stream()
-        .anyMatch(log -> log.isSame(dateTime));
+        .anyMatch(log -> log.isSame(dateTime.toLocalDate()));
   }
 
   public CrewAttendanceLogResponse getCrewAttendanceLogResponse(Crew crew) {
