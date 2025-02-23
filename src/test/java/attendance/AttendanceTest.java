@@ -44,7 +44,7 @@ public class AttendanceTest {
 
     Crew crew = new Crew("이든");
 
-    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 14, 10, 3);
+    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 16, 10, 3);
 
     attendanceService.attendance(crew, localDateTime);
 
@@ -75,7 +75,7 @@ public class AttendanceTest {
 
     Crew crew = new Crew("이든");
 
-    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 14, 10, 3);
+    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 16, 10, 3);
 
     attendanceService.attendance(crew, localDateTime);
 
@@ -90,11 +90,11 @@ public class AttendanceTest {
 
     Crew crew = new Crew("이든");
 
-    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 14, 14, 20);
+    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 16, 14, 20);
 
     attendanceService.attendance(crew, attendanceTime);
 
-    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 14, 14, 30);
+    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 16, 14, 30);
 
     attendanceService.updateAttendance(crew, timeToEdit);
 
@@ -109,11 +109,11 @@ public class AttendanceTest {
 
     Crew crew = new Crew("이든");
 
-    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 14, 10, 20);
+    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 16, 10, 20);
 
     attendanceService.attendance(crew, attendanceTime);
 
-    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 14, 10, 4);
+    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 16, 10, 4);
 
     UpdateAttendanceResponse updateAttendanceResponse = attendanceService.updateAttendance(crew,
         timeToEdit);

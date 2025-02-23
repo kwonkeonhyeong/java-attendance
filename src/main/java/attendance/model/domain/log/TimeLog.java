@@ -101,7 +101,9 @@ public class TimeLog implements Comparator<TimeLog> {
   }
 
   private void validateUnavailableDate(LocalDate date) {
-    throw new IllegalArgumentException("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
+    if(Calender.HOLIDAY.isContainDate(date) || Calender.WEEKEND.isContainDate(date)) {
+      throw new IllegalArgumentException("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
+    }
   }
 
   private boolean isAbsence(LocalDateTime dateTime) {

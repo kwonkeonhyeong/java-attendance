@@ -50,4 +50,8 @@ public enum Calender {
         .toList();
   }
 
+  public boolean isContainDate(LocalDate date) {
+    return days.contains(date.getDayOfMonth());
+  }
+
 }
