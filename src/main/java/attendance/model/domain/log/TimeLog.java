@@ -39,7 +39,7 @@ public class TimeLog implements Comparator<TimeLog> {
 
   public LocalDateTime getDateTime() {
     if(time == null) {
-      throw new IllegalStateException("출석 시간이 존재하지 않습니다.");
+      throw new IllegalStateException("출석 시간이 존재하지 않습니다");
     }
     return LocalDateTime.of(date, time);
   }
@@ -59,14 +59,6 @@ public class TimeLog implements Comparator<TimeLog> {
 
   public AttendanceLogResponse getAttendanceLogResponse() {
     return new AttendanceLogResponse(date, time, getAttendanceStatus().getName());
-  }
-
-  public LocalDate getDate() {
-    return date;
-  }
-
-  public LocalTime getTime() {
-    return time;
   }
 
   @Override
