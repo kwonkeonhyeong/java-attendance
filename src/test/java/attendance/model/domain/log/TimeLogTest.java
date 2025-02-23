@@ -1,6 +1,8 @@
 package attendance.model.domain.log;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import attendance.model.domain.crew.AttendanceStatus;
 import java.time.LocalDate;
@@ -110,8 +112,46 @@ class TimeLogTest {
 
   @Test
   void 출석_시간이_비어있는_경우_결석_상태_반환() {
-    TimeLog log = TimeLog.of(LocalDate.of(2024,12,2),null);
+    TimeLog log = TimeLog.of(LocalDate.of(2024, 12, 2), null);
     assertThat(log.getAttendanceStatus()).isEqualTo(AttendanceStatus.ABSENCE);
   }
 
+  @ParameterizedTest
+  @MethodSource("createUnavailableDateTime")
+  void 출석_시간이_08_00시_부터_23_00시_사이가_아닌_경우_예외_발생(LocalDateTime unavailableDateTime) {
+    assertThatThrownBy(() -> TimeLog.from(unavailableDateTime))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00");
+  }
+
+
+  @ParameterizedTest
+  @MethodSource("createAvailableDateTime")
+  void 출석_시간이_08_00시_부터_23_00시_사이인_아닌_경우_TimeLog_생성(LocalDateTime availableDateTime) {
+    assertThatCode(() -> TimeLog.from(availableDateTime))
+        .doesNotThrowAnyException();
+  }
+
+  static Stream<Arguments> createUnavailableDateTime() {
+    return Stream.of(
+        Arguments.arguments(
+            LocalDateTime.of(2024, 12, 3, 7, 59)
+        ),
+        Arguments.arguments(
+            LocalDateTime.of(2024, 12, 3, 23, 1)
+        )
+    );
+  }
+
+  static Stream<Arguments> createAvailableDateTime() {
+    return Stream.of(
+        Arguments.arguments(
+            LocalDateTime.of(2024, 12, 3, 8, 0)
+        ),
+        Arguments.arguments(
+            LocalDateTime.of(2024, 12, 3, 23, 0)
+        )
+
+    );
+  }
 }
