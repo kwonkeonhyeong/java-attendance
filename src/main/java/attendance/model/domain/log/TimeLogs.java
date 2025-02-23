@@ -44,14 +44,14 @@ public class TimeLogs {
     return logs.stream()
         .filter(value -> value.equals(log))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다"));
   }
 
   public TimeLog getLog(LocalDate date) {
     return logs.stream()
         .filter(value -> value.isSame(date))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다"));
   }
 
   public boolean isContain(LocalDate date) {

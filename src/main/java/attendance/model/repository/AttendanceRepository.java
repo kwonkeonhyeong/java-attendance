@@ -77,7 +77,7 @@ public class AttendanceRepository {
 
   private void validateCrewExistence(Crew crew) {
     if (!existsByCrew(crew)) {
-      throw new IllegalArgumentException("존재하지 않는 크루입니다.");
+      throw new IllegalArgumentException("존재하지 않는 크루입니다");
     }
   }
 
