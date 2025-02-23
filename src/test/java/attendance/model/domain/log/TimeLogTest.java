@@ -121,7 +121,7 @@ class TimeLogTest {
   void 출석_시간이_08_00시_부터_23_00시_사이가_아닌_경우_예외_발생(LocalDateTime unavailableDateTime) {
     assertThatThrownBy(() -> TimeLog.from(unavailableDateTime))
         .isInstanceOf(IllegalArgumentException.class)
-        .hasMessage("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00");
+        .hasMessage("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)");
   }
 
 

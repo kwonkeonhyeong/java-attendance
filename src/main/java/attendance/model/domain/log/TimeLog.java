@@ -95,7 +95,7 @@ public class TimeLog implements Comparator<TimeLog> {
       return;
     }
     if (time.isBefore(LocalTime.of(8,0,0)) || time.isAfter(LocalTime.of(23,0,0))) {
-      throw new IllegalArgumentException("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00");
+      throw new IllegalArgumentException("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)");
     }
   }
 
