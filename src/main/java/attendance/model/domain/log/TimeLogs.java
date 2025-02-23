@@ -121,7 +121,7 @@ public class TimeLogs {
         .filter(value -> value.equals(timeLog))
         .findFirst()
         .ifPresent(value -> {
-          throw new IllegalStateException("금일 출석 기록이 이미 존재합니다.");
+          throw new IllegalArgumentException("금일 출석 기록이 이미 존재합니다");
         });
   }
 
