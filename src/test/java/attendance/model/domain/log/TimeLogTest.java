@@ -7,12 +7,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import attendance.model.domain.crew.AttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 class TimeLogTest {
 
@@ -46,7 +48,7 @@ class TimeLogTest {
     assertThat(timeLog.getAttendanceStatus()).isEqualTo(attendanceStatus);
   }
 
-  static Stream<Arguments> createExpectedAttendanceStatusForMonday() {
+  private static Stream<Arguments> createExpectedAttendanceStatusForMonday() {
     return Stream.of(
         Arguments.arguments(
             TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 0)),
@@ -81,7 +83,7 @@ class TimeLogTest {
     assertThat(timeLog.getAttendanceStatus()).isEqualTo(attendanceStatus);
   }
 
-  static Stream<Arguments> createExpectedAttendanceStatusForWeekDay() {
+  private static Stream<Arguments> createExpectedAttendanceStatusForWeekDay() {
     return Stream.of(
         Arguments.arguments(
             TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 0)),
@@ -132,7 +134,7 @@ class TimeLogTest {
         .doesNotThrowAnyException();
   }
 
-  static Stream<Arguments> createUnavailableDateTime() {
+  private static Stream<Arguments> createUnavailableDateTime() {
     return Stream.of(
         Arguments.arguments(
             LocalDateTime.of(2024, 12, 3, 7, 59)
@@ -143,7 +145,7 @@ class TimeLogTest {
     );
   }
 
-  static Stream<Arguments> createAvailableDateTime() {
+  private static Stream<Arguments> createAvailableDateTime() {
     return Stream.of(
         Arguments.arguments(
             LocalDateTime.of(2024, 12, 3, 8, 0)
@@ -153,5 +155,23 @@ class TimeLogTest {
         )
 
     );
+  }
+
+  @ParameterizedTest
+  @ValueSource(ints = {1, 7, 8, 14, 15, 21, 22, 28, 29})
+  void 주말에_출석_기록을_생성하는_경우_예외_발생 (int date) {
+    LocalDate weekEnd = LocalDate.of(2024,12,date);
+    assertThatThrownBy(() -> TimeLog.of(weekEnd, null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
+
+  }
+
+  @Test
+  void 공휴일에_출석_기록을_생성하는_경우_예외_발생 () {
+    LocalDate christmas = LocalDate.of(2024,12,25);
+    assertThatThrownBy(() -> TimeLog.of(christmas, null))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
   }
 }
