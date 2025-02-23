@@ -47,4 +47,18 @@ class TimeLogsTest {
         timeLogs.isContain(LocalDateTime.of(2024, 12, 5, 10, 3))
     ).isTrue();
   }
+
+  @Test
+  void TimeLogs에서_TimeLog를_제거() {
+    List<TimeLog> logs = new ArrayList<>();
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));
+    TimeLogs timeLogs = new TimeLogs(logs);
+
+    timeLogs.remove(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
+
+    assertThat(
+        timeLogs.isContain(LocalDateTime.of(2024, 12, 2, 10, 0))
+    ).isTrue();
+  }
 }
