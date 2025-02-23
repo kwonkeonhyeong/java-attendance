@@ -21,7 +21,7 @@ public class AttendanceCount {
 
   private void validate(int value) {
     if (value < 0) {
-      throw new IllegalArgumentException("출석 횟수는 음수가 될 수 없습니다.");
+      throw new IllegalArgumentException("출석 횟수는 음수가 될 수 없습니다");
     }
   }
 
