@@ -71,7 +71,39 @@ class TimeLogsTest {
     TimeLogs timeLogs = new TimeLogs(logs);
 
     assertThat(
-        timeLogs.isContain(LocalDate.of(2024,12,2))
+        timeLogs.isContain(LocalDate.of(2024, 12, 2))
     ).isTrue();
+  }
+
+  @Test
+  void TimeLogs_기록을_기준으로_출석_count_계산() {
+    TimeLogs timeLogs = createTimeLogsForCountTest();
+    assertThat(timeLogs.calculateAttendanceCount().getValue()).isEqualTo(3);
+  }
+
+  @Test
+  void TimeLogs_기록을_기준으로_지각_count_계산() {
+    TimeLogs timeLogs = createTimeLogsForCountTest();
+    assertThat(timeLogs.calculateLateCount().getValue()).isEqualTo(3);
+  }
+
+  @Test
+  void TimeLogs_기록을_기준으로_결석_count_계산() {
+    TimeLogs timeLogs = createTimeLogsForCountTest();
+    assertThat(timeLogs.calculateAbsenceCount().getValue()).isEqualTo(2);
+  }
+
+  private TimeLogs createTimeLogsForCountTest() {
+    List<TimeLog> logs = new ArrayList<>();
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 1)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 6)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 4, 10, 3)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 5, 10, 31)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 6, 10, 30)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 9, 13, 5)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 10, 10, 17)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 11, 10, 34)));
+
+    return new TimeLogs(logs);
   }
 }
