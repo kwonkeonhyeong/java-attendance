@@ -2,6 +2,7 @@ package attendance.model.domain.log;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -59,6 +60,18 @@ class TimeLogsTest {
 
     assertThat(
         timeLogs.isContain(LocalDateTime.of(2024, 12, 2, 10, 0))
+    ).isTrue();
+  }
+
+  @Test
+  void TimeLogs에_특정_일의_TimeLog가_존재하는지_확인() {
+    List<TimeLog> logs = new ArrayList<>();
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));
+    TimeLogs timeLogs = new TimeLogs(logs);
+
+    assertThat(
+        timeLogs.isContain(LocalDate.of(2024,12,2))
     ).isTrue();
   }
 }
