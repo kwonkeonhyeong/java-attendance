@@ -4,6 +4,9 @@ import java.util.Objects;
 
 public class LateCount {
 
+    private static final int POLICY_COUNT = 3;
+    private static final String INVALID_RANGE_MESSAGE = "지각 횟수는 음수가 될 수 없습니다";
+
     private final int value;
 
     private LateCount(int value) {
@@ -16,11 +19,11 @@ public class LateCount {
     }
 
     public int calculatePolicyAppliedAbsenceCount() {
-        return value / 3;
+        return value / POLICY_COUNT;
     }
 
     public int calculatePolicyAppliedLateCount() {
-        return value % 3;
+        return value % POLICY_COUNT;
     }
 
     public int getValue() {
@@ -51,7 +54,7 @@ public class LateCount {
 
     private void validate(int value) {
         if (value < 0) {
-            throw new IllegalArgumentException("지각 횟수는 음수가 될 수 없습니다");
+            throw new IllegalArgumentException(INVALID_RANGE_MESSAGE);
         }
     }
 

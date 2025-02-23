@@ -15,6 +15,8 @@ public enum Calender {
 
   private static final int YEAR = 2024;
   private static final Month MONTH = Month.DECEMBER;
+  private static final String NOT_CONTAIN_DECEMBER = "해당 날짜는 2024년 12월에 포함되지 않습니다";
+
   private final List<Integer> days;
 
   Calender(List<Integer> days) {
@@ -39,7 +41,7 @@ public enum Calender {
 
   public static boolean isMonday(LocalDate date) {
     if (date.getYear() != YEAR && date.getMonth() != MONTH) {
-      throw new IllegalArgumentException("해당 날짜는 2024년 12월에 포함되지 않습니다");
+      throw new IllegalArgumentException(NOT_CONTAIN_DECEMBER);
     }
     return MONDAY.days.contains(date.getDayOfMonth());
   }

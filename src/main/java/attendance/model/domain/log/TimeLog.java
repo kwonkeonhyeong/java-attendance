@@ -11,11 +11,16 @@ import java.util.Objects;
 
 public class TimeLog implements Comparator<TimeLog> {
 
+  private static final String NON_EXISTS_TIME_LOG = "출석 시간이 존재하지 않습니다";
+  private static final String NON_BUSINESS_HOURS_MESSAGE = "캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)";
+  private static final String NON_BUSINESS_DAY_MESSAGE = "주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다";
+
   private static final LocalTime MONDAY_LATE_TIME = LocalTime.of(13, 5);
   private static final LocalTime MONDAY_ABSENCE_TIME = LocalTime.of(13, 30);
-
   private static final LocalTime WEEKDAY_LATE_TIME = LocalTime.of(10, 5);
   private static final LocalTime WEEKDAY_ABSENCE_TIME = LocalTime.of(10, 30);
+  private static final LocalTime CAMPUS_OPEN_TIME = LocalTime.of(8, 0, 0);
+  private static final LocalTime CAMPUS_CLOSE_TIME = LocalTime.of(23, 0, 0);
 
   private final LocalDate date;
   private final LocalTime time;
@@ -41,7 +46,7 @@ public class TimeLog implements Comparator<TimeLog> {
 
   public LocalDateTime getDateTime() {
     if(time == null) {
-      throw new IllegalStateException("출석 시간이 존재하지 않습니다");
+      throw new IllegalStateException(NON_EXISTS_TIME_LOG);
     }
     return LocalDateTime.of(date, time);
   }
@@ -95,14 +100,14 @@ public class TimeLog implements Comparator<TimeLog> {
     if (time == null) {
       return;
     }
-    if (time.isBefore(LocalTime.of(8,0,0)) || time.isAfter(LocalTime.of(23,0,0))) {
-      throw new IllegalArgumentException("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)");
+    if (time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
+      throw new IllegalArgumentException(NON_BUSINESS_HOURS_MESSAGE);
     }
   }
 
   private void validateUnavailableDate(LocalDate date) {
     if(Calender.HOLIDAY.isContainDate(date) || Calender.WEEKEND.isContainDate(date)) {
-      throw new IllegalArgumentException("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
+      throw new IllegalArgumentException(NON_BUSINESS_DAY_MESSAGE);
     }
   }
 

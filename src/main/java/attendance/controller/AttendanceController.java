@@ -18,10 +18,12 @@ import java.util.List;
 
 public class AttendanceController {
 
+  private static final String FILE_PATH = "src/main/resources/attendances.csv";
+
   private final InputView inputView = new InputView();
   private final OutputView outputView = new OutputView();
   private final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
-  private final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances.csv");
+  private final Path crewAttendanceDataPath = Path.of(FILE_PATH);
   private final AttendanceRepository attendanceRepository = new AttendanceRepository(
       crewAttendanceDeserializer,
       crewAttendanceDataPath);

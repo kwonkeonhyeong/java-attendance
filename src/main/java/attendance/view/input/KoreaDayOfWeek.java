@@ -13,6 +13,8 @@ public enum KoreaDayOfWeek {
     SATURDAY("토요일", DayOfWeek.SATURDAY),
     SUNDAY("일요일", DayOfWeek.SUNDAY);
 
+    private static final String NON_EXISTS_DAY_MESSAGE = "해당하는 요일이 없습니다.";
+
     private final String name;
     private final DayOfWeek dayOfWeek;
 
@@ -25,7 +27,7 @@ public enum KoreaDayOfWeek {
         return Arrays.stream(values())
                 .filter(koreaDayOfWeek -> koreaDayOfWeek.dayOfWeek == dayOfWeek)
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("해당하는 요일이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_DAY_MESSAGE));
     }
 
     public String getName() {

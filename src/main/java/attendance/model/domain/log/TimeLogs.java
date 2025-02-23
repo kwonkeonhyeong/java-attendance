@@ -17,6 +17,9 @@ import java.util.stream.Stream;
 
 public class TimeLogs {
 
+  private static final String NON_EXISTS_TIME_LOG = "해당 크루는 해당 일시의 출석 기록이 없습니다";
+  private static final String DUPLICATE_TIME_LOG = "금일 출석 기록이 이미 존재합니다 ";
+
   private final List<TimeLog> logs;
 
   public TimeLogs(List<TimeLog> logs) {
@@ -44,14 +47,14 @@ public class TimeLogs {
     return logs.stream()
         .filter(value -> value.equals(log))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다"));
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
   }
 
   public TimeLog getLog(LocalDate date) {
     return logs.stream()
         .filter(value -> value.isSame(date))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 해당 일시의 출석 기록이 없습니다"));
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
   }
 
   public boolean isContain(LocalDate date) {
@@ -121,7 +124,7 @@ public class TimeLogs {
         .filter(value -> value.equals(timeLog))
         .findFirst()
         .ifPresent(value -> {
-          throw new IllegalArgumentException("금일 출석 기록이 이미 존재합니다");
+          throw new IllegalArgumentException(DUPLICATE_TIME_LOG);
         });
   }
 

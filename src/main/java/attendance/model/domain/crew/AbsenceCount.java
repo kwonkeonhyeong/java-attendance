@@ -4,6 +4,8 @@ import java.util.Objects;
 
 public class AbsenceCount {
 
+  private static final String INVALID_RANGE_MESSAGE = "결석 횟수는 음수가 될 수 없습니다";
+
   private final int value;
 
   private AbsenceCount(int value) {
@@ -25,7 +27,7 @@ public class AbsenceCount {
 
   private void validate(int value) {
     if (value < 0) {
-      throw new IllegalArgumentException("결석 횟수는 음수가 될 수 없습니다");
+      throw new IllegalArgumentException(INVALID_RANGE_MESSAGE);
     }
   }
 

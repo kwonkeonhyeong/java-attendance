@@ -16,6 +16,8 @@ import java.util.Map.Entry;
 
 public class AttendanceService {
 
+  private static final String NON_EXISTS_CREW_MESSAGE = "해당 크루는 존재하지 않습니다.";
+
   private final AttendanceRepository attendanceRepository;
 
   public AttendanceService(AttendanceRepository attendanceRepository) {
@@ -32,7 +34,7 @@ public class AttendanceService {
 
   public Crew findCrewByName(String crewName) {
     return attendanceRepository.findCrewByName(crewName)
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 존재하지 않습니다."));
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_CREW_MESSAGE));
   }
 
   public UpdateAttendanceResponse updateAttendance(Crew crew, LocalDateTime updateTime) {
@@ -56,7 +58,7 @@ public class AttendanceService {
 
   public CrewAttendanceLogResponse getAttendanceLog(String crewName) {
     Entry<Crew, TimeLogs> crewAndTimeLogs = attendanceRepository.findCrewAndTimeLogsByName(crewName)
-        .orElseThrow(() -> new IllegalArgumentException("해당 크루는 존재하지 않습니다."));
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_CREW_MESSAGE));
     return crewAndTimeLogs.getValue().getCrewAttendanceLogResponse(crewAndTimeLogs.getKey());
   }
 
