@@ -39,7 +39,7 @@ public enum Calender {
 
   public static boolean isMonday(LocalDate date) {
     if (date.getYear() != YEAR && date.getMonth() != MONTH) {
-      throw new IllegalArgumentException("해당 날짜는 2024년 12월에 포함되지 않습니다.");
+      throw new IllegalArgumentException("해당 날짜는 2024년 12월에 포함되지 않습니다");
     }
     return MONDAY.days.contains(date.getDayOfMonth());
   }
