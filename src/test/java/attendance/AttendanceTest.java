@@ -1,6 +1,7 @@
 package attendance;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.assertj.core.api.Assertions.assertThatIllegalStateException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -79,9 +80,9 @@ public class AttendanceTest {
 
     attendanceService.attendance(crew, localDateTime);
 
-    assertThatIllegalStateException()
+    assertThatIllegalArgumentException()
         .isThrownBy(() -> attendanceService.attendance(crew, localDateTime))
-        .withMessage("금일 출석 기록이 이미 존재합니다.");
+        .withMessage("금일 출석 기록이 이미 존재합니다");
   }
 
   // 출석 확인을 수정하려면 닉네임, 수정하려는 날짜, 등교 시간을 입력하여 기록을 수정할 수 있다.
