@@ -18,7 +18,7 @@ public enum AttendanceStatus {
     return Arrays.stream(values())
         .filter(attendanceStatus -> attendanceStatus.name.equals(name))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당하는 출석 상태가 없습니다."));
+        .orElseThrow(() -> new IllegalArgumentException("해당하는 출석 상태가 없습니다"));
   }
 
   public String getName() {
