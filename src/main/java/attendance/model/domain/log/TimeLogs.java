@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 public class TimeLogs {
 
   private static final String NON_EXISTS_TIME_LOG = "해당 크루는 해당 일시의 출석 기록이 없습니다";
-  private static final String DUPLICATE_TIME_LOG = "금일 출석 기록이 이미 존재합니다 ";
+  private static final String DUPLICATE_TIME_LOG = "금일 출석 기록이 이미 존재합니다";
 
   private final List<TimeLog> logs;
 
