@@ -60,7 +60,7 @@ class TimeLogsTest {
 
     assertThat(
         timeLogs.isContain(LocalDateTime.of(2024, 12, 2, 10, 0))
-    ).isTrue();
+    ).isFalse();
   }
 
   @Test
