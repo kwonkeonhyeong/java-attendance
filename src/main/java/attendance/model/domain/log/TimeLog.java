@@ -22,6 +22,7 @@ public class TimeLog implements Comparator<TimeLog> {
 
   private TimeLog(LocalDate date, LocalTime time) {
     validateUnavailableTime(time);
+    validateUnavailableDate(date);
     this.date = date;
     this.time = time;
   }
@@ -97,6 +98,10 @@ public class TimeLog implements Comparator<TimeLog> {
     if (time.isBefore(LocalTime.of(8,0,0)) || time.isAfter(LocalTime.of(23,0,0))) {
       throw new IllegalArgumentException("캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)");
     }
+  }
+
+  private void validateUnavailableDate(LocalDate date) {
+    throw new IllegalArgumentException("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
   }
 
   private boolean isAbsence(LocalDateTime dateTime) {
