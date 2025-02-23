@@ -25,4 +25,13 @@ class TimeLogsTest {
     Assertions.assertThat(log.isSame(LocalDate.of(2024,12,13))).isTrue();
   }
 
+  @Test
+  void TimeLog에_출석시간이_존재하지_않는_경우_DateTime_반환_시_예외_발생() {
+    TimeLog log = TimeLog.of(LocalDate.of(2024,12,13), null);
+
+    Assertions.assertThatThrownBy(log::getDateTime)
+        .isInstanceOf(IllegalStateException.class)
+        .hasMessage("출석 시간이 존재하지 않습니다");
+  }
+
 }
