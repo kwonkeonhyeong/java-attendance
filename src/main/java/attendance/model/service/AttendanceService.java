@@ -51,7 +51,7 @@ public class AttendanceService {
       CrewAttendanceComparator crewAttendanceComparator) {
 
     return getSortedCrewAttendance(crewAttendanceComparator).stream()
-        .filter(CrewAttendanceStatus::requiresManagement)
+        .filter(CrewAttendanceStatus::isRequiredManagement)
         .map(RequiresManagementCrewResponse::from)
         .toList();
   }

@@ -29,8 +29,8 @@ public class CrewAttendanceStatus {
         managementStatus);
   }
 
-  public boolean requiresManagement() {
-    return managementStatus.requiresManagement();
+  public boolean isRequiredManagement() {
+    return managementStatus.isRequiredManagement();
   }
 
   public int getPolicyAppliedAbsenceCount() {

@@ -31,7 +31,7 @@ public enum ManagementStatus {
         return NONE;
     }
 
-    public boolean requiresManagement() {
+    public boolean isRequiredManagement() {
         return this != NONE;
     }
 

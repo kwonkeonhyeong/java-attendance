@@ -30,7 +30,7 @@ class CrewAttendanceStatusTest {
     Crew crew = attendanceRepository.findCrewByName(name).orElse(null);
     TimeLogs timeLogs = attendanceRepository.findTimeLogsByCrew(crew);
     CrewAttendanceStatus crewAttendanceStatus = CrewAttendanceStatus.of(crew, timeLogs);
-    assertThat(crewAttendanceStatus.requiresManagement()).isEqualTo(isRequired);
+    assertThat(crewAttendanceStatus.isRequiredManagement()).isEqualTo(isRequired);
   }
 
   @ParameterizedTest
