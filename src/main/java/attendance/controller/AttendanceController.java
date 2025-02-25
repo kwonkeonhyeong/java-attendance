@@ -9,7 +9,6 @@ import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
 import attendance.model.repository.AttendanceRepository;
 import attendance.model.repository.CrewAttendanceDeserializer;
 import attendance.model.service.AttendanceService;
-import attendance.view.input.Command;
 import attendance.view.input.InputView;
 import attendance.view.output.OutputView;
 import java.nio.file.Path;
@@ -31,28 +30,21 @@ public class AttendanceController {
   private final CrewAttendanceComparator crewAttendanceComparator = new DefaultCrewAttendanceComparator();
 
   public void run() {
-    Command command;
+    boolean isAvailableCommand;
     do {
-      command = inputView.inputCommand();
+      isAvailableCommand = selectCommand();
+    } while (isAvailableCommand);
+  }
 
-      if (command == Command.ATTENDANCE_CHECK) {
-        attendance();
-      }
-
-      if (command == Command.ATTENDANCE_MODIFY) {
-        updateAttendance();
-      }
-
-      if (command == Command.CREW_ATTENDANCE_CHECK) {
-        checkCrewAttendance();
-      }
-
-      if (command == Command.EXPULSION_CREW_CHECK) {
-        searchManagementCrews();
-      }
-
-    } while (command != Command.QUIT);
-
+  private boolean selectCommand() {
+    try {
+      Command command = inputView.inputCommand();
+      command.run(this);
+      return command != Command.QUIT;
+    } catch (IllegalArgumentException exception) {
+      System.out.println(exception.getMessage());
+      return true;
+    }
   }
 
   public void attendance() {
@@ -104,6 +96,9 @@ public class AttendanceController {
     List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
         crewAttendanceComparator);
     outputView.printManagementCrews(requiresManagementCrewResponses);
+  }
+
+  public void quit() {
   }
 
 }
