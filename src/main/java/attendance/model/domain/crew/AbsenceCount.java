@@ -8,13 +8,9 @@ public class AbsenceCount {
 
   private final int value;
 
-  private AbsenceCount(int value) {
+  public AbsenceCount(int value) {
     validate(value);
     this.value = value;
-  }
-
-  public static AbsenceCount from(int value) {
-    return new AbsenceCount(value);
   }
 
   public int getPolicyAppliedAbsenceCount(LateCount lateCount) {

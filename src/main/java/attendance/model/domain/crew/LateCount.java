@@ -9,13 +9,9 @@ public class LateCount {
 
     private final int value;
 
-    private LateCount(int value) {
+    public LateCount(int value) {
         validate(value);
         this.value = value;
-    }
-
-    public static LateCount from(int value) {
-        return new LateCount(value);
     }
 
     public int calculatePolicyAppliedAbsenceCount() {

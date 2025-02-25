@@ -90,7 +90,7 @@ public class TimeLogs {
             .count()
     );
     int missingAttendanceCount = Calender.countMissingAttendanceDays(this);
-    return AbsenceCount.from(presentAbsenceCount + missingAttendanceCount);
+    return new AbsenceCount(presentAbsenceCount + missingAttendanceCount);
   }
 
   public LateCount calculateLateCount() {
@@ -99,7 +99,7 @@ public class TimeLogs {
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.LATE)
             .count()
     );
-    return LateCount.from(value);
+    return new LateCount(value);
   }
 
   public AttendanceCount calculateAttendanceCount() {
@@ -108,7 +108,7 @@ public class TimeLogs {
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ATTENDANCE)
             .count()
     );
-    return AttendanceCount.from(value);
+    return new AttendanceCount(value);
   }
 
   private List<AttendanceLogResponse> createAttendanceLogResponses() {

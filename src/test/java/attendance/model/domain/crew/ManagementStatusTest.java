@@ -19,46 +19,46 @@ class ManagementStatusTest {
   private static Stream<Arguments> createAttendanceResultCountForManagementStatus() {
     return Stream.of(
         Arguments.arguments(
-            LateCount.from(1), AbsenceCount.from(0), ManagementStatus.NONE
+            new LateCount(1), new AbsenceCount(0), ManagementStatus.NONE
         ),
         Arguments.arguments(
-            LateCount.from(5), AbsenceCount.from(0), ManagementStatus.NONE
+            new LateCount(5), new AbsenceCount(0), ManagementStatus.NONE
         ),
         Arguments.arguments(
-            LateCount.from(0), AbsenceCount.from(1), ManagementStatus.NONE
+            new LateCount(0), new AbsenceCount(1), ManagementStatus.NONE
         ),
         Arguments.arguments(
-            LateCount.from(0), AbsenceCount.from(2), ManagementStatus.WARNING
+            new LateCount(0), new AbsenceCount(2), ManagementStatus.WARNING
         ),
         Arguments.arguments(
-            LateCount.from(6), AbsenceCount.from(0), ManagementStatus.WARNING
+            new LateCount(6), new AbsenceCount(0), ManagementStatus.WARNING
         ),
         Arguments.arguments(
-            LateCount.from(3), AbsenceCount.from(1), ManagementStatus.WARNING
+            new LateCount(3), new AbsenceCount(1), ManagementStatus.WARNING
         ),
         Arguments.arguments(
-            LateCount.from(0), AbsenceCount.from(3), ManagementStatus.COUNSELING
+            new LateCount(0), new AbsenceCount(3), ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            LateCount.from(3), AbsenceCount.from(2), ManagementStatus.COUNSELING
+            new LateCount(3), new AbsenceCount(2), ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            LateCount.from(9), AbsenceCount.from(0), ManagementStatus.COUNSELING
+            new LateCount(9), new AbsenceCount(0), ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            LateCount.from(15), AbsenceCount.from(0), ManagementStatus.COUNSELING
+            new LateCount(15),new  AbsenceCount(0), ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            LateCount.from(0), AbsenceCount.from(5), ManagementStatus.COUNSELING
+            new LateCount(0), new AbsenceCount(5), ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            LateCount.from(18), AbsenceCount.from(0), ManagementStatus.EXPULSION
+            new LateCount(18),new  AbsenceCount(0), ManagementStatus.EXPULSION
         ),
         Arguments.arguments(
-            LateCount.from(0), AbsenceCount.from(6), ManagementStatus.EXPULSION
+            new LateCount(0), new AbsenceCount(6), ManagementStatus.EXPULSION
         ),
         Arguments.arguments(
-            LateCount.from(9), AbsenceCount.from(3), ManagementStatus.EXPULSION
+            new LateCount(9), new AbsenceCount(3), ManagementStatus.EXPULSION
         )
     );
   }

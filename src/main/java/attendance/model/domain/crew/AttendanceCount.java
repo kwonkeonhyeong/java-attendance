@@ -8,13 +8,9 @@ public class AttendanceCount {
 
   private final int value;
 
-  private AttendanceCount(int value) {
+  public AttendanceCount(int value) {
     validate(value);
     this.value = value;
-  }
-
-  public static AttendanceCount from(int value) {
-    return new AttendanceCount(value);
   }
 
   public int getValue() {
