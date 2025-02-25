@@ -17,15 +17,14 @@ public enum ManagementStatus {
         this.name = name;
     }
 
-    public static ManagementStatus of(final AbsenceCount absenceCount, final LateCount lateCount) {
-        int realAbsenceCount = absenceCount.getPolicyAppliedAbsenceCount(lateCount);
-        if (realAbsenceCount > MIN_ABSENCES_FOR_EXPULSION) {
+    public static ManagementStatus of(int appliedPolicyAbsenceCount) {
+        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_EXPULSION) {
             return EXPULSION;
         }
-        if (realAbsenceCount > MIN_ABSENCES_FOR_COUNSELING) {
+        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_COUNSELING) {
             return COUNSELING;
         }
-        if (realAbsenceCount > MIN_ABSENCES_FOR_WARNING) {
+        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_WARNING) {
             return WARNING;
         }
         return NONE;

@@ -77,32 +77,30 @@ public class TimeLogs {
     );
   }
 
-  public AbsenceCount calculateAbsenceCount() {
+  public int calculateAbsenceCount() {
     int presentAbsenceCount = Math.toIntExact(
         logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ABSENCE)
             .count()
     );
-    int missingAttendanceCount = Calender.countMissingAttendanceDays(this);
-    return new AbsenceCount(presentAbsenceCount + missingAttendanceCount);
+    int missingAttendanceCount = Calender.calculateMissingAttendanceDateCount(this);
+    return presentAbsenceCount + missingAttendanceCount;
   }
 
-  public LateCount calculateLateCount() {
-    int value = Math.toIntExact(
+  public int calculateLateCount() {
+    return Math.toIntExact(
         logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.LATE)
             .count()
     );
-    return new LateCount(value);
   }
 
-  public AttendanceCount calculateAttendanceCount() {
-    int value = Math.toIntExact(
+  public int calculateAttendanceCount() {
+    return Math.toIntExact(
         logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ATTENDANCE)
             .count()
     );
-    return new AttendanceCount(value);
   }
 
   private List<AttendanceLogResponse> createAttendanceLogResponses() {
@@ -113,7 +111,7 @@ public class TimeLogs {
 
   private List<AttendanceLogResponse> createMissingAttendanceLogResponses() {
 
-    return Calender.getMissingDate(this).stream()
+    return Calender.filterMissingDate(this).stream()
         .map(date -> new AttendanceLogResponse(date, null, AttendanceStatus.ABSENCE.getName()))
         .toList();
   }

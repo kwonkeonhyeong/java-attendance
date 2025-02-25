@@ -3,60 +3,50 @@ package attendance.model.domain.crew;
 public class CrewAttendanceStatus {
 
   private final Crew crew;
-  private final AbsenceCount absenceCount;
-  private final LateCount lateCount;
-  private final AttendanceCount attendanceCount;
+  private final AttendanceStatusCounts attendanceStatusCounts;
   private final ManagementStatus managementStatus;
 
-  private CrewAttendanceStatus(Crew crew, AttendanceCount attendanceCount,
-      AbsenceCount absenceCount, LateCount lateCount,
-      ManagementStatus managementStatus) {
+  private CrewAttendanceStatus(Crew crew, AttendanceStatusCounts attendanceStatusCounts, ManagementStatus managementStatus) {
     this.crew = crew;
-    this.attendanceCount = attendanceCount;
-    this.absenceCount = absenceCount;
-    this.lateCount = lateCount;
+    this.attendanceStatusCounts = attendanceStatusCounts;
     this.managementStatus = managementStatus;
   }
 
   public static CrewAttendanceStatus of(Crew crew, TimeLogs timeLogs) {
-    AttendanceCount attendanceCount = timeLogs.calculateAttendanceCount();
-    AbsenceCount absenceCount = timeLogs.calculateAbsenceCount();
-    LateCount lateCount = timeLogs.calculateLateCount();
-    ManagementStatus managementStatus = ManagementStatus.of(absenceCount, lateCount);
-    return new CrewAttendanceStatus(crew, attendanceCount, absenceCount, lateCount,
-        managementStatus);
+    AttendanceStatusCounts attendanceStatusCounts;
+    return new CrewAttendanceStatus(
+        crew,
+        attendanceStatusCounts = AttendanceStatusCounts.of(timeLogs),
+        ManagementStatus.of(attendanceStatusCounts.calculatePolicyAppliedAbsenceCount())
+    );
   }
 
   public boolean isRequiredManagement() {
     return managementStatus.isRequiredManagement();
   }
 
-  public int getPolicyAppliedAbsenceCount() {
-    return absenceCount.getPolicyAppliedAbsenceCount(lateCount);
-  }
-
-  public int getPolicyAppliedLateCount() {
-    return lateCount.calculatePolicyAppliedLateCount();
-  }
-
   public Crew getCrew() {
     return crew;
   }
 
+  public ManagementStatus getManagementStatus() {
+    return managementStatus;
+  }
+
+  public int getPolicyAppliedAbsenceCount() {
+    return attendanceStatusCounts.calculatePolicyAppliedAbsenceCount();
+  }
+
+  public int getRemainingLateCount() {
+    return attendanceStatusCounts.calculateRemainingLateCount();
+  }
+
   public int getAbsenceCount() {
-    return absenceCount.getValue();
+    return attendanceStatusCounts.getAbsenceCount();
   }
 
   public int getLateCount() {
-    return lateCount.getValue();
-  }
-
-  public int getAttendanceCount() {
-    return attendanceCount.getValue();
-  }
-
-  public ManagementStatus getManagementStatus() {
-    return managementStatus;
+    return attendanceStatusCounts.getLateCount();
   }
 
 }

@@ -1,8 +1,5 @@
 package attendance.dto;
 
-import attendance.model.domain.crew.AbsenceCount;
-import attendance.model.domain.crew.AttendanceCount;
-import attendance.model.domain.crew.LateCount;
 import attendance.model.domain.crew.ManagementStatus;
 import attendance.model.domain.crew.Crew;
 import java.util.List;
@@ -26,12 +23,12 @@ public class CrewAttendanceLogResponse {
     this.managementStatus = managementStatus;
   }
 
-  public static CrewAttendanceLogResponse of(Crew crew, AttendanceCount attendanceCount,
-      LateCount lateCount, AbsenceCount absenceCount,
+  public static CrewAttendanceLogResponse of(Crew crew, int attendanceCount,
+      int lateCount, int absenceCount,
       List<AttendanceLogResponse> attendanceLogResponse,
       ManagementStatus managementStatus) {
-    return new CrewAttendanceLogResponse(crew.getName(), attendanceCount.getValue(),
-        lateCount.getValue(), absenceCount.getValue(), attendanceLogResponse,
+    return new CrewAttendanceLogResponse(crew.getName(), attendanceCount,
+        lateCount, absenceCount, attendanceLogResponse,
         managementStatus.getName());
   }
 

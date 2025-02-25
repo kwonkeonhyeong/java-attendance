@@ -80,20 +80,20 @@ class TimeLogsTest {
   @Test
   void TimeLogs_기록을_기준으로_출석_count_계산() {
     TimeLogs timeLogs = createTimeLogsForCountTest();
-    assertThat(timeLogs.calculateAttendanceCount().getValue()).isEqualTo(3);
+    assertThat(timeLogs.calculateAttendanceCount()).isEqualTo(3);
   }
 
   @Test
   void TimeLogs_기록을_기준으로_지각_count_계산() {
     TimeLogs timeLogs = createTimeLogsForCountTest();
-    assertThat(timeLogs.calculateLateCount().getValue()).isEqualTo(3);
+    assertThat(timeLogs.calculateLateCount()).isEqualTo(3);
   }
 
   // 13일까지의 출석 기록이 있다고 가정합니다.
   @Test
   void TimeLogs_기록을_기준으로_결석_count_계산() {
     TimeLogs timeLogs = createTimeLogsForCountTest();
-    assertThat(timeLogs.calculateAbsenceCount().getValue()).isEqualTo(4);
+    assertThat(timeLogs.calculateAbsenceCount()).isEqualTo(4);
   }
 
   private TimeLogs createTimeLogsForCountTest() {
