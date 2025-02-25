@@ -1,8 +1,7 @@
 package attendance.model.repository;
 
-import attendance.model.domain.calender.Calender;
-import attendance.model.domain.log.TimeLogs;
-import attendance.model.domain.log.TimeLog;
+import attendance.model.domain.crew.TimeLogs;
+import attendance.model.domain.crew.TimeLog;
 import attendance.model.domain.crew.Crew;
 import java.io.IOException;
 import java.io.UncheckedIOException;

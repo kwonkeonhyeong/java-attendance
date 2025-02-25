@@ -10,7 +10,7 @@ import attendance.dto.RequiresManagementCrewResponse;
 import attendance.dto.UpdateAttendanceResponse;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
-import attendance.model.domain.log.TimeLogs;
+import attendance.model.domain.crew.TimeLogs;
 import attendance.model.repository.AttendanceRepository;
 import attendance.model.repository.CrewAttendanceDeserializer;
 import attendance.model.service.AttendanceService;

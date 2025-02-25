@@ -1,6 +1,6 @@
 package attendance.dto;
 
-import attendance.model.domain.log.TimeLog;
+import attendance.model.domain.crew.TimeLog;
 import java.time.LocalDateTime;
 
 public class UpdateAttendanceResponse {

@@ -2,7 +2,6 @@ package attendance.model.domain.crew;
 
 import static org.assertj.core.api.Assertions.*;
 
-import attendance.model.domain.log.TimeLogs;
 import attendance.model.repository.AttendanceRepository;
 import attendance.model.repository.CrewAttendanceDeserializer;
 import java.nio.file.Path;

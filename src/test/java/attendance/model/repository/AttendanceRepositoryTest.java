@@ -4,14 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import attendance.model.domain.crew.Crew;
-import attendance.model.domain.log.TimeLog;
-import attendance.model.domain.log.TimeLogs;
+import attendance.model.domain.crew.TimeLog;
+import attendance.model.domain.crew.TimeLogs;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

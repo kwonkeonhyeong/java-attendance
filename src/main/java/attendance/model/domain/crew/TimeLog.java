@@ -1,7 +1,6 @@
-package attendance.model.domain.log;
+package attendance.model.domain.crew;
 
 import attendance.dto.AttendanceLogResponse;
-import attendance.model.domain.crew.AttendanceStatus;
 import attendance.model.domain.calender.Calender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

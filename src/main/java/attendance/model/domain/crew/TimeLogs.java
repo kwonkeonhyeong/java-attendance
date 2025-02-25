@@ -1,14 +1,8 @@
-package attendance.model.domain.log;
+package attendance.model.domain.crew;
 
 import attendance.dto.AttendanceLogResponse;
 import attendance.dto.CrewAttendanceLogResponse;
-import attendance.model.domain.crew.AbsenceCount;
-import attendance.model.domain.crew.AttendanceCount;
-import attendance.model.domain.crew.AttendanceStatus;
 import attendance.model.domain.calender.Calender;
-import attendance.model.domain.crew.Crew;
-import attendance.model.domain.crew.CrewAttendanceStatus;
-import attendance.model.domain.crew.LateCount;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Comparator;

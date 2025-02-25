@@ -2,6 +2,8 @@ package attendance.model.domain.log;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import attendance.model.domain.crew.TimeLog;
+import attendance.model.domain.crew.TimeLogs;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;

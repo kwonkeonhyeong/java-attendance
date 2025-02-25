@@ -1,7 +1,5 @@
 package attendance.model.domain.crew;
 
-import attendance.model.domain.log.TimeLogs;
-
 public class CrewAttendanceStatus {
 
   private final Crew crew;
