@@ -1,18 +1,16 @@
 package attendance.model.domain.crew.comprator;
 
 import attendance.model.domain.crew.CrewAttendanceStatus;
+import java.util.Comparator;
 
 public class DefaultCrewAttendanceComparator implements CrewAttendanceComparator {
 
-    @Override
-    public int compare(CrewAttendanceStatus o1, CrewAttendanceStatus o2) {
-        if (o1.getPolicyAppliedAbsenceCount() == o2.getPolicyAppliedAbsenceCount()) {
-            if (o1.getRemainingLateCount() == o2.getRemainingLateCount()) {
-                return o1.getCrew().getName().compareTo(o2.getCrew().getName());
-            }
-            return o2.getRemainingLateCount() - o1.getRemainingLateCount();
-        }
-        return o2.getPolicyAppliedAbsenceCount() - o1.getPolicyAppliedAbsenceCount();
-    }
-
+  @Override
+  public int compare(CrewAttendanceStatus o1, CrewAttendanceStatus o2) {
+    return Comparator
+        .comparing(CrewAttendanceStatus::getPolicyAppliedAbsenceCount, Comparator.reverseOrder())
+        .thenComparing(CrewAttendanceStatus::getRemainingLateCount, Comparator.reverseOrder())
+        .thenComparing(crewAttendanceStatus -> crewAttendanceStatus.getCrew().getName())
+        .compare(o1, o2);
+  }
 }
