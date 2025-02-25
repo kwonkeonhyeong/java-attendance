@@ -68,11 +68,8 @@ public class TimeLogs {
   }
 
   public CrewAttendanceLogResponse getCrewAttendanceLogResponse(Crew crew) {
-    TimeLogs notExistsAttendanceTimeLogs = Calender.getNotExistsDatesBeforeToday(this);
-    List<AttendanceLogResponse> existsAttendanceLogResponses = this.getAttendanceLogResponses();
-    List<AttendanceLogResponse> notExistsAttendanceLogResponses = notExistsAttendanceTimeLogs.getAttendanceLogResponses();
     List<AttendanceLogResponse> attendanceLogResponses = Stream.concat(
-            existsAttendanceLogResponses.stream(), notExistsAttendanceLogResponses.stream()
+            createAttendanceLogResponses().stream(), createMissingAttendanceLogResponses().stream()
         )
         .sorted(Comparator.comparing(AttendanceLogResponse::getDate))
         .toList();
@@ -87,12 +84,13 @@ public class TimeLogs {
   }
 
   public AbsenceCount calculateAbsenceCount() {
-    int value = Math.toIntExact(
+    int presentAbsenceCount = Math.toIntExact(
         logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ABSENCE)
             .count()
     );
-    return AbsenceCount.from(value);
+    int missingAttendanceCount = Calender.countMissingAttendanceDays(this);
+    return AbsenceCount.from(presentAbsenceCount + missingAttendanceCount);
   }
 
   public LateCount calculateLateCount() {
@@ -113,9 +111,16 @@ public class TimeLogs {
     return AttendanceCount.from(value);
   }
 
-  private List<AttendanceLogResponse> getAttendanceLogResponses() {
+  private List<AttendanceLogResponse> createAttendanceLogResponses() {
     return logs.stream()
         .map(TimeLog::getAttendanceLogResponse)
+        .toList();
+  }
+
+  private List<AttendanceLogResponse> createMissingAttendanceLogResponses() {
+
+    return Calender.getMissingDate(this).stream()
+        .map(date -> new AttendanceLogResponse(date, null, AttendanceStatus.ABSENCE.getName()))
         .toList();
   }
 

@@ -11,7 +11,6 @@ import java.util.Objects;
 
 public class TimeLog implements Comparator<TimeLog> {
 
-  private static final String NON_EXISTS_TIME_LOG = "출석 시간이 존재하지 않습니다";
   private static final String NON_BUSINESS_HOURS_MESSAGE = "캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)";
   private static final String NON_BUSINESS_DAY_MESSAGE = "주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다";
 
@@ -45,16 +44,10 @@ public class TimeLog implements Comparator<TimeLog> {
   }
 
   public LocalDateTime getDateTime() {
-    if(time == null) {
-      throw new IllegalStateException(NON_EXISTS_TIME_LOG);
-    }
     return LocalDateTime.of(date, time);
   }
 
   public AttendanceStatus getAttendanceStatus() {
-    if (time == null) {
-      return AttendanceStatus.ABSENCE;
-    }
     if (isAbsence(getDateTime())) {
       return AttendanceStatus.ABSENCE;
     }
@@ -97,9 +90,6 @@ public class TimeLog implements Comparator<TimeLog> {
   }
 
   private void validateUnavailableTime(LocalTime time) {
-    if (time == null) {
-      return;
-    }
     if (time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
       throw new IllegalArgumentException(NON_BUSINESS_HOURS_MESSAGE);
     }

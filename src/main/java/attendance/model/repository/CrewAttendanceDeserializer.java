@@ -30,10 +30,6 @@ public class CrewAttendanceDeserializer {
             map.put(entry.getKey(), times);
           });
 
-      map.forEach((key, value) -> {
-        TimeLogs notExistsDatesBeforeToday = Calender.getNotExistsDatesBeforeToday(value);
-        value.addAll(notExistsDatesBeforeToday);
-      });
       return map;
     } catch (IOException e) {
       throw new UncheckedIOException(e);

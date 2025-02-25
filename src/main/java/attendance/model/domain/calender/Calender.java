@@ -1,6 +1,5 @@
 package attendance.model.domain.calender;
 
-import attendance.model.domain.log.TimeLog;
 import attendance.model.domain.log.TimeLogs;
 import java.time.LocalDate;
 import java.time.Month;
@@ -23,19 +22,17 @@ public enum Calender {
     this.days = days;
   }
 
-  public static TimeLogs getNotExistsDatesBeforeToday(TimeLogs dates) {
-    List<TimeLog> nonExistsTimeLogsBeforeToday = getDatesBefore(
-        LocalDate.of(2024, 12, 14)).stream()
-        .filter(date -> !dates.isContain(date))
-        .map(date -> TimeLog.of(date, null))
-        .toList();
-
-    return new TimeLogs(nonExistsTimeLogsBeforeToday);
+  public static int countMissingAttendanceDays(TimeLogs timeLogs) {
+    return (int) WEEKDAY.getDays().stream()
+        .filter(date -> date.isBefore(LocalDate.of(2024, 12, 14)))
+        .filter(date -> !timeLogs.isContain(date))
+        .count();
   }
 
-  private static List<LocalDate> getDatesBefore(LocalDate date) {
+  public static List<LocalDate> getMissingDate(TimeLogs timeLogs) {
     return WEEKDAY.getDays().stream()
-        .filter(result -> result.isBefore(date))
+        .filter(date -> date.isBefore(LocalDate.of(2024, 12, 14)))
+        .filter(date -> !timeLogs.isContain(date))
         .toList();
   }
 

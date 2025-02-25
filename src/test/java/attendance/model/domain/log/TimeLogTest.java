@@ -7,6 +7,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import attendance.model.domain.crew.AttendanceStatus;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
@@ -31,15 +32,6 @@ class TimeLogTest {
     TimeLog log = TimeLog.from(LocalDateTime.of(2024, 12, 13, 13, 0));
 
     assertThat(log.isSame(LocalDate.of(2024, 12, 13))).isTrue();
-  }
-
-  @Test
-  void TimeLog에_출석시간이_존재하지_않는_경우_DateTime_반환_시_예외_발생() {
-    TimeLog log = TimeLog.of(LocalDate.of(2024, 12, 13), null);
-
-    Assertions.assertThatThrownBy(log::getDateTime)
-        .isInstanceOf(IllegalStateException.class)
-        .hasMessage("출석 시간이 존재하지 않습니다");
   }
 
   @ParameterizedTest
@@ -112,12 +104,6 @@ class TimeLogTest {
     );
   }
 
-  @Test
-  void 출석_시간이_비어있는_경우_결석_상태_반환() {
-    TimeLog log = TimeLog.of(LocalDate.of(2024, 12, 2), null);
-    assertThat(log.getAttendanceStatus()).isEqualTo(AttendanceStatus.ABSENCE);
-  }
-
   @ParameterizedTest
   @MethodSource("createUnavailableDateTime")
   void 출석_시간이_08_00시_부터_23_00시_사이가_아닌_경우_예외_발생(LocalDateTime unavailableDateTime) {
@@ -161,7 +147,7 @@ class TimeLogTest {
   @ValueSource(ints = {1, 7, 8, 14, 15, 21, 22, 28, 29})
   void 주말에_출석_기록을_생성하는_경우_예외_발생 (int date) {
     LocalDate weekEnd = LocalDate.of(2024,12,date);
-    assertThatThrownBy(() -> TimeLog.of(weekEnd, null))
+    assertThatThrownBy(() -> TimeLog.of(weekEnd, LocalTime.of(10,30)))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
 
@@ -170,7 +156,7 @@ class TimeLogTest {
   @Test
   void 공휴일에_출석_기록을_생성하는_경우_예외_발생 () {
     LocalDate christmas = LocalDate.of(2024,12,25);
-    assertThatThrownBy(() -> TimeLog.of(christmas, null))
+    assertThatThrownBy(() -> TimeLog.of(christmas,  LocalTime.of(10,30)))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
   }
