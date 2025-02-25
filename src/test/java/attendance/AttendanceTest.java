@@ -60,7 +60,7 @@ public class AttendanceTest {
 
     String crewName = "이든";
 
-    CrewAttendanceInformation crewAttendanceInformation = attendanceService.getCrewAttendanceInformation(crewName);
+    CrewAttendanceInformation crewAttendanceInformation = attendanceService.generateCrewAttendanceInformation(crewName);
 
     List<AttendanceInformation> attendanceInformation = crewAttendanceInformation.getAttendanceInformation();
 
@@ -129,7 +129,7 @@ public class AttendanceTest {
   void 닉네임을_입력하여_크루_출석_기록_확인(String name, int attendanceCount, int lateCount, int absenceCount,
       String managementStatus) {
 
-    CrewAttendanceInformation attendanceLog = attendanceService.getCrewAttendanceInformation(name);
+    CrewAttendanceInformation attendanceLog = attendanceService.generateCrewAttendanceInformation(name);
 
     assertAll(
         () -> assertThat(attendanceLog.getCrewName()).isEqualTo(name),
@@ -167,7 +167,7 @@ public class AttendanceTest {
   void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount,
       String managementStatus) {
 
-    List<ManagementCrewInformation> managementCrewInformation = attendanceService.getManagementCrewInformation(
+    List<ManagementCrewInformation> managementCrewInformation = attendanceService.generateManagementCrewInformation(
         new DefaultCrewAttendanceComparator());
 
     for (ManagementCrewInformation information : managementCrewInformation) {

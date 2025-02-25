@@ -20,7 +20,7 @@ public class AttendanceStatusCounts {
   }
 
   public int calculatePolicyAppliedAbsenceCount() {
-    Integer absenceCount = attendanceStatusCounts.get(AttendanceStatus.ABSENCE);
+    int absenceCount = getAbsenceCount();
     return absenceCount + applyPolicyToLateCount();
   }
 

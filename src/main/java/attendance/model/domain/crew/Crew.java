@@ -11,6 +11,12 @@ public class Crew {
     this.name = name;
   }
 
+  private void validate(String value) {
+    if (value.length() < 2 || value.length() > 4) {
+      throw new IllegalArgumentException("크루 이름은 2 ~ 4글자 사이여야 합니다");
+    }
+  }
+
   public String getName() {
     return name;
   }
@@ -34,12 +40,6 @@ public class Crew {
     return "Crew{" +
         "name='" + name + '\'' +
         '}';
-  }
-
-  private void validate(String value) {
-    if (value.length() < 2 || value.length() > 4) {
-      throw new IllegalArgumentException("크루 이름은 2 ~ 4글자 사이여야 합니다");
-    }
   }
 
 }

@@ -33,6 +33,13 @@ public class OutputView {
         System.out.println(message);
     }
 
+    public String formatTime(LocalTime time) {
+        if (time == null) {
+            return "--:--";
+        }
+        return String.format("%2d:%2d", time.getHour(), time.getMinute());
+    }
+
     public void printCrewAttendanceInformation(CrewAttendanceInformation crewAttendanceInformation) {
         System.out.printf("이번 달 %s의 출석 기록입니다.%n%n", crewAttendanceInformation.getCrewName());
 
@@ -63,13 +70,6 @@ public class OutputView {
             response.getLateCount(),
             response.getManagementStatus()
         );
-    }
-
-    public String formatTime(LocalTime time) {
-        if (time == null) {
-            return "--:--";
-        }
-        return String.format("%2d:%2d", time.getHour(), time.getMinute());
     }
 
 }

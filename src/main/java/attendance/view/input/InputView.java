@@ -16,11 +16,19 @@ public class InputView {
     public Command inputCommand() {
         System.out.print(getToday());
         System.out.println(" 기능을 선택해주세요.");
-
         Arrays.stream(Command.values())
                 .forEach(command -> System.out.println(command.getOption() + ". " + command.getDescription()));
-
         return Command.from(SCANNER.nextLine());
+    }
+
+    private String getToday() {
+        LocalDate now = LocalDate.of(2024, 12, 14);
+        KoreaDayOfWeek dayOfWeek = KoreaDayOfWeek.from(now.getDayOfWeek());
+        return String.format("오늘은 %d월 %d일 %s입니다.",
+            now.getMonth().getValue(),
+            now.getDayOfMonth(),
+            dayOfWeek.getName()
+        );
     }
 
     public String inputNickname() {
@@ -51,16 +59,6 @@ public class InputView {
         System.out.println("언제로 변경하겠습니까?");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return LocalTime.parse(SCANNER.nextLine(), formatter);
-    }
-
-    private String getToday() {
-        LocalDate now = LocalDate.of(2024, 12, 14);
-        KoreaDayOfWeek dayOfWeek = KoreaDayOfWeek.from(now.getDayOfWeek());
-        return String.format("오늘은 %d월 %d일 %s입니다.",
-                now.getMonth().getValue(),
-                now.getDayOfMonth(),
-                dayOfWeek.getName()
-        );
     }
 
 }

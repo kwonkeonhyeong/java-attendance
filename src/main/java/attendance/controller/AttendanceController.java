@@ -52,11 +52,9 @@ public class AttendanceController {
     try {
       String crewName = inputView.inputNickname();
       Crew crew = attendanceService.findCrewByName(crewName);
-
       LocalDateTime attendanceTime = inputView.inputAttendanceTime();
-
-      AttendanceInformation attendanceInformation = attendanceService.attendance(crew, attendanceTime);
-
+      AttendanceInformation attendanceInformation = attendanceService.attendance(crew,
+          attendanceTime);
       outputView.printAttendanceLog(attendanceInformation);
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
@@ -67,15 +65,11 @@ public class AttendanceController {
     try {
       String crewName = inputView.inputUpdateCrewName();
       Crew crew = attendanceService.findCrewByName(crewName);
-
       LocalDateTime updatedTime = LocalDateTime.of(inputView.inputUpdateAttendanceDate(),
           inputView.inputUpdateAttendanceTime());
-
-      AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceService.updateAttendance(crew,
-          updatedTime);
-
+      AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceService.updateAttendance(
+          crew, updatedTime);
       outputView.printAttendanceUpdatesInformation(attendanceUpdatesInformation);
-
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
     }
@@ -84,17 +78,15 @@ public class AttendanceController {
   public void checkCrewAttendance() {
     try {
       String crewName = inputView.inputNickname();
-
       outputView.printCrewAttendanceInformation(
-          attendanceService.getCrewAttendanceInformation(crewName)
-      );
+          attendanceService.generateCrewAttendanceInformation(crewName));
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
     }
   }
 
   public void searchManagementCrews() {
-    List<ManagementCrewInformation> managementCrewInformation = attendanceService.getManagementCrewInformation(
+    List<ManagementCrewInformation> managementCrewInformation = attendanceService.generateManagementCrewInformation(
         crewAttendanceComparator);
     outputView.printManagementCrewInformation(managementCrewInformation);
   }

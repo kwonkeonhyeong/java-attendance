@@ -25,45 +25,26 @@ public class TimeLogs {
     logs.add(log);
   }
 
-  public void addAll(TimeLogs timeLogs) {
-    logs.addAll(timeLogs.getLogs());
+  private void validateConflict(TimeLog timeLog) {
+    logs.stream()
+        .filter(value -> value.equals(timeLog))
+        .findFirst()
+        .ifPresent(value -> {
+          throw new IllegalArgumentException(DUPLICATE_TIME_LOG);
+        });
   }
 
-  public void remove(TimeLog log) {
-    logs.remove(log);
+  public void addAll(TimeLogs timeLogs) {
+    logs.addAll(timeLogs.getLogs());
   }
 
   public List<TimeLog> getLogs() {
     return logs.stream().toList();
   }
 
-  public TimeLog getLog(TimeLog log) {
-    return logs.stream()
-        .filter(value -> value.equals(log))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
-  }
-
-  public TimeLog getLog(LocalDate date) {
-    return logs.stream()
-        .filter(value -> value.isSame(date))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
-  }
-
-  public boolean isContain(LocalDate date) {
-    return logs.stream()
-        .anyMatch(log -> log.isSame(date));
-  }
-
-  public boolean isContain(LocalDateTime dateTime) {
-    return logs.stream()
-        .anyMatch(log -> log.isSame(dateTime.toLocalDate()));
-  }
-
-  public CrewAttendanceInformation getCrewAttendanceInformation(Crew crew) {
+  public CrewAttendanceInformation generateCrewAttendanceInformation(Crew crew) {
     List<AttendanceInformation> attendanceInformation = Stream.concat(
-            createAttendanceInformation().stream(), createMissingAttendanceInformation().stream()
+            generateAttendanceInformation().stream(), generateMissingAttendanceInformation().stream()
         )
         .sorted(Comparator.comparing(AttendanceInformation::getDate))
         .toList();
@@ -75,6 +56,18 @@ public class TimeLogs {
         attendanceInformation,
         CrewAttendanceStatus.of(crew, this).getManagementStatus()
     );
+  }
+
+  private List<AttendanceInformation> generateMissingAttendanceInformation() {
+    return Calender.filterMissingDate(this).stream()
+        .map(date -> new AttendanceInformation(date, null, AttendanceStatus.ABSENCE.getName()))
+        .toList();
+  }
+
+  private List<AttendanceInformation> generateAttendanceInformation() {
+    return logs.stream()
+        .map(TimeLog::generateAttendanceInformation)
+        .toList();
   }
 
   public int calculateAbsenceCount() {
@@ -103,26 +96,32 @@ public class TimeLogs {
     );
   }
 
-  private List<AttendanceInformation> createAttendanceInformation() {
+  public void remove(TimeLog log) {
+    logs.remove(log);
+  }
+
+  public TimeLog getLog(TimeLog log) {
     return logs.stream()
-        .map(TimeLog::getAttendanceInformation)
-        .toList();
-  }
-
-  private List<AttendanceInformation> createMissingAttendanceInformation() {
-
-    return Calender.filterMissingDate(this).stream()
-        .map(date -> new AttendanceInformation(date, null, AttendanceStatus.ABSENCE.getName()))
-        .toList();
-  }
-
-  private void validateConflict(TimeLog timeLog) {
-    logs.stream()
-        .filter(value -> value.equals(timeLog))
+        .filter(value -> value.equals(log))
         .findFirst()
-        .ifPresent(value -> {
-          throw new IllegalArgumentException(DUPLICATE_TIME_LOG);
-        });
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
+  }
+
+  public TimeLog getLog(LocalDate date) {
+    return logs.stream()
+        .filter(value -> value.isSame(date))
+        .findFirst()
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
+  }
+
+  public boolean isContain(LocalDate date) {
+    return logs.stream()
+        .anyMatch(log -> log.isSame(date));
+  }
+
+  public boolean isContain(LocalDateTime dateTime) {
+    return logs.stream()
+        .anyMatch(log -> log.isSame(dateTime.toLocalDate()));
   }
 
   @Override
@@ -131,4 +130,5 @@ public class TimeLogs {
         "logs=" + logs +
         '}';
   }
+
 }

@@ -47,27 +47,26 @@ public class AttendanceService {
     return AttendanceUpdatesInformation.of(previousTimeLog, updateTimeLog);
   }
 
-  public List<ManagementCrewInformation> getManagementCrewInformation(
+  public List<ManagementCrewInformation> generateManagementCrewInformation(
       CrewAttendanceComparator crewAttendanceComparator) {
-
-    return getSortedCrewAttendance(crewAttendanceComparator).stream()
+    return sortedCrewAttendance(crewAttendanceComparator).stream()
         .filter(CrewAttendanceStatus::isRequiredManagement)
         .map(ManagementCrewInformation::from)
         .toList();
   }
 
-  public CrewAttendanceInformation getCrewAttendanceInformation(String crewName) {
-    Entry<Crew, TimeLogs> crewAndTimeLogs = attendanceRepository.findCrewAndTimeLogsByName(crewName)
-        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_CREW_MESSAGE));
-    return crewAndTimeLogs.getValue().getCrewAttendanceInformation(crewAndTimeLogs.getKey());
-  }
-
-  private List<CrewAttendanceStatus> getSortedCrewAttendance(
+  private List<CrewAttendanceStatus> sortedCrewAttendance(
       CrewAttendanceComparator crewAttendanceComparator) {
     return attendanceRepository.findAllCrews().stream()
         .map(crew -> CrewAttendanceStatus.of(crew, attendanceRepository.findTimeLogsByCrew(crew)))
         .sorted(crewAttendanceComparator)
         .toList();
+  }
+
+  public CrewAttendanceInformation generateCrewAttendanceInformation(String crewName) {
+    Entry<Crew, TimeLogs> crewAndTimeLogs = attendanceRepository.findCrewAndTimeLogsByName(crewName)
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_CREW_MESSAGE));
+    return crewAndTimeLogs.getValue().generateCrewAttendanceInformation(crewAndTimeLogs.getKey());
   }
 
 }
