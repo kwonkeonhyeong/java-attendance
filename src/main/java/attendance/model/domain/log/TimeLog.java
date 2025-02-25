@@ -11,15 +11,18 @@ import java.util.Objects;
 
 public class TimeLog implements Comparator<TimeLog> {
 
-  private static final String NON_BUSINESS_HOURS_MESSAGE = "캠퍼스 운영시간이 아닙니다 (운영시간 매일 08:00~23:00)";
-  private static final String NON_BUSINESS_DAY_MESSAGE = "주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다";
-
   private static final LocalTime MONDAY_LATE_TIME = LocalTime.of(13, 5);
   private static final LocalTime MONDAY_ABSENCE_TIME = LocalTime.of(13, 30);
   private static final LocalTime WEEKDAY_LATE_TIME = LocalTime.of(10, 5);
   private static final LocalTime WEEKDAY_ABSENCE_TIME = LocalTime.of(10, 30);
   private static final LocalTime CAMPUS_OPEN_TIME = LocalTime.of(8, 0, 0);
   private static final LocalTime CAMPUS_CLOSE_TIME = LocalTime.of(23, 0, 0);
+
+  private static final String NON_BUSINESS_DAY_MESSAGE = "주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다";
+  private static final String NON_BUSINESS_HOURS_MESSAGE_FORMAT = "캠퍼스 운영시간이 아닙니다 (운영시간 매일 %02d:%02d~%02d:%02d)";
+  private static final String NON_BUSINESS_HOURS_MESSAGE = String.format(
+      NON_BUSINESS_HOURS_MESSAGE_FORMAT, CAMPUS_OPEN_TIME.getHour(), CAMPUS_OPEN_TIME.getMinute(),
+      CAMPUS_CLOSE_TIME.getHour(), CAMPUS_CLOSE_TIME.getMinute());
 
   private final LocalDate date;
   private final LocalTime time;
@@ -96,7 +99,7 @@ public class TimeLog implements Comparator<TimeLog> {
   }
 
   private void validateUnavailableDate(LocalDate date) {
-    if(Calender.HOLIDAY.isContainDate(date) || Calender.WEEKEND.isContainDate(date)) {
+    if (Calender.HOLIDAY.isContainDate(date) || Calender.WEEKEND.isContainDate(date)) {
       throw new IllegalArgumentException(NON_BUSINESS_DAY_MESSAGE);
     }
   }
@@ -110,9 +113,11 @@ public class TimeLog implements Comparator<TimeLog> {
 
   private boolean isLate(LocalDateTime dateTime) {
     if (Calender.isMonday(dateTime.toLocalDate())) {
-      return isTimeBetween(dateTime.toLocalTime(), MONDAY_LATE_TIME, MONDAY_ABSENCE_TIME.plusMinutes(1));
+      return isTimeBetween(dateTime.toLocalTime(), MONDAY_LATE_TIME,
+          MONDAY_ABSENCE_TIME.plusMinutes(1));
     }
-    return isTimeBetween(dateTime.toLocalTime(), WEEKDAY_LATE_TIME, WEEKDAY_ABSENCE_TIME.plusMinutes(1));
+    return isTimeBetween(dateTime.toLocalTime(), WEEKDAY_LATE_TIME,
+        WEEKDAY_ABSENCE_TIME.plusMinutes(1));
   }
 
   private boolean isTimeAfter(LocalTime time, LocalTime baseTime) {
