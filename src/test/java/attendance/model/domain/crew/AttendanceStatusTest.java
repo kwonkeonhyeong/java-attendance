@@ -10,6 +10,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class AttendanceStatusTest {
+
   @Test
   void 입력한_출석_상태가_존재하지_않는_경우_예외_발생() {
     assertThatThrownBy(() -> AttendanceStatus.from("없는경우"))
@@ -30,4 +31,5 @@ class AttendanceStatusTest {
         Arguments.arguments("결석", AttendanceStatus.ABSENCE)
     );
   }
+
 }

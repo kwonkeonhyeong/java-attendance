@@ -8,4 +8,5 @@ public class Application {
         AttendanceController attendanceController = new AttendanceController();
         attendanceController.run();
     }
+
 }

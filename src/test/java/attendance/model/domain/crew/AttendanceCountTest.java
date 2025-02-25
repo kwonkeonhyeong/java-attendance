@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class AttendanceCountTest {
+
   @Test
   void 출석_횟수는_음수가_될_수_없습니다() {
     Assertions.assertThatThrownBy(() -> {

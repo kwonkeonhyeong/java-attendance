@@ -69,4 +69,5 @@ public class AttendanceService {
         .sorted(crewAttendanceComparator)
         .toList();
   }
+
 }
