@@ -1,6 +1,6 @@
 package attendance.model.domain.crew;
 
-import attendance.dto.AttendanceLogResponse;
+import attendance.model.domain.Information.AttendanceInformation;
 import attendance.model.domain.calender.Calender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,8 +59,8 @@ public class TimeLog implements Comparator<TimeLog> {
     return AttendanceStatus.ATTENDANCE;
   }
 
-  public AttendanceLogResponse getAttendanceLogResponse() {
-    return new AttendanceLogResponse(date, time, getAttendanceStatus().getName());
+  public AttendanceInformation getAttendanceInformation() {
+    return new AttendanceInformation(date, time, getAttendanceStatus().getName());
   }
 
   @Override

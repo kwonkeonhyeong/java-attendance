@@ -1,7 +1,7 @@
 package attendance.model.domain.crew;
 
-import attendance.dto.AttendanceLogResponse;
-import attendance.dto.CrewAttendanceLogResponse;
+import attendance.model.domain.Information.AttendanceInformation;
+import attendance.model.domain.Information.CrewAttendanceInformation;
 import attendance.model.domain.calender.Calender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -61,18 +61,18 @@ public class TimeLogs {
         .anyMatch(log -> log.isSame(dateTime.toLocalDate()));
   }
 
-  public CrewAttendanceLogResponse getCrewAttendanceLogResponse(Crew crew) {
-    List<AttendanceLogResponse> attendanceLogResponses = Stream.concat(
-            createAttendanceLogResponses().stream(), createMissingAttendanceLogResponses().stream()
+  public CrewAttendanceInformation getCrewAttendanceInformation(Crew crew) {
+    List<AttendanceInformation> attendanceInformation = Stream.concat(
+            createAttendanceInformation().stream(), createMissingAttendanceInformation().stream()
         )
-        .sorted(Comparator.comparing(AttendanceLogResponse::getDate))
+        .sorted(Comparator.comparing(AttendanceInformation::getDate))
         .toList();
-    return CrewAttendanceLogResponse.of(
+    return CrewAttendanceInformation.of(
         crew,
         calculateAttendanceCount(),
         calculateLateCount(),
         calculateAbsenceCount(),
-        attendanceLogResponses,
+        attendanceInformation,
         CrewAttendanceStatus.of(crew, this).getManagementStatus()
     );
   }
@@ -103,16 +103,16 @@ public class TimeLogs {
     );
   }
 
-  private List<AttendanceLogResponse> createAttendanceLogResponses() {
+  private List<AttendanceInformation> createAttendanceInformation() {
     return logs.stream()
-        .map(TimeLog::getAttendanceLogResponse)
+        .map(TimeLog::getAttendanceInformation)
         .toList();
   }
 
-  private List<AttendanceLogResponse> createMissingAttendanceLogResponses() {
+  private List<AttendanceInformation> createMissingAttendanceInformation() {
 
     return Calender.filterMissingDate(this).stream()
-        .map(date -> new AttendanceLogResponse(date, null, AttendanceStatus.ABSENCE.getName()))
+        .map(date -> new AttendanceInformation(date, null, AttendanceStatus.ABSENCE.getName()))
         .toList();
   }
 

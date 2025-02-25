@@ -1,22 +1,22 @@
-package attendance.dto;
+package attendance.model.domain.Information;
 
 import attendance.model.domain.crew.CrewAttendanceStatus;
 
-public class RequiresManagementCrewResponse {
+public class ManagementCrewInformation {
     private final String crewName;
     private final int absenceCount;
     private final int lateCount;
     private final String managementStatus;
 
-    private RequiresManagementCrewResponse(String crewName, int absenceCount, int lateCount, String managementStatus) {
+    private ManagementCrewInformation(String crewName, int absenceCount, int lateCount, String managementStatus) {
         this.crewName = crewName;
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
         this.managementStatus = managementStatus;
     }
 
-    public static RequiresManagementCrewResponse from(CrewAttendanceStatus crewAttendanceStatus) {
-        return new RequiresManagementCrewResponse(
+    public static ManagementCrewInformation from(CrewAttendanceStatus crewAttendanceStatus) {
+        return new ManagementCrewInformation(
                 crewAttendanceStatus.getCrew().getName(),
                 crewAttendanceStatus.getAbsenceCount(),
                 crewAttendanceStatus.getLateCount(),

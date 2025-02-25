@@ -4,10 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import attendance.dto.AttendanceLogResponse;
-import attendance.dto.CrewAttendanceLogResponse;
-import attendance.dto.RequiresManagementCrewResponse;
-import attendance.dto.UpdateAttendanceResponse;
+import attendance.model.domain.Information.AttendanceInformation;
+import attendance.model.domain.Information.CrewAttendanceInformation;
+import attendance.model.domain.Information.ManagementCrewInformation;
+import attendance.model.domain.Information.AttendanceUpdatesInformation;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
 import attendance.model.domain.crew.TimeLogs;
@@ -59,14 +59,14 @@ public class AttendanceTest {
 
     String crewName = "이든";
 
-    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(crewName);
+    CrewAttendanceInformation crewAttendanceInformation = attendanceService.getCrewAttendanceInformation(crewName);
 
-    List<AttendanceLogResponse> searchTimeLogs = attendanceLog.getTimeLogs();
+    List<AttendanceInformation> attendanceInformation = crewAttendanceInformation.getAttendanceInformation();
 
-    String searchCrewName = attendanceLog.getCrewName();
+    String searchCrewName = crewAttendanceInformation.getCrewName();
 
     assertThat(crewName).isEqualTo(searchCrewName);
-    assertThat(searchTimeLogs).isNotEmpty();
+    assertThat(attendanceInformation).isNotEmpty();
   }
 
   // 이미 출석한 경우, 다시 출석할 수 없으며 수정 기능을 이용하도록 안내한다.
@@ -115,11 +115,11 @@ public class AttendanceTest {
 
     LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 16, 10, 4);
 
-    UpdateAttendanceResponse updateAttendanceResponse = attendanceService.updateAttendance(crew,
+    AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceService.updateAttendance(crew,
         timeToEdit);
 
-    assertThat(updateAttendanceResponse.getBefore()).isEqualTo(attendanceTime);
-    assertThat(updateAttendanceResponse.getAfter()).isEqualTo(timeToEdit);
+    assertThat(attendanceUpdatesInformation.getBefore()).isEqualTo(attendanceTime);
+    assertThat(attendanceUpdatesInformation.getAfter()).isEqualTo(timeToEdit);
   }
 
   // 닉네임을 입력하여 크루 출석 기록을 확인할 수 있다.
@@ -128,7 +128,7 @@ public class AttendanceTest {
   void 닉네임을_입력하여_크루_출석_기록_확인(String name, int attendanceCount, int lateCount, int absenceCount,
       String managementStatus) {
 
-    CrewAttendanceLogResponse attendanceLog = attendanceService.getAttendanceLog(name);
+    CrewAttendanceInformation attendanceLog = attendanceService.getCrewAttendanceInformation(name);
 
     assertAll(
         () -> assertThat(attendanceLog.getCrewName()).isEqualTo(name),
@@ -137,7 +137,7 @@ public class AttendanceTest {
         () -> assertThat(attendanceLog.getAbsenceCount()).isEqualTo(absenceCount),
         () -> assertThat(attendanceLog.getManagementStatus()).isEqualTo(managementStatus),
         () -> assertThat(
-            attendanceLog.getTimeLogs().stream().map(AttendanceLogResponse::getDate)).isSorted()
+            attendanceLog.getAttendanceInformation().stream().map(AttendanceInformation::getDate)).isSorted()
     );
   }
 
@@ -166,17 +166,17 @@ public class AttendanceTest {
   void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount,
       String managementStatus) {
 
-    List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
+    List<ManagementCrewInformation> managementCrewInformation = attendanceService.getManagementCrewInformation(
         new DefaultCrewAttendanceComparator());
 
-    for (RequiresManagementCrewResponse requiresManagementCrewResponse : requiresManagementCrewResponses) {
-      if (requiresManagementCrewResponse.getCrewName().equals(name)) {
+    for (ManagementCrewInformation information : managementCrewInformation) {
+      if (information.getCrewName().equals(name)) {
         assertAll(
-            () -> assertThat(requiresManagementCrewResponse.getCrewName()).isEqualTo(name),
-            () -> assertThat(requiresManagementCrewResponse.getLateCount()).isEqualTo(lateCount),
-            () -> assertThat(requiresManagementCrewResponse.getAbsenceCount()).isEqualTo(
+            () -> assertThat(information.getCrewName()).isEqualTo(name),
+            () -> assertThat(information.getLateCount()).isEqualTo(lateCount),
+            () -> assertThat(information.getAbsenceCount()).isEqualTo(
                 absenceCount),
-            () -> assertThat(requiresManagementCrewResponse.getManagementStatus()).isEqualTo(
+            () -> assertThat(information.getManagementStatus()).isEqualTo(
                 managementStatus)
         );
       }

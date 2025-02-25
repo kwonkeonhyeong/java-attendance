@@ -1,34 +1,34 @@
-package attendance.dto;
+package attendance.model.domain.Information;
 
 import attendance.model.domain.crew.ManagementStatus;
 import attendance.model.domain.crew.Crew;
 import java.util.List;
 
-public class CrewAttendanceLogResponse {
+public class CrewAttendanceInformation {
 
   private final String crewName;
   private final int attendanceCount;
   private final int lateCount;
   private final int absenceCount;
-  private final List<AttendanceLogResponse> timeLogs;
+  private final List<AttendanceInformation> attendanceInformation;
   private final String managementStatus;
 
-  public CrewAttendanceLogResponse(String crewName, int attendanceCount, int lateCount,
-      int absenceCount, List<AttendanceLogResponse> timeLogs, String managementStatus) {
+  public CrewAttendanceInformation(String crewName, int attendanceCount, int lateCount,
+      int absenceCount, List<AttendanceInformation> attendanceInformation, String managementStatus) {
     this.crewName = crewName;
     this.attendanceCount = attendanceCount;
     this.lateCount = lateCount;
     this.absenceCount = absenceCount;
-    this.timeLogs = timeLogs;
+    this.attendanceInformation = attendanceInformation;
     this.managementStatus = managementStatus;
   }
 
-  public static CrewAttendanceLogResponse of(Crew crew, int attendanceCount,
+  public static CrewAttendanceInformation of(Crew crew, int attendanceCount,
       int lateCount, int absenceCount,
-      List<AttendanceLogResponse> attendanceLogResponse,
+      List<AttendanceInformation> attendanceInformation,
       ManagementStatus managementStatus) {
-    return new CrewAttendanceLogResponse(crew.getName(), attendanceCount,
-        lateCount, absenceCount, attendanceLogResponse,
+    return new CrewAttendanceInformation(crew.getName(), attendanceCount,
+        lateCount, absenceCount, attendanceInformation,
         managementStatus.getName());
   }
 
@@ -48,8 +48,8 @@ public class CrewAttendanceLogResponse {
     return absenceCount;
   }
 
-  public List<AttendanceLogResponse> getTimeLogs() {
-    return timeLogs;
+  public List<AttendanceInformation> getAttendanceInformation() {
+    return attendanceInformation;
   }
 
   public String getManagementStatus() {

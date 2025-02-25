@@ -1,9 +1,9 @@
-package attendance.dto;
+package attendance.model.domain.Information;
 
 import attendance.model.domain.crew.TimeLog;
 import java.time.LocalDateTime;
 
-public class UpdateAttendanceResponse {
+public class AttendanceUpdatesInformation {
 
   private final LocalDateTime before;
   private final LocalDateTime after;
@@ -11,7 +11,7 @@ public class UpdateAttendanceResponse {
   private final String beforeStatus;
   private final String afterStatus;
 
-  private UpdateAttendanceResponse(LocalDateTime before, LocalDateTime after, String beforeStatus,
+  private AttendanceUpdatesInformation(LocalDateTime before, LocalDateTime after, String beforeStatus,
       String afterStatus) {
     this.before = before;
     this.after = after;
@@ -19,8 +19,8 @@ public class UpdateAttendanceResponse {
     this.afterStatus = afterStatus;
   }
 
-  public static UpdateAttendanceResponse of(TimeLog before, TimeLog after) {
-    return new UpdateAttendanceResponse(
+  public static AttendanceUpdatesInformation of(TimeLog before, TimeLog after) {
+    return new AttendanceUpdatesInformation(
         before.getDateTime(),
         after.getDateTime(),
         before.getAttendanceStatus().getName(),

@@ -1,61 +1,61 @@
 package attendance.view.output;
 
-import attendance.dto.AttendanceLogResponse;
-import attendance.dto.CrewAttendanceLogResponse;
-import attendance.dto.RequiresManagementCrewResponse;
-import attendance.dto.UpdateAttendanceResponse;
+import attendance.model.domain.Information.AttendanceInformation;
+import attendance.model.domain.Information.CrewAttendanceInformation;
+import attendance.model.domain.Information.ManagementCrewInformation;
+import attendance.model.domain.Information.AttendanceUpdatesInformation;
 import attendance.view.input.KoreaDayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Map;
 
 public class OutputView {
 
-    public void printAttendanceLog(AttendanceLogResponse response) {
+    public void printAttendanceLog(AttendanceInformation information) {
         String message = String.format("%d월 %d일 %s %s (%s)",
-                response.getDate().getMonthValue(),
-                response.getDate().getDayOfMonth(),
-                KoreaDayOfWeek.from(response.getDate().getDayOfWeek()).getName(),
-                formatTime(response.getTime()),
-                response.getAttendanceStatus());
+                information.getDate().getMonthValue(),
+                information.getDate().getDayOfMonth(),
+                KoreaDayOfWeek.from(information.getDate().getDayOfWeek()).getName(),
+                formatTime(information.getTime()),
+                information.getAttendanceStatus());
         System.out.println(message);
     }
 
-    public void printUpdateAttendanceResponse(UpdateAttendanceResponse updateAttendanceResponse) {
+    public void printAttendanceUpdatesInformation(
+        AttendanceUpdatesInformation attendanceUpdatesInformation) {
         String message = String.format("%d월 %d일 %s %s (%s) -> %s (%s) 수정 완료!",
-                updateAttendanceResponse.getBefore().getMonthValue(),
-                updateAttendanceResponse.getBefore().getDayOfMonth(),
-                KoreaDayOfWeek.from(updateAttendanceResponse.getBefore().getDayOfWeek()).getName(),
-                formatTime(updateAttendanceResponse.getBefore().toLocalTime()),
-                updateAttendanceResponse.getBeforeStatus(),
-                formatTime(updateAttendanceResponse.getAfter().toLocalTime()),
-                updateAttendanceResponse.getAfterStatus());
+                attendanceUpdatesInformation.getBefore().getMonthValue(),
+                attendanceUpdatesInformation.getBefore().getDayOfMonth(),
+                KoreaDayOfWeek.from(attendanceUpdatesInformation.getBefore().getDayOfWeek()).getName(),
+                formatTime(attendanceUpdatesInformation.getBefore().toLocalTime()),
+                attendanceUpdatesInformation.getBeforeStatus(),
+                formatTime(attendanceUpdatesInformation.getAfter().toLocalTime()),
+                attendanceUpdatesInformation.getAfterStatus());
         System.out.println(message);
     }
 
-    public void printCrewAttendanceLogResponse(CrewAttendanceLogResponse crewAttendanceLogResponse) {
-        System.out.printf("이번 달 %s의 출석 기록입니다.%n%n", crewAttendanceLogResponse.getCrewName());
+    public void printCrewAttendanceInformation(CrewAttendanceInformation crewAttendanceInformation) {
+        System.out.printf("이번 달 %s의 출석 기록입니다.%n%n", crewAttendanceInformation.getCrewName());
 
-        crewAttendanceLogResponse.getTimeLogs().forEach(this::printAttendanceLog);
+        crewAttendanceInformation.getAttendanceInformation().forEach(this::printAttendanceLog);
         System.out.println();
-        System.out.printf("출석: %d회%n", crewAttendanceLogResponse.getAttendanceCount());
-        System.out.printf("지각: %d회%n", crewAttendanceLogResponse.getLateCount());
-        System.out.printf("결석: %d회%n", crewAttendanceLogResponse.getAbsenceCount());
+        System.out.printf("출석: %d회%n", crewAttendanceInformation.getAttendanceCount());
+        System.out.printf("지각: %d회%n", crewAttendanceInformation.getLateCount());
+        System.out.printf("결석: %d회%n", crewAttendanceInformation.getAbsenceCount());
 
-        if (!crewAttendanceLogResponse.getManagementStatus().equals("일반")) {
-            System.out.printf("%n%s 대상자입니다.%n%n", crewAttendanceLogResponse.getManagementStatus());
+        if (!crewAttendanceInformation.getManagementStatus().equals("일반")) {
+            System.out.printf("%n%s 대상자입니다.%n%n", crewAttendanceInformation.getManagementStatus());
         }
     }
 
-    public void printManagementCrews(List<RequiresManagementCrewResponse> responses) {
+    public void printManagementCrewInformation(List<ManagementCrewInformation> information) {
         System.out.println("\n제적 위험자 조회 결과");
-        for (RequiresManagementCrewResponse response : responses) {
-            System.out.println(formatManagementCrew(response));
+        for (ManagementCrewInformation managementCrewInformation : information) {
+            System.out.println(formatManagementCrew(managementCrewInformation));
         }
         System.out.println();
     }
 
-    private String formatManagementCrew(RequiresManagementCrewResponse response) {
+    private String formatManagementCrew(ManagementCrewInformation response) {
         return String.format(
             "- %s: 결석 %d회, 지각 %d회 (%s)",
             response.getCrewName(),

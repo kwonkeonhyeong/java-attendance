@@ -1,8 +1,8 @@
 package attendance.controller;
 
-import attendance.dto.AttendanceLogResponse;
-import attendance.dto.RequiresManagementCrewResponse;
-import attendance.dto.UpdateAttendanceResponse;
+import attendance.model.domain.Information.AttendanceInformation;
+import attendance.model.domain.Information.ManagementCrewInformation;
+import attendance.model.domain.Information.AttendanceUpdatesInformation;
 import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.comprator.CrewAttendanceComparator;
 import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
@@ -54,9 +54,9 @@ public class AttendanceController {
 
       LocalDateTime attendanceTime = inputView.inputAttendanceTime();
 
-      AttendanceLogResponse response = attendanceService.attendance(crew, attendanceTime);
+      AttendanceInformation attendanceInformation = attendanceService.attendance(crew, attendanceTime);
 
-      outputView.printAttendanceLog(response);
+      outputView.printAttendanceLog(attendanceInformation);
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
     }
@@ -70,10 +70,10 @@ public class AttendanceController {
       LocalDateTime updatedTime = LocalDateTime.of(inputView.inputUpdateAttendanceDate(),
           inputView.inputUpdateAttendanceTime());
 
-      UpdateAttendanceResponse updateAttendanceResponse = attendanceService.updateAttendance(crew,
+      AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceService.updateAttendance(crew,
           updatedTime);
 
-      outputView.printUpdateAttendanceResponse(updateAttendanceResponse);
+      outputView.printAttendanceUpdatesInformation(attendanceUpdatesInformation);
 
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
@@ -84,8 +84,8 @@ public class AttendanceController {
     try {
       String crewName = inputView.inputNickname();
 
-      outputView.printCrewAttendanceLogResponse(
-          attendanceService.getAttendanceLog(crewName)
+      outputView.printCrewAttendanceInformation(
+          attendanceService.getCrewAttendanceInformation(crewName)
       );
     } catch (RuntimeException runtimeException) {
       System.out.println(runtimeException.getMessage());
@@ -93,9 +93,9 @@ public class AttendanceController {
   }
 
   public void searchManagementCrews() {
-    List<RequiresManagementCrewResponse> requiresManagementCrewResponses = attendanceService.getRequiresManagementCrews(
+    List<ManagementCrewInformation> managementCrewInformation = attendanceService.getManagementCrewInformation(
         crewAttendanceComparator);
-    outputView.printManagementCrews(requiresManagementCrewResponses);
+    outputView.printManagementCrewInformation(managementCrewInformation);
   }
 
   public void quit() {
