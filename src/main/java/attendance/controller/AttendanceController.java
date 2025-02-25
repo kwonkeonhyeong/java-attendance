@@ -7,7 +7,8 @@ import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.comprator.CrewAttendanceComparator;
 import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
 import attendance.model.repository.AttendanceRepository;
-import attendance.model.repository.CrewAttendanceDeserializer;
+import attendance.model.repository.CrewTimeLogsInitializer;
+import attendance.model.repository.DefaultCrewTimeLogsInitializer;
 import attendance.model.service.AttendanceService;
 import attendance.view.input.InputView;
 import attendance.view.output.OutputView;
@@ -21,10 +22,10 @@ public class AttendanceController {
 
   private final InputView inputView = new InputView();
   private final OutputView outputView = new OutputView();
-  private final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
+  private final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
   private final Path crewAttendanceDataPath = Path.of(FILE_PATH);
   private final AttendanceRepository attendanceRepository = new AttendanceRepository(
-      crewAttendanceDeserializer,
+      crewTimeLogsInitializer,
       crewAttendanceDataPath);
   private final AttendanceService attendanceService = new AttendanceService(attendanceRepository);
   private final CrewAttendanceComparator crewAttendanceComparator = new DefaultCrewAttendanceComparator();

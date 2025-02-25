@@ -12,7 +12,8 @@ import attendance.model.domain.crew.Crew;
 import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
 import attendance.model.domain.crew.TimeLogs;
 import attendance.model.repository.AttendanceRepository;
-import attendance.model.repository.CrewAttendanceDeserializer;
+import attendance.model.repository.CrewTimeLogsInitializer;
+import attendance.model.repository.DefaultCrewTimeLogsInitializer;
 import attendance.model.service.AttendanceService;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -31,9 +32,9 @@ public class AttendanceTest {
 
   @BeforeEach
   void beforeEach() {
-    final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
+    final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
     final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances_test.csv");
-    attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+    attendanceRepository = new AttendanceRepository(crewTimeLogsInitializer,
         crewAttendanceDataPath);
     attendanceService = new AttendanceService(attendanceRepository);
   }

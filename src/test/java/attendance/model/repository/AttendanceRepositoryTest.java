@@ -22,9 +22,9 @@ class AttendanceRepositoryTest {
 
   @BeforeEach
   void beforeEach() {
-    final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
+    final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
     final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances_test.csv");
-    attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+    attendanceRepository = new AttendanceRepository(crewTimeLogsInitializer,
         crewAttendanceDataPath);
   }
 

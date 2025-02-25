@@ -1,8 +1,8 @@
 package attendance.model.repository;
 
-import attendance.model.domain.crew.TimeLogs;
-import attendance.model.domain.crew.TimeLog;
 import attendance.model.domain.crew.Crew;
+import attendance.model.domain.crew.TimeLog;
+import attendance.model.domain.crew.TimeLogs;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
@@ -16,9 +16,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
 
-public class CrewAttendanceDeserializer {
+public class DefaultCrewTimeLogsInitializer implements CrewTimeLogsInitializer {
 
-  public Map<Crew, TimeLogs> readAll(final Path filePath) throws UncheckedIOException {
+  @Override
+  public Map<Crew, TimeLogs> initialize(Path filePath) {
     try (Stream<String> lines = Files.lines(filePath)) {
       HashMap<Crew, TimeLogs> map = new HashMap<>();
       lines.skip(1)
@@ -28,7 +29,6 @@ public class CrewAttendanceDeserializer {
             times.add(entry.getValue());
             map.put(entry.getKey(), times);
           });
-
       return map;
     } catch (IOException e) {
       throw new UncheckedIOException(e);

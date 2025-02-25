@@ -18,8 +18,8 @@ public class AttendanceRepository {
 
   private final Map<Crew, TimeLogs> values;
 
-  public AttendanceRepository(CrewAttendanceDeserializer crewAttendanceDeserializer, Path path) {
-    this.values = crewAttendanceDeserializer.readAll(path);
+  public AttendanceRepository(CrewTimeLogsInitializer crewTimeLogsInitializer, Path path) {
+    this.values = crewTimeLogsInitializer.initialize(path);
   }
 
   public TimeLogs findTimeLogsByCrew(Crew crew) {

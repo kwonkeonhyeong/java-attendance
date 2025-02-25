@@ -3,9 +3,9 @@ package attendance.model.domain.crew;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import attendance.model.repository.AttendanceRepository;
-import attendance.model.repository.CrewAttendanceDeserializer;
+import attendance.model.repository.CrewTimeLogsInitializer;
+import attendance.model.repository.DefaultCrewTimeLogsInitializer;
 import java.nio.file.Path;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,9 +16,9 @@ public class AttendanceStatusCountsTest {
 
   @BeforeEach
   void beforeEach() {
-    final CrewAttendanceDeserializer crewAttendanceDeserializer = new CrewAttendanceDeserializer();
+    final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
     final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances_test.csv");
-    attendanceRepository = new AttendanceRepository(crewAttendanceDeserializer,
+    attendanceRepository = new AttendanceRepository(crewTimeLogsInitializer,
         crewAttendanceDataPath);
     attendanceStatusCounts = AttendanceStatusCounts.of(attendanceRepository.findTimeLogsByCrew(new Crew("이든")));
   }
