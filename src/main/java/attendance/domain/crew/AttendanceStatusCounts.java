@@ -1,4 +1,4 @@
-package attendance.model.domain.crew;
+package attendance.domain.crew;
 
 import java.util.HashMap;
 import java.util.Map;

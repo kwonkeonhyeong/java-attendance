@@ -1,15 +1,15 @@
-package attendance.model.service;
+package attendance.service;
 
-import attendance.model.domain.Information.AttendanceInformation;
-import attendance.model.domain.Information.CrewAttendanceInformation;
-import attendance.model.domain.Information.ManagementCrewInformation;
-import attendance.model.domain.Information.AttendanceUpdatesInformation;
-import attendance.model.domain.crew.CrewAttendanceStatus;
-import attendance.model.domain.crew.Crew;
-import attendance.model.domain.crew.comprator.CrewAttendanceComparator;
-import attendance.model.domain.crew.TimeLog;
-import attendance.model.domain.crew.TimeLogs;
-import attendance.model.repository.AttendanceRepository;
+import attendance.domain.Information.AttendanceInformation;
+import attendance.domain.Information.CrewAttendanceInformation;
+import attendance.domain.Information.ManagementCrewInformation;
+import attendance.domain.Information.AttendanceUpdatesInformation;
+import attendance.domain.crew.CrewAttendanceStatus;
+import attendance.domain.crew.Crew;
+import attendance.domain.crew.comprator.CrewAttendanceComparator;
+import attendance.domain.crew.TimeLog;
+import attendance.domain.crew.TimeLogs;
+import attendance.repository.AttendanceRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map.Entry;

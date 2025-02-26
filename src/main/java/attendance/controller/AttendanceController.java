@@ -1,15 +1,15 @@
 package attendance.controller;
 
-import attendance.model.domain.Information.AttendanceInformation;
-import attendance.model.domain.Information.ManagementCrewInformation;
-import attendance.model.domain.Information.AttendanceUpdatesInformation;
-import attendance.model.domain.crew.Crew;
-import attendance.model.domain.crew.comprator.CrewAttendanceComparator;
-import attendance.model.domain.crew.comprator.DefaultCrewAttendanceComparator;
-import attendance.model.repository.AttendanceRepository;
-import attendance.model.repository.CrewTimeLogsInitializer;
-import attendance.model.repository.DefaultCrewTimeLogsInitializer;
-import attendance.model.service.AttendanceService;
+import attendance.domain.Information.AttendanceInformation;
+import attendance.domain.Information.ManagementCrewInformation;
+import attendance.domain.Information.AttendanceUpdatesInformation;
+import attendance.domain.crew.Crew;
+import attendance.domain.crew.comprator.CrewAttendanceComparator;
+import attendance.domain.crew.comprator.DefaultCrewAttendanceComparator;
+import attendance.repository.AttendanceRepository;
+import attendance.repository.CrewTimeLogsInitializer;
+import attendance.repository.DefaultCrewTimeLogsInitializer;
+import attendance.service.AttendanceService;
 import attendance.view.input.InputView;
 import attendance.view.output.OutputView;
 import java.nio.file.Path;

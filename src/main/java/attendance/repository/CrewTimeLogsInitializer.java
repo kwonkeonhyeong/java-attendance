@@ -1,7 +1,7 @@
-package attendance.model.repository;
+package attendance.repository;
 
-import attendance.model.domain.crew.Crew;
-import attendance.model.domain.crew.TimeLogs;
+import attendance.domain.crew.Crew;
+import attendance.domain.crew.TimeLogs;
 import java.nio.file.Path;
 import java.util.Map;
 

@@ -1,8 +1,8 @@
-package attendance.model.repository;
+package attendance.repository;
 
-import attendance.model.domain.crew.TimeLogs;
-import attendance.model.domain.crew.TimeLog;
-import attendance.model.domain.crew.Crew;
+import attendance.domain.crew.TimeLogs;
+import attendance.domain.crew.TimeLog;
+import attendance.domain.crew.Crew;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

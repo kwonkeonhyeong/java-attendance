@@ -1,6 +1,6 @@
-package attendance.model.domain.crew.comprator;
+package attendance.domain.crew.comprator;
 
-import attendance.model.domain.crew.CrewAttendanceStatus;
+import attendance.domain.crew.CrewAttendanceStatus;
 import java.util.Comparator;
 
 public class DefaultCrewAttendanceComparator implements CrewAttendanceComparator {

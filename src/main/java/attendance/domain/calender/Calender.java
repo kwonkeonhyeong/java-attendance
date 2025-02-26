@@ -1,6 +1,6 @@
-package attendance.model.domain.calender;
+package attendance.domain.calender;
 
-import attendance.model.domain.crew.TimeLogs;
+import attendance.domain.crew.TimeLogs;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;

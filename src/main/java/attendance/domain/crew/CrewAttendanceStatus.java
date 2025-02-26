@@ -1,4 +1,4 @@
-package attendance.model.domain.crew;
+package attendance.domain.crew;
 
 public class CrewAttendanceStatus {
 

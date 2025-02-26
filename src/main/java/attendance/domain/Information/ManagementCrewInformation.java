@@ -1,6 +1,6 @@
-package attendance.model.domain.Information;
+package attendance.domain.Information;
 
-import attendance.model.domain.crew.CrewAttendanceStatus;
+import attendance.domain.crew.CrewAttendanceStatus;
 
 public class ManagementCrewInformation {
     private final String crewName;

@@ -3,9 +3,12 @@ package attendance.model.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import attendance.model.domain.crew.Crew;
-import attendance.model.domain.crew.TimeLog;
-import attendance.model.domain.crew.TimeLogs;
+import attendance.domain.crew.Crew;
+import attendance.domain.crew.TimeLog;
+import attendance.domain.crew.TimeLogs;
+import attendance.repository.AttendanceRepository;
+import attendance.repository.CrewTimeLogsInitializer;
+import attendance.repository.DefaultCrewTimeLogsInitializer;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;

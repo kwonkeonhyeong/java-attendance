@@ -1,11 +1,11 @@
-package attendance.model.domain.log;
+package attendance.model.domain.crew;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import attendance.model.domain.crew.AttendanceStatus;
-import attendance.model.domain.crew.TimeLog;
+import attendance.domain.crew.AttendanceStatus;
+import attendance.domain.crew.TimeLog;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

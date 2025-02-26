@@ -1,7 +1,7 @@
-package attendance.model.domain.Information;
+package attendance.domain.Information;
 
-import attendance.model.domain.crew.ManagementStatus;
-import attendance.model.domain.crew.Crew;
+import attendance.domain.crew.ManagementStatus;
+import attendance.domain.crew.Crew;
 import java.util.List;
 
 public class CrewAttendanceInformation {

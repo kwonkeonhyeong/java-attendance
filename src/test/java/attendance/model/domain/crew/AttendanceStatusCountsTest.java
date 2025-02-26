@@ -2,9 +2,11 @@ package attendance.model.domain.crew;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import attendance.model.repository.AttendanceRepository;
-import attendance.model.repository.CrewTimeLogsInitializer;
-import attendance.model.repository.DefaultCrewTimeLogsInitializer;
+import attendance.domain.crew.AttendanceStatusCounts;
+import attendance.domain.crew.Crew;
+import attendance.repository.AttendanceRepository;
+import attendance.repository.CrewTimeLogsInitializer;
+import attendance.repository.DefaultCrewTimeLogsInitializer;
 import java.nio.file.Path;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

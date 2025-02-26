@@ -1,7 +1,7 @@
-package attendance.model.domain.crew;
+package attendance.domain.crew;
 
-import attendance.model.domain.Information.AttendanceInformation;
-import attendance.model.domain.calender.Calender;
+import attendance.domain.Information.AttendanceInformation;
+import attendance.domain.calender.Calender;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

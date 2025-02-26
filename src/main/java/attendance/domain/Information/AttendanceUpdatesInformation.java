@@ -1,6 +1,6 @@
-package attendance.model.domain.Information;
+package attendance.domain.Information;
 
-import attendance.model.domain.crew.TimeLog;
+import attendance.domain.crew.TimeLog;
 import java.time.LocalDateTime;
 
 public class AttendanceUpdatesInformation {

@@ -1,9 +1,9 @@
 package attendance.view.output;
 
-import attendance.model.domain.Information.AttendanceInformation;
-import attendance.model.domain.Information.CrewAttendanceInformation;
-import attendance.model.domain.Information.ManagementCrewInformation;
-import attendance.model.domain.Information.AttendanceUpdatesInformation;
+import attendance.domain.Information.AttendanceInformation;
+import attendance.domain.Information.CrewAttendanceInformation;
+import attendance.domain.Information.ManagementCrewInformation;
+import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.view.input.KoreaDayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
