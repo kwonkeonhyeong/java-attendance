@@ -7,22 +7,14 @@ import attendance.domain.crew.Crew;
 import attendance.domain.crew.CrewAttendanceStatus;
 import attendance.domain.crew.TimeLog;
 import attendance.domain.crew.TimeLogs;
-import attendance.domain.AttendanceBook;
-import attendance.view.input.InputView;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 class CrewAttendanceStatusTest {
 
 
-  private final InputView inputView = new InputView();
-  private final AttendanceBook attendanceBook = new AttendanceBook(inputView.loadCrewAttendanceTimeLogs());
   private final CrewAttendanceStatus managementCrewStatus = CrewAttendanceStatus.of(new Crew("이든"), createRequiredManagementCrewTimeLogs());
   private final CrewAttendanceStatus crewStatus = CrewAttendanceStatus.of(new Crew("히포"), createCrewTimeLogs());
 
