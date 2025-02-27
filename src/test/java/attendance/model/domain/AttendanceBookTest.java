@@ -54,8 +54,10 @@ public class AttendanceBookTest {
 
     String searchCrewName = crewAttendanceInformation.getCrewName();
 
-    assertThat(crew.getName()).isEqualTo(searchCrewName);
-    assertThat(attendanceInformation).isNotEmpty();
+    assertAll(
+        () -> assertThat(crew.getName()).isEqualTo(searchCrewName),
+        () -> assertThat(attendanceInformation).isNotEmpty()
+    );
   }
 
   @Test
@@ -85,8 +87,10 @@ public class AttendanceBookTest {
     assertAll(
         () -> assertThat(attendanceUpdatesInformation.getBefore()).isEqualTo(attendanceTime),
         () -> assertThat(attendanceUpdatesInformation.getAfter()).isEqualTo(modifyTime),
-        () -> assertThat(attendanceUpdatesInformation.getBeforeStatus()).isEqualTo(AttendanceStatus.LATE),
-        () -> assertThat(attendanceUpdatesInformation.getAfterStatus()).isEqualTo(AttendanceStatus.ATTENDANCE)
+        () -> assertThat(attendanceUpdatesInformation.getBeforeStatus()).isEqualTo(
+            AttendanceStatus.LATE),
+        () -> assertThat(attendanceUpdatesInformation.getAfterStatus()).isEqualTo(
+            AttendanceStatus.ATTENDANCE)
     );
   }
 

@@ -1,6 +1,7 @@
 package attendance.model.domain.crew;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.domain.crew.Crew;
 import attendance.domain.crew.CrewAttendanceStatus;
@@ -27,9 +28,11 @@ class ManagementStatusTest {
     ManagementStatus warningManagementStatus = ManagementStatus.of(
         warningTimeLogs.calculatePolicyAppliedAbsenceCount());
 
-    assertThat(expulsionManagementStatus).isEqualTo(ManagementStatus.EXPULSION);
-    assertThat(counselingManagementStatus).isEqualTo(ManagementStatus.COUNSELING);
-    assertThat(warningManagementStatus).isEqualTo(ManagementStatus.WARNING);
+    assertAll(
+        () -> assertThat(expulsionManagementStatus).isEqualTo(ManagementStatus.EXPULSION),
+        () -> assertThat(counselingManagementStatus).isEqualTo(ManagementStatus.COUNSELING),
+        () -> assertThat(warningManagementStatus).isEqualTo(ManagementStatus.WARNING)
+    );
   }
 
   private CrewAttendanceStatus createExpulsionCrewAttendanceStatus() {
