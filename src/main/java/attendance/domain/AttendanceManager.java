@@ -62,7 +62,8 @@ public class AttendanceManager {
     try {
       String crewName = inputView.inputUpdateCrewName();
       Crew crew = new Crew(crewName);
-      LocalDateTime updatedTime = LocalDateTime.of(inputView.inputUpdateAttendanceDate(), inputView.inputUpdateAttendanceTime());
+      LocalDateTime updatedTime = LocalDateTime.of(inputView.inputUpdateAttendanceDate(),
+          inputView.inputUpdateAttendanceTime());
       AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceBook.modifiedAttendanceTimeLog(
           crew, TimeLog.from(updatedTime));
       outputView.printAttendanceUpdatesInformation(attendanceUpdatesInformation);
@@ -90,4 +91,5 @@ public class AttendanceManager {
 
   public void quit() {
   }
+
 }

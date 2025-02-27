@@ -20,9 +20,12 @@ class ManagementStatusTest {
     CrewAttendanceStatus counselingTimeLogs = createCounselingCrewAttendanceStatus();
     CrewAttendanceStatus warningTimeLogs = createWarningCrewAttendanceStatus();
 
-    ManagementStatus expulsionManagementStatus = ManagementStatus.of(expulsionTimeLogs.calculatePolicyAppliedAbsenceCount());
-    ManagementStatus counselingManagementStatus = ManagementStatus.of(counselingTimeLogs.calculatePolicyAppliedAbsenceCount());
-    ManagementStatus warningManagementStatus = ManagementStatus.of(warningTimeLogs.calculatePolicyAppliedAbsenceCount());
+    ManagementStatus expulsionManagementStatus = ManagementStatus.of(
+        expulsionTimeLogs.calculatePolicyAppliedAbsenceCount());
+    ManagementStatus counselingManagementStatus = ManagementStatus.of(
+        counselingTimeLogs.calculatePolicyAppliedAbsenceCount());
+    ManagementStatus warningManagementStatus = ManagementStatus.of(
+        warningTimeLogs.calculatePolicyAppliedAbsenceCount());
 
     assertThat(expulsionManagementStatus).isEqualTo(ManagementStatus.EXPULSION);
     assertThat(counselingManagementStatus).isEqualTo(ManagementStatus.COUNSELING);
@@ -44,7 +47,7 @@ class ManagementStatusTest {
     return CrewAttendanceStatus.of(new Crew("히포"), new TimeLogs(logs));
   }
 
-  private CrewAttendanceStatus createCounselingCrewAttendanceStatus () {
+  private CrewAttendanceStatus createCounselingCrewAttendanceStatus() {
     List<TimeLog> logs = new ArrayList<>();
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 1)));
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));
@@ -58,7 +61,7 @@ class ManagementStatusTest {
     return CrewAttendanceStatus.of(new Crew("히포"), new TimeLogs(logs));
   }
 
-  private CrewAttendanceStatus createWarningCrewAttendanceStatus () {
+  private CrewAttendanceStatus createWarningCrewAttendanceStatus() {
     List<TimeLog> logs = new ArrayList<>();
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 1)));
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));

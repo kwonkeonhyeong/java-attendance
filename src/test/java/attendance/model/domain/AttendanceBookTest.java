@@ -24,7 +24,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class AttendanceBookTest {
 
   private final InputView inputView = new InputView();
-  private final AttendanceBook attendanceBook = new AttendanceBook(inputView.loadCrewAttendanceTimeLogs());
+  private final AttendanceBook attendanceBook = new AttendanceBook(
+      inputView.loadCrewAttendanceTimeLogs());
 
   @Test
   void 닉네임과_등교_시간을_입력하면_출석할_수_있다() {
@@ -44,7 +45,8 @@ public class AttendanceBookTest {
 
     Crew crew = new Crew("이든");
 
-    CrewAttendanceInformation crewAttendanceInformation = attendanceBook.checkAttendanceTimeLogs(crew);
+    CrewAttendanceInformation crewAttendanceInformation = attendanceBook.checkAttendanceTimeLogs(
+        crew);
 
     List<AttendanceInformation> attendanceInformation = crewAttendanceInformation.getAttendanceInformation();
 
@@ -91,7 +93,8 @@ public class AttendanceBookTest {
   void 닉네임을_입력하여_크루_출석_기록_확인(String name, long attendanceCount, long lateCount, long absenceCount,
       String managementStatus) {
 
-    CrewAttendanceInformation attendanceLog = attendanceBook.checkAttendanceTimeLogs(new Crew(name));
+    CrewAttendanceInformation attendanceLog = attendanceBook.checkAttendanceTimeLogs(
+        new Crew(name));
 
     assertAll(
         () -> assertThat(attendanceLog.getCrewName()).isEqualTo(name),
@@ -100,7 +103,8 @@ public class AttendanceBookTest {
         () -> assertThat(attendanceLog.getAbsenceCount()).isEqualTo(absenceCount),
         () -> assertThat(attendanceLog.getManagementStatus()).isEqualTo(managementStatus),
         () -> assertThat(
-            attendanceLog.getAttendanceInformation().stream().map(AttendanceInformation::getDate)).isSorted()
+            attendanceLog.getAttendanceInformation().stream()
+                .map(AttendanceInformation::getDate)).isSorted()
     );
   }
 
@@ -164,4 +168,5 @@ public class AttendanceBookTest {
         )
     );
   }
+
 }

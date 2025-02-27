@@ -69,4 +69,5 @@ class TimeLogsTest {
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 11, 10, 34)));
     return new TimeLogs(logs);
   }
+
 }

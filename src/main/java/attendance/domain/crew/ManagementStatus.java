@@ -2,40 +2,36 @@ package attendance.domain.crew;
 
 public enum ManagementStatus {
 
-    EXPULSION("제적"),
-    COUNSELING("면담"),
-    WARNING("경고"),
-    NONE("일반");
+  EXPULSION("제적"),
+  COUNSELING("면담"),
+  WARNING("경고"),
+  NONE("일반");
 
-    private static final int MIN_ABSENCES_FOR_EXPULSION = 5;
-    private static final int MIN_ABSENCES_FOR_COUNSELING = 2;
-    private static final int MIN_ABSENCES_FOR_WARNING = 1;
+  private static final int MIN_ABSENCES_FOR_EXPULSION = 5;
+  private static final int MIN_ABSENCES_FOR_COUNSELING = 2;
+  private static final int MIN_ABSENCES_FOR_WARNING = 1;
 
-    private final String name;
+  private final String name;
 
-    ManagementStatus(String name) {
-        this.name = name;
+  ManagementStatus(String name) {
+    this.name = name;
+  }
+
+  public static ManagementStatus of(long appliedPolicyAbsenceCount) {
+    if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_EXPULSION) {
+      return EXPULSION;
     }
-
-    public static ManagementStatus of(long appliedPolicyAbsenceCount) {
-        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_EXPULSION) {
-            return EXPULSION;
-        }
-        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_COUNSELING) {
-            return COUNSELING;
-        }
-        if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_WARNING) {
-            return WARNING;
-        }
-        return NONE;
+    if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_COUNSELING) {
+      return COUNSELING;
     }
-
-    public boolean isRequiredManagement() {
-        return this != NONE;
+    if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_WARNING) {
+      return WARNING;
     }
+    return NONE;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
 }

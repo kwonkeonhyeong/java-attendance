@@ -3,6 +3,7 @@ package attendance.domain.Information;
 import attendance.domain.crew.CrewAttendanceStatus;
 
 public class ManagementCrewInformation {
+
     private final String crewName;
     private final long absenceCount;
     private final long lateCount;

@@ -8,9 +8,11 @@ public class DefaultCrewAttendanceComparator implements CrewAttendanceComparator
   @Override
   public int compare(CrewAttendanceStatus o1, CrewAttendanceStatus o2) {
     return Comparator
-        .comparing(CrewAttendanceStatus::calculatePolicyAppliedAbsenceCount, Comparator.reverseOrder())
+        .comparing(CrewAttendanceStatus::calculatePolicyAppliedAbsenceCount,
+            Comparator.reverseOrder())
         .thenComparing(CrewAttendanceStatus::calculateRemainingLateCount, Comparator.reverseOrder())
         .thenComparing(crewAttendanceStatus -> crewAttendanceStatus.getCrew().getName())
         .compare(o1, o2);
   }
+
 }

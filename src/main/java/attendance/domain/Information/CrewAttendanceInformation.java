@@ -14,7 +14,8 @@ public class CrewAttendanceInformation {
   private final String managementStatus;
 
   public CrewAttendanceInformation(String crewName, long attendanceCount, long lateCount,
-      long absenceCount, List<AttendanceInformation> attendanceInformation, String managementStatus) {
+      long absenceCount, List<AttendanceInformation> attendanceInformation,
+      String managementStatus) {
     this.crewName = crewName;
     this.attendanceCount = attendanceCount;
     this.lateCount = lateCount;

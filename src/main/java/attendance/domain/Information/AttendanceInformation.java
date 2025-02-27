@@ -33,4 +33,5 @@ public class AttendanceInformation {
   public String getAttendanceStatus() {
     return attendanceStatus;
   }
+
 }

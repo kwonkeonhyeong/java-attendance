@@ -6,5 +6,7 @@ import java.nio.file.Path;
 import java.util.Map;
 
 public interface CrewTimeLogsInitializer {
+
   Map<Crew, TimeLogs> initialize(Path filePath);
+
 }

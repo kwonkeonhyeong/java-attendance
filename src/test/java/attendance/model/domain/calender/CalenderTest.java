@@ -12,14 +12,15 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class CalenderTest {
+
   @Test
   void 입력한_날이_12월_중_월요일이면_TRUE_반환() {
-    assertThat(Calender.isMonday(LocalDate.of(2024,12,2))).isTrue();
+    assertThat(Calender.isMonday(LocalDate.of(2024, 12, 2))).isTrue();
   }
 
   @Test
   void 입력한_날이_12월_중_월요일이_아니면_FALSE_반환() {
-    assertThat(Calender.isMonday(LocalDate.of(2024,12,3))).isFalse();
+    assertThat(Calender.isMonday(LocalDate.of(2024, 12, 3))).isFalse();
   }
 
   @Test
@@ -40,8 +41,8 @@ class CalenderTest {
   @Test
   void 출석_기록이_존재하지_않는_Date를_리스트로_반환() {
     List<LocalDate> expected = List.of(
-        LocalDate.of(2024,12,12),
-        LocalDate.of(2024,12,13)
+        LocalDate.of(2024, 12, 12),
+        LocalDate.of(2024, 12, 13)
     );
 
     List<LocalDate> missingDate = Calender.filterMissingDate(createTimeLogs());

@@ -44,7 +44,8 @@ public class AttendanceBook {
 
   public List<ManagementCrewInformation> checkManagementCrews() {
     return crewAttendanceTimeLogs.entrySet().stream()
-        .map(crewAndTimeLogs -> CrewAttendanceStatus.of(crewAndTimeLogs.getKey(),crewAndTimeLogs.getValue()))
+        .map(crewAndTimeLogs -> CrewAttendanceStatus.of(crewAndTimeLogs.getKey(),
+            crewAndTimeLogs.getValue()))
         .sorted(new DefaultCrewAttendanceComparator())
         .filter(CrewAttendanceStatus::isRequiredManagement)
         .map(ManagementCrewInformation::from)

@@ -143,19 +143,20 @@ class TimeLogTest {
 
   @ParameterizedTest
   @ValueSource(ints = {1, 7, 8, 14, 15, 21, 22, 28, 29})
-  void 주말에_출석_기록을_생성하는_경우_예외_발생 (int date) {
-    LocalDate weekEnd = LocalDate.of(2024,12,date);
-    assertThatThrownBy(() -> TimeLog.of(weekEnd, LocalTime.of(10,30)))
+  void 주말에_출석_기록을_생성하는_경우_예외_발생(int date) {
+    LocalDate weekEnd = LocalDate.of(2024, 12, date);
+    assertThatThrownBy(() -> TimeLog.of(weekEnd, LocalTime.of(10, 30)))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
 
   }
 
   @Test
-  void 공휴일에_출석_기록을_생성하는_경우_예외_발생 () {
-    LocalDate christmas = LocalDate.of(2024,12,25);
-    assertThatThrownBy(() -> TimeLog.of(christmas,  LocalTime.of(10,30)))
+  void 공휴일에_출석_기록을_생성하는_경우_예외_발생() {
+    LocalDate christmas = LocalDate.of(2024, 12, 25);
+    assertThatThrownBy(() -> TimeLog.of(christmas, LocalTime.of(10, 30)))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("주말 또는 공휴일에는 출석 기록을 생성할 수 없습니다");
   }
+
 }

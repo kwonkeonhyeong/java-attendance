@@ -5,7 +5,6 @@ import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.calender.Calender;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -96,11 +95,6 @@ public class TimeLogs {
   public boolean isContain(LocalDate date) {
     return logs.stream()
         .anyMatch(log -> log.isSame(date));
-  }
-
-  public boolean isContain(LocalDateTime dateTime) {
-    return logs.stream()
-        .anyMatch(log -> log.isSame(dateTime.toLocalDate()));
   }
 
   @Override

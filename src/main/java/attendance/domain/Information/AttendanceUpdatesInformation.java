@@ -11,7 +11,8 @@ public class AttendanceUpdatesInformation {
   private final String beforeStatus;
   private final String afterStatus;
 
-  private AttendanceUpdatesInformation(LocalDateTime before, LocalDateTime after, String beforeStatus,
+  private AttendanceUpdatesInformation(LocalDateTime before, LocalDateTime after,
+      String beforeStatus,
       String afterStatus) {
     this.before = before;
     this.after = after;

@@ -1,6 +1,5 @@
 package attendance.domain.crew;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class CrewAttendanceStatus {
@@ -8,7 +7,7 @@ public class CrewAttendanceStatus {
   private final Crew crew;
   private final Map<AttendanceStatus, Long> attendanceStatusCounts;
 
-  private CrewAttendanceStatus(Crew crew ,Map<AttendanceStatus, Long> attendanceStatusCounts) {
+  private CrewAttendanceStatus(Crew crew, Map<AttendanceStatus, Long> attendanceStatusCounts) {
     this.crew = crew;
     this.attendanceStatusCounts = attendanceStatusCounts;
   }
@@ -49,10 +48,6 @@ public class CrewAttendanceStatus {
 
   public long getLateCount() {
     return attendanceStatusCounts.get(AttendanceStatus.LATE);
-  }
-
-  public long getAttendanceCount() {
-    return attendanceStatusCounts.get(AttendanceStatus.ATTENDANCE);
   }
 
   public ManagementStatus getManagementStatus() {
