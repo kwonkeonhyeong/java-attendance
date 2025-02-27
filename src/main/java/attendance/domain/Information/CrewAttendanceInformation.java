@@ -7,14 +7,14 @@ import java.util.List;
 public class CrewAttendanceInformation {
 
   private final String crewName;
-  private final int attendanceCount;
-  private final int lateCount;
-  private final int absenceCount;
+  private final long attendanceCount;
+  private final long lateCount;
+  private final long absenceCount;
   private final List<AttendanceInformation> attendanceInformation;
   private final String managementStatus;
 
-  public CrewAttendanceInformation(String crewName, int attendanceCount, int lateCount,
-      int absenceCount, List<AttendanceInformation> attendanceInformation, String managementStatus) {
+  public CrewAttendanceInformation(String crewName, long attendanceCount, long lateCount,
+      long absenceCount, List<AttendanceInformation> attendanceInformation, String managementStatus) {
     this.crewName = crewName;
     this.attendanceCount = attendanceCount;
     this.lateCount = lateCount;
@@ -23,8 +23,8 @@ public class CrewAttendanceInformation {
     this.managementStatus = managementStatus;
   }
 
-  public static CrewAttendanceInformation of(Crew crew, int attendanceCount,
-      int lateCount, int absenceCount,
+  public static CrewAttendanceInformation of(Crew crew, long attendanceCount,
+      long lateCount, long absenceCount,
       List<AttendanceInformation> attendanceInformation,
       ManagementStatus managementStatus) {
     return new CrewAttendanceInformation(crew.getName(), attendanceCount,
@@ -36,15 +36,15 @@ public class CrewAttendanceInformation {
     return crewName;
   }
 
-  public int getAttendanceCount() {
+  public long getAttendanceCount() {
     return attendanceCount;
   }
 
-  public int getLateCount() {
+  public long getLateCount() {
     return lateCount;
   }
 
-  public int getAbsenceCount() {
+  public long getAbsenceCount() {
     return absenceCount;
   }
 

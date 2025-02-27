@@ -22,8 +22,8 @@ public enum Calender {
     this.days = days;
   }
 
-  public static int calculateMissingAttendanceDateCount(TimeLogs timeLogs) {
-    return (int) WEEKDAY.getDays().stream()
+  public static long calculateMissingAttendanceDateCount(TimeLogs timeLogs) {
+    return WEEKDAY.getDays().stream()
         .filter(date -> date.isBefore(LocalDate.of(2024, 12, 14)))
         .filter(date -> !timeLogs.isContain(date))
         .count();

@@ -31,9 +31,9 @@ class CalenderTest {
 
   @Test
   void 출석_기록이_존재하지_않는_날의_개수를_반환() {
-    int missingCount = Calender.calculateMissingAttendanceDateCount(createTimeLogs());
+    long missingCount = Calender.calculateMissingAttendanceDateCount(createTimeLogs());
 
-    assertThat(missingCount).isEqualTo(2);
+    assertThat(missingCount).isEqualTo(2L);
   }
 
 

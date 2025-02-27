@@ -4,11 +4,11 @@ import attendance.domain.crew.CrewAttendanceStatus;
 
 public class ManagementCrewInformation {
     private final String crewName;
-    private final int absenceCount;
-    private final int lateCount;
+    private final long absenceCount;
+    private final long lateCount;
     private final String managementStatus;
 
-    private ManagementCrewInformation(String crewName, int absenceCount, int lateCount, String managementStatus) {
+    private ManagementCrewInformation(String crewName, long absenceCount, long lateCount, String managementStatus) {
         this.crewName = crewName;
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
@@ -28,11 +28,11 @@ public class ManagementCrewInformation {
         return crewName;
     }
 
-    public int getAbsenceCount() {
+    public long getAbsenceCount() {
         return absenceCount;
     }
 
-    public int getLateCount() {
+    public long getLateCount() {
         return lateCount;
     }
 

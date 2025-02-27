@@ -71,30 +71,24 @@ public class TimeLogs {
         .toList();
   }
 
-  public int calculateAbsenceCount() {
-    int presentAbsenceCount = Math.toIntExact(
-        logs.stream()
+  public long calculateAbsenceCount() {
+    long presentAbsenceCount = logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ABSENCE)
-            .count()
-    );
-    int missingAttendanceCount = Calender.calculateMissingAttendanceDateCount(this);
+            .count();
+    long missingAttendanceCount = Calender.calculateMissingAttendanceDateCount(this);
     return presentAbsenceCount + missingAttendanceCount;
   }
 
-  public int calculateLateCount() {
-    return Math.toIntExact(
-        logs.stream()
+  public long calculateLateCount() {
+    return logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.LATE)
-            .count()
-    );
+            .count();
   }
 
-  public int calculateAttendanceCount() {
-    return Math.toIntExact(
-        logs.stream()
+  public long calculateAttendanceCount() {
+    return logs.stream()
             .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ATTENDANCE)
-            .count()
-    );
+            .count();
   }
   
   public AttendanceUpdatesInformation modify(TimeLog updateTimeLog) {

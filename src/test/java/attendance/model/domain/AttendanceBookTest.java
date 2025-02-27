@@ -88,7 +88,7 @@ public class AttendanceBookTest {
 
   @ParameterizedTest
   @MethodSource("getCrewAttendanceLogExpectedValue")
-  void 닉네임을_입력하여_크루_출석_기록_확인(String name, int attendanceCount, int lateCount, int absenceCount,
+  void 닉네임을_입력하여_크루_출석_기록_확인(String name, long attendanceCount, long lateCount, long absenceCount,
       String managementStatus) {
 
     CrewAttendanceInformation attendanceLog = attendanceBook.checkAttendanceTimeLogs(new Crew(name));
@@ -126,7 +126,7 @@ public class AttendanceBookTest {
 
   @ParameterizedTest
   @MethodSource("getManagementCrewExpectedValue")
-  void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount,
+  void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, long lateCount, long absenceCount,
       String managementStatus) {
 
     List<ManagementCrewInformation> managementCrewInformation = attendanceBook.checkManagementCrews();

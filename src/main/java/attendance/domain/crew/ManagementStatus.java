@@ -17,7 +17,7 @@ public enum ManagementStatus {
         this.name = name;
     }
 
-    public static ManagementStatus of(int appliedPolicyAbsenceCount) {
+    public static ManagementStatus of(long appliedPolicyAbsenceCount) {
         if (appliedPolicyAbsenceCount > MIN_ABSENCES_FOR_EXPULSION) {
             return EXPULSION;
         }

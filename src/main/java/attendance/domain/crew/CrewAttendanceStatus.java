@@ -6,15 +6,15 @@ import java.util.Map;
 public class CrewAttendanceStatus {
 
   private final Crew crew;
-  private final Map<AttendanceStatus, Integer> attendanceStatusCounts;
+  private final Map<AttendanceStatus, Long> attendanceStatusCounts;
 
-  private CrewAttendanceStatus(Crew crew ,Map<AttendanceStatus, Integer> attendanceStatusCounts) {
+  private CrewAttendanceStatus(Crew crew ,Map<AttendanceStatus, Long> attendanceStatusCounts) {
     this.crew = crew;
     this.attendanceStatusCounts = attendanceStatusCounts;
   }
 
   public static CrewAttendanceStatus of(Crew crew, TimeLogs timeLogs) {
-    Map<AttendanceStatus, Integer> attendanceStatusCounts = Map.of(
+    Map<AttendanceStatus, Long> attendanceStatusCounts = Map.of(
         AttendanceStatus.ATTENDANCE, timeLogs.calculateAttendanceCount(),
         AttendanceStatus.LATE, timeLogs.calculateLateCount(),
         AttendanceStatus.ABSENCE, timeLogs.calculateAbsenceCount()
@@ -26,16 +26,16 @@ public class CrewAttendanceStatus {
     );
   }
 
-  public int calculatePolicyAppliedAbsenceCount() {
-    int absenceCount = getAbsenceCount();
+  public long calculatePolicyAppliedAbsenceCount() {
+    long absenceCount = getAbsenceCount();
     return absenceCount + applyPolicyToLateCount();
   }
 
-  public int applyPolicyToLateCount() {
+  public long applyPolicyToLateCount() {
     return attendanceStatusCounts.get(AttendanceStatus.LATE) / 3;
   }
 
-  public int calculateRemainingLateCount() {
+  public long calculateRemainingLateCount() {
     return attendanceStatusCounts.get(AttendanceStatus.LATE) % 3;
   }
 
@@ -43,15 +43,15 @@ public class CrewAttendanceStatus {
     return !getManagementStatus().equals(ManagementStatus.NONE);
   }
 
-  public int getAbsenceCount() {
+  public long getAbsenceCount() {
     return attendanceStatusCounts.get(AttendanceStatus.ABSENCE);
   }
 
-  public int getLateCount() {
+  public long getLateCount() {
     return attendanceStatusCounts.get(AttendanceStatus.LATE);
   }
 
-  public int getAttendanceCount() {
+  public long getAttendanceCount() {
     return attendanceStatusCounts.get(AttendanceStatus.ATTENDANCE);
   }
 
