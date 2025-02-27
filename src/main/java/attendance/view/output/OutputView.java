@@ -4,6 +4,7 @@ import attendance.domain.Information.AttendanceInformation;
 import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.Information.ManagementCrewInformation;
 import attendance.domain.Information.AttendanceUpdatesInformation;
+import attendance.domain.crew.AttendanceStatus;
 import attendance.view.input.KoreaDayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
@@ -16,7 +17,8 @@ public class OutputView {
         information.getDate().getDayOfMonth(),
         KoreaDayOfWeek.from(information.getDate().getDayOfWeek()).getName(),
         formatTime(information.getTime()),
-        information.getAttendanceStatus());
+        convertAttendanceStatusToName(information.getAttendanceStatus())
+        );
     System.out.println(message);
   }
 
@@ -72,4 +74,13 @@ public class OutputView {
     );
   }
 
+  private String convertAttendanceStatusToName(AttendanceStatus attendanceStatus) {
+    if (attendanceStatus == AttendanceStatus.ATTENDANCE) {
+      return "출석";
+    }
+    if (attendanceStatus == AttendanceStatus.LATE) {
+      return "지각";
+    }
+      return "결석";
+  }
 }

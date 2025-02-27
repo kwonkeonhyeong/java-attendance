@@ -52,7 +52,7 @@ public class TimeLogs {
 
   private List<AttendanceInformation> generateMissingAttendanceInformation() {
     return Calender.filterMissingDate(this).stream()
-        .map(date -> new AttendanceInformation(date, null, AttendanceStatus.ABSENCE.getName()))
+        .map(date -> new AttendanceInformation(date, null, AttendanceStatus.ABSENCE))
         .toList();
   }
 
@@ -64,7 +64,7 @@ public class TimeLogs {
 
   public long calculateAbsenceCount() {
     long presentAbsenceCount = logs.stream()
-            .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ABSENCE)
+            .filter(log -> log.judgeAttendanceStatus() == AttendanceStatus.ABSENCE)
             .count();
     long missingAttendanceCount = Calender.calculateMissingAttendanceDateCount(this);
     return presentAbsenceCount + missingAttendanceCount;
@@ -72,13 +72,13 @@ public class TimeLogs {
 
   public long calculateLateCount() {
     return logs.stream()
-            .filter(log -> log.getAttendanceStatus() == AttendanceStatus.LATE)
+            .filter(log -> log.judgeAttendanceStatus() == AttendanceStatus.LATE)
             .count();
   }
 
   public long calculateAttendanceCount() {
     return logs.stream()
-            .filter(log -> log.getAttendanceStatus() == AttendanceStatus.ATTENDANCE)
+            .filter(log -> log.judgeAttendanceStatus() == AttendanceStatus.ATTENDANCE)
             .count();
   }
   

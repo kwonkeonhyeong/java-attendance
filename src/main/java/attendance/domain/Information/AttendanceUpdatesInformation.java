@@ -1,5 +1,6 @@
 package attendance.domain.Information;
 
+import attendance.domain.crew.AttendanceStatus;
 import attendance.domain.crew.TimeLog;
 import java.time.LocalDateTime;
 
@@ -8,12 +9,12 @@ public class AttendanceUpdatesInformation {
   private final LocalDateTime before;
   private final LocalDateTime after;
 
-  private final String beforeStatus;
-  private final String afterStatus;
+  private final AttendanceStatus beforeStatus;
+  private final AttendanceStatus afterStatus;
 
   private AttendanceUpdatesInformation(LocalDateTime before, LocalDateTime after,
-      String beforeStatus,
-      String afterStatus) {
+      AttendanceStatus beforeStatus,
+      AttendanceStatus afterStatus) {
     this.before = before;
     this.after = after;
     this.beforeStatus = beforeStatus;
@@ -24,8 +25,8 @@ public class AttendanceUpdatesInformation {
     return new AttendanceUpdatesInformation(
         before.getDateTime(),
         after.getDateTime(),
-        before.getAttendanceStatus().getName(),
-        after.getAttendanceStatus().getName()
+        before.judgeAttendanceStatus(),
+        after.judgeAttendanceStatus()
     );
   }
 
@@ -37,11 +38,11 @@ public class AttendanceUpdatesInformation {
     return after;
   }
 
-  public String getBeforeStatus() {
+  public AttendanceStatus getBeforeStatus() {
     return beforeStatus;
   }
 
-  public String getAfterStatus() {
+  public AttendanceStatus getAfterStatus() {
     return afterStatus;
   }
 

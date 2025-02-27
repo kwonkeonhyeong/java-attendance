@@ -35,7 +35,7 @@ class TimeLogTest {
   @ParameterizedTest
   @MethodSource("createExpectedAttendanceStatusForMonday")
   void 월요일_출석_시간에_따라_출석_상태를_반환(TimeLog timeLog, AttendanceStatus attendanceStatus) {
-    assertThat(timeLog.getAttendanceStatus()).isEqualTo(attendanceStatus);
+    assertThat(timeLog.judgeAttendanceStatus()).isEqualTo(attendanceStatus);
   }
 
   private static Stream<Arguments> createExpectedAttendanceStatusForMonday() {
@@ -70,7 +70,7 @@ class TimeLogTest {
   @ParameterizedTest
   @MethodSource("createExpectedAttendanceStatusForWeekDay")
   void 평일_출석_시간에_따른_출석_상태를_반환(TimeLog timeLog, AttendanceStatus attendanceStatus) {
-    assertThat(timeLog.getAttendanceStatus()).isEqualTo(attendanceStatus);
+    assertThat(timeLog.judgeAttendanceStatus()).isEqualTo(attendanceStatus);
   }
 
   private static Stream<Arguments> createExpectedAttendanceStatusForWeekDay() {

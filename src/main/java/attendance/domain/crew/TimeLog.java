@@ -53,7 +53,7 @@ public class TimeLog implements Comparator<TimeLog> {
     }
   }
 
-  public AttendanceStatus getAttendanceStatus() {
+  public AttendanceStatus judgeAttendanceStatus() {
     if (isAbsence(getDateTime())) {
       return AttendanceStatus.ABSENCE;
     }
@@ -96,7 +96,7 @@ public class TimeLog implements Comparator<TimeLog> {
   }
 
   public AttendanceInformation generateAttendanceInformation() {
-    return new AttendanceInformation(date, time, getAttendanceStatus().getName());
+    return new AttendanceInformation(date, time, judgeAttendanceStatus());
   }
 
   public LocalDateTime getDateTime() {

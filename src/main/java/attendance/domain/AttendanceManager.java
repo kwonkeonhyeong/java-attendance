@@ -55,7 +55,7 @@ public class AttendanceManager {
 
   private AttendanceInformation createAttendanceInformation(TimeLog timeLog) {
     return new AttendanceInformation(timeLog.getDateTime(),
-        timeLog.getAttendanceStatus().getName());
+        timeLog.judgeAttendanceStatus());
   }
 
   public void updateAttendanceTimeLog() {

@@ -9,6 +9,7 @@ import attendance.domain.Information.AttendanceInformation;
 import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.Information.ManagementCrewInformation;
 import attendance.domain.Information.AttendanceUpdatesInformation;
+import attendance.domain.crew.AttendanceStatus;
 import attendance.domain.crew.Crew;
 import attendance.domain.crew.TimeLog;
 import attendance.domain.AttendanceBook;
@@ -83,8 +84,8 @@ public class AttendanceBookTest {
     assertAll(
         () -> assertThat(attendanceUpdatesInformation.getBefore()).isEqualTo(attendanceTime),
         () -> assertThat(attendanceUpdatesInformation.getAfter()).isEqualTo(modifyTime),
-        () -> assertThat(attendanceUpdatesInformation.getBeforeStatus()).isEqualTo("지각"),
-        () -> assertThat(attendanceUpdatesInformation.getAfterStatus()).isEqualTo("출석")
+        () -> assertThat(attendanceUpdatesInformation.getBeforeStatus()).isEqualTo(AttendanceStatus.LATE),
+        () -> assertThat(attendanceUpdatesInformation.getAfterStatus()).isEqualTo(AttendanceStatus.ATTENDANCE)
     );
   }
 
