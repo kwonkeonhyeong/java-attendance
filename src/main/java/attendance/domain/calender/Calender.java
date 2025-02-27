@@ -13,7 +13,7 @@ public enum Calender {
   HOLIDAY(List.of(25));
 
   private static final int YEAR = 2024;
-  private static final Month MONTH = Month.DECEMBER;
+  private static final Month DECEMBER = Month.DECEMBER;
   private static final String NOT_CONTAIN_DECEMBER = "해당 날짜는 2024년 12월에 포함되지 않습니다";
 
   private final List<Integer> days;
@@ -37,7 +37,7 @@ public enum Calender {
   }
 
   public static boolean isMonday(LocalDate date) {
-    if (date.getYear() != YEAR && date.getMonth() != MONTH) {
+    if (date.getYear() != YEAR && date.getMonth() != DECEMBER) {
       throw new IllegalArgumentException(NOT_CONTAIN_DECEMBER);
     }
     return MONDAY.days.contains(date.getDayOfMonth());
@@ -45,7 +45,7 @@ public enum Calender {
 
   public List<LocalDate> getDays() {
     return days.stream()
-        .map(day -> LocalDate.of(YEAR, MONTH, day))
+        .map(day -> LocalDate.of(YEAR, DECEMBER, day))
         .toList();
   }
 
