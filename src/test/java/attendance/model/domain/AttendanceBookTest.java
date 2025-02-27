@@ -11,6 +11,7 @@ import attendance.domain.Information.ManagementCrewInformation;
 import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.domain.crew.AttendanceStatus;
 import attendance.domain.crew.Crew;
+import attendance.domain.crew.ManagementStatus;
 import attendance.domain.crew.TimeLog;
 import attendance.domain.AttendanceBook;
 import attendance.view.input.InputView;
@@ -92,7 +93,7 @@ public class AttendanceBookTest {
   @ParameterizedTest
   @MethodSource("getCrewAttendanceLogExpectedValue")
   void 닉네임을_입력하여_크루_출석_기록_확인(String name, long attendanceCount, long lateCount, long absenceCount,
-      String managementStatus) {
+      ManagementStatus managementStatus) {
 
     CrewAttendanceInformation attendanceLog = attendanceBook.checkAttendanceTimeLogs(
         new Crew(name));
@@ -112,19 +113,19 @@ public class AttendanceBookTest {
   static Stream<Arguments> getCrewAttendanceLogExpectedValue() {
     return Stream.of(
         Arguments.arguments(
-            "빙티", 3, 4, 3, "면담"
+            "빙티", 3, 4, 3, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "이든", 3, 5, 2, "면담"
+            "이든", 3, 5, 2, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "빙봉", 3, 6, 1, "면담"
+            "빙봉", 3, 6, 1, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "쿠키", 5, 3, 2, "면담"
+            "쿠키", 5, 3, 2, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "짱수", 8, 0, 2, "경고"
+            "짱수", 8, 0, 2, ManagementStatus.WARNING
         )
     );
   }
@@ -132,7 +133,7 @@ public class AttendanceBookTest {
   @ParameterizedTest
   @MethodSource("getManagementCrewExpectedValue")
   void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, long lateCount, long absenceCount,
-      String managementStatus) {
+      ManagementStatus managementStatus) {
 
     List<ManagementCrewInformation> managementCrewInformation = attendanceBook.checkManagementCrews();
 
@@ -153,19 +154,19 @@ public class AttendanceBookTest {
   static Stream<Arguments> getManagementCrewExpectedValue() {
     return Stream.of(
         Arguments.arguments(
-            "빙티", 4, 3, "면담"
+            "빙티", 4, 3, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "이든", 5, 2, "면담"
+            "이든", 5, 2, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "빙봉", 6, 1, "면담"
+            "빙봉", 6, 1, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "쿠키", 3, 2, "면담"
+            "쿠키", 3, 2, ManagementStatus.COUNSELING
         ),
         Arguments.arguments(
-            "짱수", 0, 2, "경고"
+            "짱수", 0, 2, ManagementStatus.WARNING
         )
     );
   }

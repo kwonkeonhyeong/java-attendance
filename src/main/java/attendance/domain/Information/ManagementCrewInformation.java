@@ -1,15 +1,16 @@
 package attendance.domain.Information;
 
 import attendance.domain.crew.CrewAttendanceStatus;
+import attendance.domain.crew.ManagementStatus;
 
 public class ManagementCrewInformation {
 
     private final String crewName;
     private final long absenceCount;
     private final long lateCount;
-    private final String managementStatus;
+    private final ManagementStatus managementStatus;
 
-    private ManagementCrewInformation(String crewName, long absenceCount, long lateCount, String managementStatus) {
+    private ManagementCrewInformation(String crewName, long absenceCount, long lateCount, ManagementStatus managementStatus) {
         this.crewName = crewName;
         this.absenceCount = absenceCount;
         this.lateCount = lateCount;
@@ -21,7 +22,7 @@ public class ManagementCrewInformation {
                 crewAttendanceStatus.getCrew().getName(),
                 crewAttendanceStatus.getAbsenceCount(),
                 crewAttendanceStatus.getLateCount(),
-                crewAttendanceStatus.getManagementStatus().getName()
+                crewAttendanceStatus.getManagementStatus()
         );
     }
 
@@ -37,7 +38,7 @@ public class ManagementCrewInformation {
         return lateCount;
     }
 
-    public String getManagementStatus() {
+    public ManagementStatus getManagementStatus() {
         return managementStatus;
     }
 

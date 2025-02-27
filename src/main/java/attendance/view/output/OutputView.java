@@ -5,6 +5,7 @@ import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.Information.ManagementCrewInformation;
 import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.domain.crew.AttendanceStatus;
+import attendance.domain.crew.ManagementStatus;
 import attendance.view.input.KoreaDayOfWeek;
 import java.time.LocalTime;
 import java.util.List;
@@ -51,8 +52,8 @@ public class OutputView {
     System.out.printf("지각: %d회%n", crewAttendanceInformation.getLateCount());
     System.out.printf("결석: %d회%n", crewAttendanceInformation.getAbsenceCount());
 
-    if (!crewAttendanceInformation.getManagementStatus().equals("일반")) {
-      System.out.printf("%n%s 대상자입니다.%n%n", crewAttendanceInformation.getManagementStatus());
+    if (crewAttendanceInformation.getManagementStatus() != ManagementStatus.NONE) {
+      System.out.printf("%n%s 대상자입니다.%n%n", convertManagementStatusToName(crewAttendanceInformation.getManagementStatus()));
     }
   }
 
@@ -64,13 +65,13 @@ public class OutputView {
     System.out.println();
   }
 
-  private String formatManagementCrew(ManagementCrewInformation response) {
+  private String formatManagementCrew(ManagementCrewInformation managementCrewInformation) {
     return String.format(
         "- %s: 결석 %d회, 지각 %d회 (%s)",
-        response.getCrewName(),
-        response.getAbsenceCount(),
-        response.getLateCount(),
-        response.getManagementStatus()
+        managementCrewInformation.getCrewName(),
+        managementCrewInformation.getAbsenceCount(),
+        managementCrewInformation.getLateCount(),
+        convertManagementStatusToName(managementCrewInformation.getManagementStatus())
     );
   }
 
@@ -83,4 +84,18 @@ public class OutputView {
     }
       return "결석";
   }
+
+  private String convertManagementStatusToName(ManagementStatus managementStatus) {
+    if (managementStatus == ManagementStatus.EXPULSION) {
+      return "제적";
+    }
+    if (managementStatus == ManagementStatus.COUNSELING) {
+      return "면담";
+    }
+    if (managementStatus == ManagementStatus.WARNING) {
+      return "경고";
+    }
+      return "일반";
+  }
+
 }

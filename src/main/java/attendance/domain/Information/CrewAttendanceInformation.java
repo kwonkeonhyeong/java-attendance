@@ -11,11 +11,11 @@ public class CrewAttendanceInformation {
   private final long lateCount;
   private final long absenceCount;
   private final List<AttendanceInformation> attendanceInformation;
-  private final String managementStatus;
+  private final ManagementStatus managementStatus;
 
   public CrewAttendanceInformation(String crewName, long attendanceCount, long lateCount,
       long absenceCount, List<AttendanceInformation> attendanceInformation,
-      String managementStatus) {
+      ManagementStatus managementStatus) {
     this.crewName = crewName;
     this.attendanceCount = attendanceCount;
     this.lateCount = lateCount;
@@ -30,7 +30,7 @@ public class CrewAttendanceInformation {
       ManagementStatus managementStatus) {
     return new CrewAttendanceInformation(crew.getName(), attendanceCount,
         lateCount, absenceCount, attendanceInformation,
-        managementStatus.getName());
+        managementStatus);
   }
 
   public String getCrewName() {
@@ -53,7 +53,7 @@ public class CrewAttendanceInformation {
     return attendanceInformation;
   }
 
-  public String getManagementStatus() {
+  public ManagementStatus getManagementStatus() {
     return managementStatus;
   }
 
