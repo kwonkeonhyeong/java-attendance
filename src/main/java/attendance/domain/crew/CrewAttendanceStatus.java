@@ -14,10 +14,12 @@ public class CrewAttendanceStatus {
   }
 
   public static CrewAttendanceStatus of(Crew crew, TimeLogs timeLogs) {
-    Map<AttendanceStatus, Integer> attendanceStatusCounts = new HashMap<>();
-    attendanceStatusCounts.put(AttendanceStatus.ATTENDANCE, timeLogs.calculateAttendanceCount());
-    attendanceStatusCounts.put(AttendanceStatus.LATE, timeLogs.calculateLateCount());
-    attendanceStatusCounts.put(AttendanceStatus.ABSENCE, timeLogs.calculateAbsenceCount());
+    Map<AttendanceStatus, Integer> attendanceStatusCounts = Map.of(
+        AttendanceStatus.ATTENDANCE, timeLogs.calculateAttendanceCount(),
+        AttendanceStatus.LATE, timeLogs.calculateLateCount(),
+        AttendanceStatus.ABSENCE, timeLogs.calculateAbsenceCount()
+    );
+
     return new CrewAttendanceStatus(
         crew,
         attendanceStatusCounts
