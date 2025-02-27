@@ -10,10 +10,10 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.AbstractMap.SimpleImmutableEntry;
-import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DefaultCrewTimeLogsInitializer implements CrewTimeLogsInitializer {
@@ -21,18 +21,24 @@ public class DefaultCrewTimeLogsInitializer implements CrewTimeLogsInitializer {
   @Override
   public Map<Crew, TimeLogs> initialize(Path filePath) {
     try (Stream<String> lines = Files.lines(filePath)) {
-      HashMap<Crew, TimeLogs> map = new HashMap<>();
-      lines.skip(1)
-          .map(this::deSerialize)
-          .forEach(entry -> {
-            TimeLogs times = map.getOrDefault(entry.getKey(), new TimeLogs(new LinkedList<>()));
-            times.add(entry.getValue());
-            map.put(entry.getKey(), times);
-          });
-      return map;
+      Map<Crew, List<TimeLog>> crewWithTimeLogs = groupByCrewWithTimeLogs(lines);
+      return crewWithTimeLogs.entrySet().stream()
+          .collect(Collectors.toMap(
+              Entry::getKey,
+              entry -> new TimeLogs(entry.getValue())
+          ));
     } catch (IOException e) {
       throw new UncheckedIOException(e);
     }
+  }
+
+  private Map<Crew, List<TimeLog>> groupByCrewWithTimeLogs(Stream<String> dataStream) {
+    return dataStream.skip(1)
+        .map(this::deSerialize)
+        .collect(Collectors.groupingBy(
+            Entry::getKey,
+            Collectors.mapping(Entry::getValue, Collectors.toList())
+        ));
   }
 
   private Entry<Crew, TimeLog> deSerialize(final String line) throws UncheckedIOException {
