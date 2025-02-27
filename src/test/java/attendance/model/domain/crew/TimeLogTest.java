@@ -18,7 +18,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class TimeLogTest {
 
-  // TimeLogs, TimeLog
   @Test
   void TimeLog와_날짜가_같으면_true를_반환() {
     TimeLog log = TimeLog.from(LocalDateTime.of(2024, 12, 13, 13, 0));

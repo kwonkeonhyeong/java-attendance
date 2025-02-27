@@ -75,7 +75,6 @@ class TimeLogsTest {
     assertThat(timeLogs.calculateLateCount()).isEqualTo(3);
   }
 
-  // 13일까지의 출석 기록이 있다고 가정합니다.
   @Test
   void TimeLogs_기록을_기준으로_결석_count_계산() {
     TimeLogs timeLogs = createTimeLogsForCountTest();
