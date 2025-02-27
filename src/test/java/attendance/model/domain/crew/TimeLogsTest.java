@@ -28,30 +28,6 @@ class TimeLogsTest {
   }
 
   @Test
-  void TimeLogs에_다른_TimeLogs_내의_모든_출석_기록을_등록() {
-
-    List<TimeLog> logs = new ArrayList<>();
-    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
-    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));
-    TimeLogs timeLogs = new TimeLogs(logs);
-
-    List<TimeLog> anotherLogs = new ArrayList<>();
-    anotherLogs.add(TimeLog.from(LocalDateTime.of(2024, 12, 5, 10, 3)));
-    anotherLogs.add(TimeLog.from(LocalDateTime.of(2024, 12, 4, 10, 2)));
-    TimeLogs anotherTimeLogs = new TimeLogs(anotherLogs);
-
-    timeLogs.addAll(anotherTimeLogs);
-
-    assertThat(
-        timeLogs.isContain(LocalDateTime.of(2024, 12, 4, 10, 2))
-    ).isTrue();
-
-    assertThat(
-        timeLogs.isContain(LocalDateTime.of(2024, 12, 5, 10, 3))
-    ).isTrue();
-  }
-
-  @Test
   void TimeLogs에_특정_일의_TimeLog가_존재하는지_확인() {
     List<TimeLog> logs = new ArrayList<>();
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));

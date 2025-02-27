@@ -35,14 +35,6 @@ public class TimeLogs {
         });
   }
 
-  public void addAll(TimeLogs timeLogs) {
-    logs.addAll(timeLogs.getLogs());
-  }
-
-  public List<TimeLog> getLogs() {
-    return logs.stream().toList();
-  }
-
   public CrewAttendanceInformation generateCrewAttendanceInformation(Crew crew) {
     List<AttendanceInformation> attendanceInformation = Stream.concat(
             generateAttendanceInformation().stream(), generateMissingAttendanceInformation().stream()
