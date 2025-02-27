@@ -1,6 +1,7 @@
 package attendance.domain.crew;
 
 import attendance.domain.Information.AttendanceInformation;
+import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.calender.Calender;
 import java.time.LocalDate;
@@ -25,11 +26,11 @@ public class TimeLogs {
     logs.add(log);
   }
 
-  private void validateConflict(TimeLog timeLog) {
+  private void validateConflict(TimeLog attendTimeLog) {
     logs.stream()
-        .filter(value -> value.equals(timeLog))
+        .filter(timeLog -> timeLog.isSame(attendTimeLog))
         .findFirst()
-        .ifPresent(value -> {
+        .ifPresent(timeLog -> {
           throw new IllegalArgumentException(DUPLICATE_TIME_LOG);
         });
   }
@@ -95,23 +96,15 @@ public class TimeLogs {
             .count()
     );
   }
-
-  public void remove(TimeLog log) {
-    logs.remove(log);
-  }
-
-  public TimeLog getLog(TimeLog log) {
-    return logs.stream()
-        .filter(value -> value.equals(log))
+  
+  public AttendanceUpdatesInformation modify(TimeLog updateTimeLog) {
+    TimeLog previousTimeLog = logs.stream()
+        .filter(timeLog -> timeLog.isSame(updateTimeLog))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
-  }
-
-  public TimeLog getLog(LocalDate date) {
-    return logs.stream()
-        .filter(value -> value.isSame(date))
-        .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_TIME_LOG));
+    logs.remove(previousTimeLog);
+    logs.add(updateTimeLog);
+    return AttendanceUpdatesInformation.of(previousTimeLog, updateTimeLog);
   }
 
   public boolean isContain(LocalDate date) {

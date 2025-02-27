@@ -1,88 +1,85 @@
 package attendance.model.domain.crew;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import attendance.domain.crew.Crew;
 import attendance.domain.crew.CrewAttendanceStatus;
+import attendance.domain.crew.TimeLog;
 import attendance.domain.crew.TimeLogs;
-import attendance.repository.AttendanceRepository;
-import attendance.repository.CrewTimeLogsInitializer;
-import attendance.repository.DefaultCrewTimeLogsInitializer;
-import java.nio.file.Path;
+import attendance.domain.AttendanceBook;
+import attendance.view.input.InputView;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 class CrewAttendanceStatusTest {
 
-  private AttendanceRepository attendanceRepository;
 
-  @BeforeEach
-  void beforeEach() {
-    final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
-    final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances_test.csv");
-    attendanceRepository = new AttendanceRepository(crewTimeLogsInitializer,
-        crewAttendanceDataPath);
+  private final InputView inputView = new InputView();
+  private final AttendanceBook attendanceBook = new AttendanceBook(inputView.loadCrewAttendanceTimeLogs());
+  private final CrewAttendanceStatus managementCrewStatus = CrewAttendanceStatus.of(new Crew("이든"), createRequiredManagementCrewTimeLogs());
+  private final CrewAttendanceStatus crewStatus = CrewAttendanceStatus.of(new Crew("히포"), createCrewTimeLogs());
+
+  @Test
+  void 크루의_현재_출석_상태가_관리를_필요로_하는_경우_TRUE() {
+    assertThat(managementCrewStatus.isRequiredManagement()).isTrue();
   }
 
-  @ParameterizedTest
-  @MethodSource("createCrewAttendanceStatusData")
-  void 크루의_현재_출석_상태가_관리를_필요로_하는지_확인(String name, boolean isRequired) {
-    Crew crew = attendanceRepository.findCrewByName(name).orElse(null);
-    TimeLogs timeLogs = attendanceRepository.findTimeLogsByCrew(crew);
-    CrewAttendanceStatus crewAttendanceStatus = CrewAttendanceStatus.of(crew, timeLogs);
-    assertThat(crewAttendanceStatus.isRequiredManagement()).isEqualTo(isRequired);
+  @Test
+  void 크루의_현재_출석_상태가_관리를_필요로_하는_경우_FALSE() {
+    assertThat(crewStatus.isRequiredManagement()).isFalse();
   }
 
-  @ParameterizedTest
-  @MethodSource("createPolicyAppliedAbsenceCountData")
-  void 지각_3회_시_결석_1회로_환산된_출석_기록_확인(String name, int policyAppliedAbsenceCount) {
-    Crew crew = attendanceRepository.findCrewByName(name).orElse(null);
-    TimeLogs timeLogs = attendanceRepository.findTimeLogsByCrew(crew);
-    CrewAttendanceStatus crewAttendanceStatus = CrewAttendanceStatus.of(crew, timeLogs);
-    assertThat(crewAttendanceStatus.getPolicyAppliedAbsenceCount()).isEqualTo(policyAppliedAbsenceCount);
-  }
-
-  private static Stream<Arguments> createCrewAttendanceStatusData() {
-    return Stream.of(
-        Arguments.arguments(
-            "빙티", true
-        ),
-        Arguments.arguments(
-            "이든", true
-        ),
-        Arguments.arguments(
-            "빙봉", true
-        ),
-        Arguments.arguments(
-            "쿠키", true
-        ),
-        Arguments.arguments(
-            "짱수", true
-        )
+  @Test
+  void 지각_3회_시_결석_1회로_환산된_출석_기록_확인() {
+    assertAll(
+        () ->assertThat(managementCrewStatus.calculatePolicyAppliedAbsenceCount()).isEqualTo(3),
+        () ->assertThat(crewStatus.calculatePolicyAppliedAbsenceCount()).isEqualTo(0)
     );
   }
 
-  private static Stream<Arguments> createPolicyAppliedAbsenceCountData() {
-    return Stream.of(
-        Arguments.arguments(
-            "빙티", 4
-        ),
-        Arguments.arguments(
-            "이든", 3
-        ),
-        Arguments.arguments(
-            "빙봉", 3
-        ),
-        Arguments.arguments(
-            "쿠키", 3
-        ),
-        Arguments.arguments(
-            "짱수", 2
-        )
+  @Test
+  void 지각_3회_시_결석_1회로_반환_후_남은_지각_횟수_반환() {
+    assertAll(
+        () -> assertThat(managementCrewStatus.calculateRemainingLateCount()).isEqualTo(1),
+        () -> assertThat(crewStatus.calculateRemainingLateCount()).isEqualTo(0)
     );
+  }
+
+  private TimeLogs createRequiredManagementCrewTimeLogs() {
+    List<TimeLog> logs = new ArrayList<>();
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 1)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 6)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 4, 10, 3)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 5, 10, 31)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 6, 10, 30)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 9, 13, 5)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 10, 10, 17)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 11, 10, 3)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 12, 10, 34)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 13, 10, 7)));
+    return new TimeLogs(logs);
+  }
+
+  private TimeLogs createCrewTimeLogs() {
+    List<TimeLog> logs = new ArrayList<>();
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 13, 1)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 2)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 4, 10, 3)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 5, 10, 4)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 6, 10, 5)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 9, 13, 5)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 10, 10, 1)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 11, 10, 2)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 12, 10, 3)));
+    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 13, 10, 4)));
+    return new TimeLogs(logs);
   }
 
 }

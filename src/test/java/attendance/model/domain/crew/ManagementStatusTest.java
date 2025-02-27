@@ -20,9 +20,9 @@ class ManagementStatusTest {
     CrewAttendanceStatus counselingTimeLogs = createCounselingCrewAttendanceStatus();
     CrewAttendanceStatus warningTimeLogs = createWarningCrewAttendanceStatus();
 
-    ManagementStatus expulsionManagementStatus = ManagementStatus.of(expulsionTimeLogs.getPolicyAppliedAbsenceCount());
-    ManagementStatus counselingManagementStatus = ManagementStatus.of(counselingTimeLogs.getPolicyAppliedAbsenceCount());
-    ManagementStatus warningManagementStatus = ManagementStatus.of(warningTimeLogs.getPolicyAppliedAbsenceCount());
+    ManagementStatus expulsionManagementStatus = ManagementStatus.of(expulsionTimeLogs.calculatePolicyAppliedAbsenceCount());
+    ManagementStatus counselingManagementStatus = ManagementStatus.of(counselingTimeLogs.calculatePolicyAppliedAbsenceCount());
+    ManagementStatus warningManagementStatus = ManagementStatus.of(warningTimeLogs.calculatePolicyAppliedAbsenceCount());
 
     assertThat(expulsionManagementStatus).isEqualTo(ManagementStatus.EXPULSION);
     assertThat(counselingManagementStatus).isEqualTo(ManagementStatus.COUNSELING);

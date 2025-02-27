@@ -1,43 +1,32 @@
-package attendance;
+package attendance.model.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatIllegalArgumentException;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import attendance.domain.AttendanceManager;
 import attendance.domain.Information.AttendanceInformation;
 import attendance.domain.Information.CrewAttendanceInformation;
 import attendance.domain.Information.ManagementCrewInformation;
 import attendance.domain.Information.AttendanceUpdatesInformation;
 import attendance.domain.crew.Crew;
-import attendance.domain.crew.comprator.DefaultCrewAttendanceComparator;
-import attendance.domain.crew.TimeLogs;
-import attendance.repository.AttendanceRepository;
-import attendance.repository.CrewTimeLogsInitializer;
-import attendance.repository.DefaultCrewTimeLogsInitializer;
-import attendance.service.AttendanceService;
-import java.nio.file.Path;
+import attendance.domain.crew.TimeLog;
+import attendance.domain.AttendanceBook;
+import attendance.view.input.InputView;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Stream;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class AttendanceTest {
+public class AttendanceBookTest {
 
-  private AttendanceRepository attendanceRepository;
-  private AttendanceService attendanceService;
-
-  @BeforeEach
-  void beforeEach() {
-    final CrewTimeLogsInitializer crewTimeLogsInitializer = new DefaultCrewTimeLogsInitializer();
-    final Path crewAttendanceDataPath = Path.of("src/main/resources/attendances_test.csv");
-    attendanceRepository = new AttendanceRepository(crewTimeLogsInitializer,
-        crewAttendanceDataPath);
-    attendanceService = new AttendanceService(attendanceRepository);
-  }
+  private final InputView inputView = new InputView();
+  private final AttendanceBook attendanceBook = new AttendanceBook(inputView.loadCrewAttendanceTimeLogs());
 
   // 닉네임과 등교 시간을 입력하면 출석할 수 있다.
   @Test
@@ -47,80 +36,60 @@ public class AttendanceTest {
 
     LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 16, 10, 3);
 
-    attendanceService.attendance(crew, localDateTime);
+    TimeLog timeLog = TimeLog.from(localDateTime);
 
-    TimeLogs values = attendanceRepository.findTimeLogsByCrew(crew);
-
-    assertThat(values.isContain(localDateTime)).isTrue();
+    assertThatCode(() -> attendanceBook.attend(crew, timeLog))
+        .doesNotThrowAnyException();
   }
 
   // 출석 기록을 확인할 수 있다.
   @Test
   void 출석_기록을_확인할_수_있다() {
 
-    String crewName = "이든";
+    Crew crew = new Crew("이든");
 
-    CrewAttendanceInformation crewAttendanceInformation = attendanceService.generateCrewAttendanceInformation(crewName);
+    CrewAttendanceInformation crewAttendanceInformation = attendanceBook.checkAttendanceTimeLogs(crew);
 
     List<AttendanceInformation> attendanceInformation = crewAttendanceInformation.getAttendanceInformation();
 
     String searchCrewName = crewAttendanceInformation.getCrewName();
 
-    assertThat(crewName).isEqualTo(searchCrewName);
+    assertThat(crew.getName()).isEqualTo(searchCrewName);
     assertThat(attendanceInformation).isNotEmpty();
   }
 
   // 이미 출석한 경우, 다시 출석할 수 없으며 수정 기능을 이용하도록 안내한다.
   @Test
   void 이미_출석한_경우_다시_출석할_수_없으며_수정_기능을_이용하도록_안내한다() {
-
     Crew crew = new Crew("이든");
+    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 10, 10, 3);
+    TimeLog timeLog = TimeLog.from(localDateTime);
 
-    LocalDateTime localDateTime = LocalDateTime.of(2024, 12, 16, 10, 3);
-
-    attendanceService.attendance(crew, localDateTime);
-
-    assertThatIllegalArgumentException()
-        .isThrownBy(() -> attendanceService.attendance(crew, localDateTime))
-        .withMessage("금일 출석 기록이 이미 존재합니다");
+    assertThatThrownBy(() -> attendanceBook.attend(crew, timeLog))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("금일 출석 기록이 이미 존재합니다");
   }
 
   // 출석 확인을 수정하려면 닉네임, 수정하려는 날짜, 등교 시간을 입력하여 기록을 수정할 수 있다.
   @Test
   void 출석을_수정할_수_있다() {
-
     Crew crew = new Crew("이든");
+    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 16, 13, 30);
+    TimeLog attendanceTimeLog = TimeLog.from(attendanceTime);
+    attendanceBook.attend(crew, attendanceTimeLog);
 
-    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 16, 14, 20);
+    LocalDateTime modifyTime = LocalDateTime.of(2024, 12, 16, 13, 3);
+    TimeLog modifyTimeLog = TimeLog.from(modifyTime);
 
-    attendanceService.attendance(crew, attendanceTime);
+    AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceBook.modifiedAttendanceTimeLog(
+        crew, modifyTimeLog);
 
-    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 16, 14, 30);
-
-    attendanceService.updateAttendance(crew, timeToEdit);
-
-    TimeLogs values = attendanceRepository.findTimeLogsByCrew(crew);
-
-    assertThat(values.isContain(timeToEdit)).isTrue();
-  }
-
-  // 수정 후에는 변경 전과 변경 후의 출석 기록을 확인할 수 있다.
-  @Test
-  void 수정_후에는_변경_전과_변경_후의_출석_기록을_확인할_수_있다() {
-
-    Crew crew = new Crew("이든");
-
-    LocalDateTime attendanceTime = LocalDateTime.of(2024, 12, 16, 10, 20);
-
-    attendanceService.attendance(crew, attendanceTime);
-
-    LocalDateTime timeToEdit = LocalDateTime.of(2024, 12, 16, 10, 4);
-
-    AttendanceUpdatesInformation attendanceUpdatesInformation = attendanceService.updateAttendance(crew,
-        timeToEdit);
-
-    assertThat(attendanceUpdatesInformation.getBefore()).isEqualTo(attendanceTime);
-    assertThat(attendanceUpdatesInformation.getAfter()).isEqualTo(timeToEdit);
+    assertAll(
+        () -> assertThat(attendanceUpdatesInformation.getBefore()).isEqualTo(attendanceTime),
+        () -> assertThat(attendanceUpdatesInformation.getAfter()).isEqualTo(modifyTime),
+        () -> assertThat(attendanceUpdatesInformation.getBeforeStatus()).isEqualTo("지각"),
+        () -> assertThat(attendanceUpdatesInformation.getAfterStatus()).isEqualTo("출석")
+    );
   }
 
   // 닉네임을 입력하여 크루 출석 기록을 확인할 수 있다.
@@ -129,7 +98,7 @@ public class AttendanceTest {
   void 닉네임을_입력하여_크루_출석_기록_확인(String name, int attendanceCount, int lateCount, int absenceCount,
       String managementStatus) {
 
-    CrewAttendanceInformation attendanceLog = attendanceService.generateCrewAttendanceInformation(name);
+    CrewAttendanceInformation attendanceLog = attendanceBook.checkAttendanceTimeLogs(new Crew(name));
 
     assertAll(
         () -> assertThat(attendanceLog.getCrewName()).isEqualTo(name),
@@ -167,8 +136,7 @@ public class AttendanceTest {
   void 전날까지의_크루_출석_기록을_통해_제적_위험자_반환(String name, int lateCount, int absenceCount,
       String managementStatus) {
 
-    List<ManagementCrewInformation> managementCrewInformation = attendanceService.generateManagementCrewInformation(
-        new DefaultCrewAttendanceComparator());
+    List<ManagementCrewInformation> managementCrewInformation = attendanceBook.checkManagementCrews();
 
     for (ManagementCrewInformation information : managementCrewInformation) {
       if (information.getCrewName().equals(name)) {

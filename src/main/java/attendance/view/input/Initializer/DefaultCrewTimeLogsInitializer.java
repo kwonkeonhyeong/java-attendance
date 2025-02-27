@@ -1,4 +1,4 @@
-package attendance.repository;
+package attendance.view.input.Initializer;
 
 import attendance.domain.crew.Crew;
 import attendance.domain.crew.TimeLog;

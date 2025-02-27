@@ -1,17 +1,26 @@
 package attendance.view.input;
 
-import attendance.controller.Command;
+import attendance.domain.Command;
+import attendance.domain.crew.Crew;
+import attendance.domain.crew.TimeLogs;
+import attendance.view.input.Initializer.CrewTimeLogsInitializer;
+import attendance.view.input.Initializer.DefaultCrewTimeLogsInitializer;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
 
 public class InputView {
 
+    private static final String FILE_PATH = "src/main/resources/attendances.csv";
+
     private static final Scanner SCANNER = new Scanner(System.in);
+    private static final CrewTimeLogsInitializer initializer = new DefaultCrewTimeLogsInitializer();
 
     public Command inputCommand() {
         System.out.print(getToday());
@@ -61,4 +70,7 @@ public class InputView {
         return LocalTime.parse(SCANNER.nextLine(), formatter);
     }
 
+    public Map<Crew, TimeLogs> loadCrewAttendanceTimeLogs() {
+        return initializer.initialize(Path.of(FILE_PATH));
+    }
 }

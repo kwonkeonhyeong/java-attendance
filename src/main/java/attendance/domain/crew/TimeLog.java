@@ -91,6 +91,10 @@ public class TimeLog implements Comparator<TimeLog> {
     return this.date.equals(date);
   }
 
+  public boolean isSame(TimeLog timeLog) {
+    return timeLog.isSame(date);
+  }
+
   public AttendanceInformation generateAttendanceInformation() {
     return new AttendanceInformation(date, time, getAttendanceStatus().getName());
   }

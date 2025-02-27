@@ -52,20 +52,6 @@ class TimeLogsTest {
   }
 
   @Test
-  void TimeLogs에서_TimeLog를_제거() {
-    List<TimeLog> logs = new ArrayList<>();
-    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
-    logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 3, 10, 1)));
-    TimeLogs timeLogs = new TimeLogs(logs);
-
-    timeLogs.remove(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
-
-    assertThat(
-        timeLogs.isContain(LocalDateTime.of(2024, 12, 2, 10, 0))
-    ).isFalse();
-  }
-
-  @Test
   void TimeLogs에_특정_일의_TimeLog가_존재하는지_확인() {
     List<TimeLog> logs = new ArrayList<>();
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 2, 10, 0)));
@@ -106,7 +92,6 @@ class TimeLogsTest {
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 9, 13, 5)));
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 10, 10, 17)));
     logs.add(TimeLog.from(LocalDateTime.of(2024, 12, 11, 10, 34)));
-
     return new TimeLogs(logs);
   }
 }
