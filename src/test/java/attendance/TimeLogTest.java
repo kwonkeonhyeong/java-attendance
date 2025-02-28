@@ -11,7 +11,7 @@ public class TimeLogTest {
 
   @DisplayName("캠퍼스_운영_시간이_아닌_경우_예외_발생")
   @Test
-  void timeOperatingTime() {
+  void operationTimeTest1() {
     List<LocalDateTime> dateTimes = List.of(
         LocalDateTime.of(2025, 2, 28, 7, 59),
         LocalDateTime.of(2025, 2, 28, 23, 1)
@@ -27,7 +27,7 @@ public class TimeLogTest {
 
   @DisplayName("캠퍼스_운영_시간인_경우_TimeLog_생성")
   @Test
-  void timeOperatingTime2() {
+  void operationTimeTest2() {
     List<LocalDateTime> dateTimes = List.of(
         LocalDateTime.of(2025, 2, 28, 8, 0),
         LocalDateTime.of(2025, 2, 28, 23, 0)
