@@ -1,8 +1,10 @@
 package attendance;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 
 public class TimeLog {
 
@@ -14,14 +16,26 @@ public class TimeLog {
   private final LocalTime time;
 
   public TimeLog(LocalDateTime dateTime) {
+    validateCampusOperatingDate(dateTime);
     validateCampusOperatingTime(dateTime.toLocalTime());
     this.date = dateTime.toLocalDate();
     this.time = dateTime.toLocalTime();
   }
 
-  private static void validateCampusOperatingTime(LocalTime time) {
+  private void validateCampusOperatingTime(LocalTime time) {
     if(time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
       throw new IllegalArgumentException(CAMPUS_CLOSED_MESSAGE);
     }
   }
+
+  private void validateCampusOperatingDate(LocalDateTime dateTime) {
+    DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
+    if(dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+      throw new IllegalArgumentException("주말 또는 공휴일에는 운영하지 않습니다.");
+    }
+    if(dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 25) {
+      throw  new IllegalArgumentException("주말 또는 공휴일에는 운영하지 않습니다.");
+    }
+  }
+
 }
