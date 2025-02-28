@@ -11,6 +11,7 @@ public class TimeLog {
   private static final LocalTime CAMPUS_OPEN_TIME = LocalTime.of(8, 0);
   private static final LocalTime CAMPUS_CLOSE_TIME = LocalTime.of(23, 0);
   private static final String CAMPUS_CLOSED_MESSAGE = "캠퍼스 운영 시간이 아닙니다";
+  private static final String NON_OPERATING_DAY_MESSAGE = "주말 또는 공휴일에는 운영하지 않습니다.";
 
   private final LocalDate date;
   private final LocalTime time;
@@ -31,10 +32,10 @@ public class TimeLog {
   private void validateCampusOperatingDate(LocalDateTime dateTime) {
     DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
     if(dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
-      throw new IllegalArgumentException("주말 또는 공휴일에는 운영하지 않습니다.");
+      throw new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
     }
-    if(dateTime.getMonth() == Month.DECEMBER && dateTime.getDayOfMonth() == 25) {
-      throw  new IllegalArgumentException("주말 또는 공휴일에는 운영하지 않습니다.");
+    if(Holiday.contains(dateTime.toLocalDate())) {
+      throw  new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
     }
   }
 
