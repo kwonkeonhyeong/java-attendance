@@ -18,7 +18,7 @@ public class CrewTest {
 
   @DisplayName("크루_닉네임이_2_4자가_아닌_경우_예외_발생")
   @ParameterizedTest
-  @ValueSource(strings = {"12","123","1234"})
+  @ValueSource(strings = {"1","12345","123456"})
   void crewNicknameLengthTest2(String name) {
     Assertions.assertThatThrownBy(() -> new Crew(name));
   }
