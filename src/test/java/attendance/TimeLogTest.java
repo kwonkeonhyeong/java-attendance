@@ -79,6 +79,15 @@ public class TimeLogTest {
     assertThatCode(() -> new TimeLog(weekday)).doesNotThrowAnyException();
   }
 
+  @DisplayName("TimeLog_동등성_확인")
+  @Test
+  void timeLogEqualsTest() {
+    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,28,10,0)))).isTrue();
+    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,27,10,0)))).isFalse();
+    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,3,28,10,0)))).isFalse();
+    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,28,10,5)))).isFalse();
+  }
+
   @DisplayName("AttendanceRecord_동등성_확인")
   @ParameterizedTest
   @MethodSource("createAttendanceRecord")
