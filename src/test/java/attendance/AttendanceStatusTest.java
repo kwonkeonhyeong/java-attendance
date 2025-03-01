@@ -14,16 +14,16 @@ public class AttendanceStatusTest {
   void judgeAttendanceStatusByWeekdayTimeLogTest() {
     assertAll(
         () -> assertThat(
-            AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 5)))).isEqualTo(
+            AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 2, 28, 10, 5)))).isEqualTo(
             AttendanceStatus.ATTENDANCE),
         () -> assertThat(
-            AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 6)))).isEqualTo(
+            AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 2, 28, 10, 6)))).isEqualTo(
             AttendanceStatus.LATE),
         () -> assertThat(
-            AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 30)))).isEqualTo(
+            AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 2, 28, 10, 30)))).isEqualTo(
             AttendanceStatus.LATE),
         () -> assertThat(
-            AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 31)))).isEqualTo(
+            AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 2, 28, 10, 31)))).isEqualTo(
             AttendanceStatus.ABSENCE)
     );
   }
@@ -32,13 +32,13 @@ public class AttendanceStatusTest {
   @Test
   void judgeAttendanceStatusByMondayTimeLogTest() {
     assertAll(
-      () -> assertThat(AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 5)))).isEqualTo(
+      () -> assertThat(AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 3, 3, 13, 5)))).isEqualTo(
           AttendanceStatus.ATTENDANCE),
-      () -> assertThat(AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 6)))).isEqualTo(
+      () -> assertThat(AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 3, 3, 13, 6)))).isEqualTo(
           AttendanceStatus.LATE),
-      () -> assertThat(AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 30)))).isEqualTo(
+      () -> assertThat(AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 3, 3, 13, 30)))).isEqualTo(
           AttendanceStatus.LATE),
-      () -> assertThat(AttendanceStatus.from(new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 31)))).isEqualTo(
+      () -> assertThat(AttendanceStatus.from(new AttendanceRecord(LocalDateTime.of(2025, 3, 3, 13, 31)))).isEqualTo(
           AttendanceStatus.ABSENCE)
     );
   }

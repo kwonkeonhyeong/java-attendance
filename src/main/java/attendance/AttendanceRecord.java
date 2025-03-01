@@ -1,24 +1,54 @@
 package attendance;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Objects;
 
 public class AttendanceRecord {
 
-  private final Crew crew;
-  private final TimeLog timeLog;
+  private static final LocalTime CAMPUS_OPEN_TIME = LocalTime.of(8, 0);
+  private static final LocalTime CAMPUS_CLOSE_TIME = LocalTime.of(23, 0);
+  private static final String CAMPUS_CLOSED_MESSAGE = "캠퍼스 운영 시간이 아닙니다";
+  private static final String NON_OPERATING_DAY_MESSAGE = "주말 또는 공휴일에는 운영하지 않습니다.";
 
-  public AttendanceRecord(String nickname, LocalDateTime attendanceTime) {
-    this.crew = new Crew(nickname);
-    this.timeLog = new TimeLog(attendanceTime);
+  private final LocalDate date;
+  private final LocalTime time;
+
+  public AttendanceRecord(LocalDateTime dateTime) {
+    validateCampusOperatingDate(dateTime);
+    validateCampusOperatingTime(dateTime.toLocalTime());
+    this.date = dateTime.toLocalDate();
+    this.time = dateTime.toLocalTime();
   }
 
-  public Crew getNickname() {
-    return crew;
+  private void validateCampusOperatingTime(LocalTime time) {
+    if(time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
+      throw new IllegalArgumentException(CAMPUS_CLOSED_MESSAGE);
+    }
   }
 
-  public TimeLog getTimeLog() {
-    return timeLog;
+  private void validateCampusOperatingDate(LocalDateTime dateTime) {
+    DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
+    if(dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+      throw new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
+    }
+    if(Holiday.contains(dateTime.toLocalDate())) {
+      throw  new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
+    }
+  }
+
+  public boolean isMonday() {
+    return date.getDayOfWeek().equals(DayOfWeek.MONDAY);
+  }
+
+  public boolean isAttendance(LocalTime attendanceDeadline) {
+    return time.isBefore(attendanceDeadline) || time.equals(attendanceDeadline);
+  }
+
+  public boolean isLate(LocalTime lateDeadline) {
+    return time.isBefore(lateDeadline) || time.equals(lateDeadline);
   }
 
   @Override
@@ -26,14 +56,12 @@ public class AttendanceRecord {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AttendanceRecord that = (AttendanceRecord) o;
-    return Objects.equals(crew, that.crew) && Objects.equals(timeLog,
-        that.timeLog);
+    AttendanceRecord attendanceRecord = (AttendanceRecord) o;
+    return Objects.equals(date, attendanceRecord.date);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(crew, timeLog);
+    return Objects.hash(date);
   }
-
 }
