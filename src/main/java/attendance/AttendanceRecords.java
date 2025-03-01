@@ -8,7 +8,8 @@ public class AttendanceRecords {
   private final List<AttendanceRecord> attendanceRecords = new ArrayList<>();
 
   public AttendanceRecord save(AttendanceRecord attendanceRecord) {
-    return null;
+    attendanceRecords.add(attendanceRecord);
+    return attendanceRecord;
   }
 
 }
