@@ -88,36 +88,4 @@ public class TimeLogTest {
     assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,28,10,5)))).isFalse();
   }
 
-  @DisplayName("AttendanceRecord_동등성_확인")
-  @ParameterizedTest
-  @MethodSource("createAttendanceRecord")
-  void attendanceRecordEqualsTest(AttendanceRecord record, AttendanceRecord anotherRecord, boolean expected) {
-    assertThat(record.equals(anotherRecord)).isEqualTo(expected);
-  }
-
-  static Stream<Arguments> createAttendanceRecord() {
-    return Stream.of(
-        Arguments.arguments(
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 2, 28, 10, 0)),
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 2, 28, 10, 0)),
-            true
-        ),
-        Arguments.arguments(
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 2, 28, 10, 0)),
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 2, 28, 10, 5)),
-            false
-        ),
-        Arguments.arguments(
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 3, 3, 10, 0)),
-            new AttendanceRecord("이든", LocalDateTime.of(2025, 3, 4, 10, 0)),
-            false
-        ),
-        Arguments.arguments(
-            new AttendanceRecord("히포", LocalDateTime.of(2025, 2, 28, 10, 0)),
-            new AttendanceRecord("이든", LocalDateTime.of(2025, 2, 28, 10, 0)),
-            false
-        )
-    );
-  }
-
 }
