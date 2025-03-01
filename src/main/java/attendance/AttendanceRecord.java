@@ -66,6 +66,6 @@ public class AttendanceRecord {
   }
 
   public LocalDateTime getDateTime() {
-    return null;
+    return LocalDateTime.of(date, time);
   }
 }

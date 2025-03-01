@@ -3,6 +3,8 @@ package attendance;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,7 +14,15 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class AttendanceBookTest {
-  private final AttendanceBook attendanceBook = new AttendanceBook();
+
+  private final AttendanceBook attendanceBook = new AttendanceBook(
+      new HashMap<>(
+          Map.of(
+              new Crew("히포"), new AttendanceRecords()
+          )
+      )
+  );
+
   @DisplayName("출석_확인_시_크루가_존재하지_않는_경우_예외_발생")
   @Test
   void notExistsCrewTest() {

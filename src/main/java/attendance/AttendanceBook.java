@@ -1,12 +1,15 @@
 package attendance;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
 public class AttendanceBook {
 
-  private final Map<Crew, AttendanceRecords> attendanceBook = new HashMap<>();
+  private final Map<Crew, AttendanceRecords> attendanceBook;
+
+  public AttendanceBook(Map<Crew, AttendanceRecords> attendanceBook) {
+    this.attendanceBook = attendanceBook;
+  }
 
   public AttendanceRecord checkAttendance (String nickname, LocalDateTime dateTime) {
     Crew crew = new Crew(nickname);
