@@ -1,6 +1,7 @@
 package attendance;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class AttendanceRecord {
 
@@ -19,4 +20,20 @@ public class AttendanceRecord {
   public TimeLog getTimeLog() {
     return timeLog;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AttendanceRecord that = (AttendanceRecord) o;
+    return Objects.equals(crew, that.crew) && Objects.equals(timeLog,
+        that.timeLog);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(crew, timeLog);
+  }
+
 }
