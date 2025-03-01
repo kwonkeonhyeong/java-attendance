@@ -64,4 +64,8 @@ public class AttendanceRecord {
   public int hashCode() {
     return Objects.hash(date);
   }
+
+  public LocalDateTime getDateTime() {
+    return null;
+  }
 }
