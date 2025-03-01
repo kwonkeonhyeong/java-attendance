@@ -39,8 +39,16 @@ public class TimeLog {
     }
   }
 
-  public LocalDateTime getDateTime() {
-    return LocalDateTime.of(date,time);
+  public boolean isMonday() {
+    return date.getDayOfWeek().equals(DayOfWeek.MONDAY);
+  }
+
+  public boolean isAttendance(LocalTime attendanceDeadline) {
+    return time.isBefore(attendanceDeadline) || time.equals(attendanceDeadline);
+  }
+
+  public boolean isLate(LocalTime lateDeadline) {
+    return time.isBefore(lateDeadline) || time.equals(lateDeadline);
   }
 
   @Override

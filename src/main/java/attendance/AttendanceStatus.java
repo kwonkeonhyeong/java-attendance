@@ -1,7 +1,5 @@
 package attendance;
 
-import java.time.DayOfWeek;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public enum AttendanceStatus {
@@ -10,24 +8,27 @@ public enum AttendanceStatus {
   LATE,
   ABSENCE;
 
-  public static AttendanceStatus from(TimeLog timeLog) {
-    LocalDateTime dateTime = timeLog.getDateTime();
-    if (dateTime.getDayOfWeek().equals(DayOfWeek.MONDAY)) {
-      if (dateTime.toLocalTime().isBefore(LocalTime.of(13, 6))) {
-        return ATTENDANCE;
-      }
-      if (dateTime.toLocalTime().isBefore(LocalTime.of(13, 31))) {
-        return LATE;
-      }
-        return ABSENCE;
-    }
+  private static final LocalTime mondayAttendanceStartTime = LocalTime.of(13,0);
+  private static final LocalTime weekdayAttendanceStartTime = LocalTime.of(10,0);
 
-    if (dateTime.toLocalTime().isBefore(LocalTime.of(10, 6))) {
+  private static final long ATTENDANCE_APPROVAL_MINUTE = 5;
+  private static final long LATE_APPROVAL_MINUTE = 30;
+
+  public static AttendanceStatus from(TimeLog timeLog) {
+    if (timeLog.isMonday()) {
+      return judgeAttendanceManagement(timeLog, mondayAttendanceStartTime);
+    }
+    return judgeAttendanceManagement(timeLog, weekdayAttendanceStartTime);
+  }
+
+  private static AttendanceStatus judgeAttendanceManagement(TimeLog timeLog, LocalTime startTime) {
+    if (timeLog.isAttendance(startTime.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))) {
       return ATTENDANCE;
     }
-    if (dateTime.toLocalTime().isBefore(LocalTime.of(10, 31))) {
+    if (timeLog.isLate(startTime.plusMinutes(LATE_APPROVAL_MINUTE))) {
       return LATE;
     }
     return ABSENCE;
   }
+
 }
