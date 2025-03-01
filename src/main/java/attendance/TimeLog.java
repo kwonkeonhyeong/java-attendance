@@ -39,6 +39,10 @@ public class TimeLog {
     }
   }
 
+  public LocalDateTime getDateTime() {
+    return LocalDateTime.of(date,time);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) {
@@ -53,5 +57,4 @@ public class TimeLog {
   public int hashCode() {
     return Objects.hash(date, time);
   }
-
 }
