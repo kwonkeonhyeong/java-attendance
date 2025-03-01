@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Objects;
 
 public class TimeLog {
 
@@ -36,6 +37,21 @@ public class TimeLog {
     if(Holiday.contains(dateTime.toLocalDate())) {
       throw  new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
     }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TimeLog timeLog = (TimeLog) o;
+    return Objects.equals(date, timeLog.date) && Objects.equals(time,
+        timeLog.time);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(date, time);
   }
 
 }
