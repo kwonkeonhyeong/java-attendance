@@ -4,15 +4,17 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 public class TimeLogTest {
+
+  private final LocalTime MONDAY_ATTENDANCE_START_TIME = LocalTime.of(13, 0);
+  private final LocalTime WEEKDAY_ATTENDANCE_START_TIME = LocalTime.of(10, 0);
+  private final long ATTENDANCE_APPROVAL_MINUTE = 5;
+  private static final long LATE_APPROVAL_MINUTE = 30;
 
   @DisplayName("캠퍼스_운영_시간이_아닌_경우_예외_발생")
   @Test
@@ -59,7 +61,6 @@ public class TimeLogTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("주말 또는 공휴일에는 운영하지 않습니다.")
     );
-
   }
 
   @DisplayName("공휴일인_경우_TimeLog_생성_시_예외_발생")
@@ -82,10 +83,94 @@ public class TimeLogTest {
   @DisplayName("TimeLog_동등성_확인")
   @Test
   void timeLogEqualsTest() {
-    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,28,10,0)))).isTrue();
-    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,27,10,0)))).isFalse();
-    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,3,28,10,0)))).isFalse();
-    assertThat(new TimeLog(LocalDateTime.of(2025,2,28,10,0)).equals(new TimeLog(LocalDateTime.of(2025,2,28,10,5)))).isFalse();
+    assertThat(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 0)).equals(
+        new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 0)))).isTrue();
+    assertThat(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 0)).equals(
+        new TimeLog(LocalDateTime.of(2025, 2, 27, 10, 0)))).isFalse();
+    assertThat(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 0)).equals(
+        new TimeLog(LocalDateTime.of(2025, 3, 28, 10, 0)))).isFalse();
+    assertThat(new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 0)).equals(
+        new TimeLog(LocalDateTime.of(2025, 2, 28, 10, 5)))).isFalse();
+  }
+
+  @DisplayName("TimeLog_내의_기록이_월요일인_경우_true")
+  @Test
+  void mondayTest() {
+    TimeLog timeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 10, 0));
+    assertThat(timeLog.isMonday()).isTrue();
+  }
+
+  @DisplayName("TimeLog_내의_기록이_월요일이_아닌_경우_false")
+  @Test
+  void weekdayTest() {
+    TimeLog timeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 0));
+    assertThat(timeLog.isMonday()).isFalse();
+  }
+
+  @DisplayName("월요일_TimeLog_내의_기록이_출석_데드라인을_넘지_않은_경우_true")
+  @Test
+  void mondayAttendanceDeadlineTrueTest() {
+    TimeLog mondayMinTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 5));
+    assertThat(mondayMinTimeLog.isAttendance(MONDAY_ATTENDANCE_START_TIME.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))).isTrue();
+
+  }
+
+  @DisplayName("평일_TimeLog_내의_기록이_출석_데드라인을_넘지_않은_경우_true")
+  @Test
+  void weekdayAttendanceDeadlineTrueTest() {
+    TimeLog mondayMinTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 5));
+    assertThat(mondayMinTimeLog.isAttendance(WEEKDAY_ATTENDANCE_START_TIME.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))).isTrue();
+
+  }
+
+  @DisplayName("월요일_TimeLog_내의_기록이_출석_데드라인을_넘은_경우_false")
+  @Test
+  void mondayAttendanceDeadlineFalseTest() {
+    TimeLog mondayTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 6));
+    assertThat(mondayTimeLog.isAttendance(MONDAY_ATTENDANCE_START_TIME.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))).isFalse();
+  }
+
+  @DisplayName("평일_TimeLog_내의_기록이_출석_데드라인을_넘은_경우_false")
+  @Test
+  void weekdayAttendanceDeadlineFalseTest() {
+    TimeLog weekdayTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 6));
+    assertThat(weekdayTimeLog.isAttendance(WEEKDAY_ATTENDANCE_START_TIME.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))).isFalse();
+  }
+
+  @DisplayName("월요일_TimeLog_내의_기록이_지각_데드라인을_넘지_않은_경우_true")
+  @Test
+  void mondayLateDeadlineTrueTest() {
+    TimeLog mondayMinTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 6));
+    TimeLog mondayMaxTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 30));
+    assertAll(
+        () -> assertThat(mondayMinTimeLog.isAttendance(MONDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isTrue(),
+        () -> assertThat(mondayMaxTimeLog.isAttendance(MONDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isTrue()
+    );
+  }
+
+  @DisplayName("평일_TimeLog_내의_기록이_지각을_데드라인을_넘지_않은_경우_true")
+  @Test
+  void weekdayLateDeadlineTrueTest() {
+    TimeLog weekdayMinTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 6));
+    TimeLog weekdayMaxTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 30));
+    assertAll(
+        () -> assertThat(weekdayMinTimeLog.isAttendance(WEEKDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isTrue(),
+        () -> assertThat(weekdayMaxTimeLog.isAttendance(WEEKDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isTrue()
+    );
+  }
+
+  @DisplayName("월요일_TimeLog_내의_기록이_지각_데드라인을_넘은_경우_false")
+  @Test
+  void mondayLateDeadlineFalseTest() {
+    TimeLog mondayTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 3, 13, 31));
+    assertThat(mondayTimeLog.isAttendance(MONDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isFalse();
+  }
+
+  @DisplayName("평일_TimeLog_내의_기록이_지각_데드라인을_넘은_경우_false")
+  @Test
+  void weekdayLateDeadlineFalseTest() {
+    TimeLog weekdayTimeLog = new TimeLog(LocalDateTime.of(2025, 3, 4, 10, 31));
+    assertThat(weekdayTimeLog.isAttendance(WEEKDAY_ATTENDANCE_START_TIME.plusMinutes(LATE_APPROVAL_MINUTE))).isFalse();
   }
 
 }
