@@ -39,6 +39,10 @@ public class AttendanceRecord {
     }
   }
 
+  public AttendanceRecord modifyTime(LocalTime time) {
+    return new AttendanceRecord(LocalDateTime.of(date,time));
+  }
+
   public boolean isMonday() {
     return date.getDayOfWeek().equals(DayOfWeek.MONDAY);
   }
@@ -51,6 +55,10 @@ public class AttendanceRecord {
     return time.isBefore(lateDeadline) || time.equals(lateDeadline);
   }
 
+  public LocalDateTime getDateTime() {
+    return LocalDateTime.of(date, time);
+  }
+
   @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) {
@@ -59,17 +67,10 @@ public class AttendanceRecord {
     AttendanceRecord attendanceRecord = (AttendanceRecord) o;
     return Objects.equals(date, attendanceRecord.date);
   }
-
   @Override
   public int hashCode() {
     return Objects.hash(date);
   }
 
-  public LocalDateTime getDateTime() {
-    return LocalDateTime.of(date, time);
-  }
 
-  public AttendanceRecord modifyTime(LocalTime of) {
-    return new AttendanceRecord(LocalDateTime.of(date,of));
-  }
 }

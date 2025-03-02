@@ -178,7 +178,7 @@ public class AttendanceRecordTest {
 
   @DisplayName("저장된_시간을_변경하고_새로운_AttendanceRecord_반환")
   @Test
-  void modifyAttendance() {
+  void modifyAttendanceRecordTime() {
     AttendanceRecord attendanceRecord = new AttendanceRecord(LocalDateTime.of(2025,2,28,10,0));
     AttendanceRecord modifiedAttendanceRecord = attendanceRecord.modifyTime(LocalTime.of(10,5));
     assertThat(attendanceRecord).isNotSameAs(modifiedAttendanceRecord);
