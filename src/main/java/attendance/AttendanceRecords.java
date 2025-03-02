@@ -1,5 +1,6 @@
 package attendance;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,13 @@ public class AttendanceRecords {
   }
 
   public AttendanceRecord modifyAttendanceRecord(AttendanceRecord updateAttendanceRecord) {
-    return null;
+    AttendanceRecord previousRecord = attendanceRecords.stream()
+        .filter(record -> record.equals(updateAttendanceRecord))
+        .findFirst()
+            .orElse(new AttendanceRecord(updateAttendanceRecord.getDateTime()));
+
+    attendanceRecords.remove(previousRecord);
+    attendanceRecords.add(updateAttendanceRecord);
+    return previousRecord;
   }
 }
