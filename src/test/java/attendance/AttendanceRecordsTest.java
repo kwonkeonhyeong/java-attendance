@@ -28,4 +28,5 @@ public class AttendanceRecordsTest {
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("해당 일 출석 기록이 이미 존재합니다");
   }
+
 }

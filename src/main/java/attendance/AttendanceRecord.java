@@ -68,4 +68,8 @@ public class AttendanceRecord {
   public LocalDateTime getDateTime() {
     return LocalDateTime.of(date, time);
   }
+
+  public AttendanceRecord modifyTime(LocalTime of) {
+    return null;
+  }
 }
