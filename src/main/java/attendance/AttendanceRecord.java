@@ -70,6 +70,6 @@ public class AttendanceRecord {
   }
 
   public AttendanceRecord modifyTime(LocalTime of) {
-    return null;
+    return new AttendanceRecord(LocalDateTime.of(date,of));
   }
 }
