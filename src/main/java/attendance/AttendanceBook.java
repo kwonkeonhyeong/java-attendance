@@ -13,9 +13,13 @@ public class AttendanceBook {
 
   public AttendanceRecord checkAttendance (String nickname, LocalDateTime dateTime) {
     Crew crew = new Crew(nickname);
+    validateExistentCrew(crew);
+    return attendanceBook.get(crew).save(new AttendanceRecord(dateTime));
+  }
+
+  private void validateExistentCrew(Crew crew) {
     if(!attendanceBook.containsKey(crew)) {
       throw new IllegalArgumentException("등록되지 않은 크루입니다");
     }
-    return attendanceBook.get(crew).save(new AttendanceRecord(dateTime));
   }
 }
