@@ -1,5 +1,6 @@
 package attendance;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ public class AttendanceRecordsTest {
   void saveAttendanceRecordTest() {
     AttendanceRecord attendanceRecord = new AttendanceRecord(LocalDateTime.of(2025, 2, 28, 10, 0));
     AttendanceRecord savedAttendanceRecord = attendanceRecords.save(attendanceRecord);
-    Assertions.assertThat(savedAttendanceRecord).isEqualTo(attendanceRecord);
+    assertThat(savedAttendanceRecord).isEqualTo(attendanceRecord);
   }
 
   @DisplayName("동일한_출석_기록이_존재하는_경우_예외_발생")
@@ -27,6 +28,16 @@ public class AttendanceRecordsTest {
     assertThatThrownBy(() -> attendanceRecords.save(attendanceRecord))
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessage("해당 일 출석 기록이 이미 존재합니다");
+  }
+
+  @DisplayName("저장된_AttendanceRecord를_수정하고_수정_이전의_기록_반환")
+  @Test
+  void modifyAttendanceRecordAndReturnPreviousRecord() {
+    AttendanceRecord attendanceRecord = new AttendanceRecord(LocalDateTime.of(2025,2,28,10,0));
+    attendanceRecords.save(attendanceRecord);
+    AttendanceRecord updateAttendanceRecord = new AttendanceRecord(LocalDateTime.of(2025,2,28,10,0));
+    AttendanceRecord previousRecord= attendanceRecords.modifyAttendanceRecord(updateAttendanceRecord);
+    assertThat(attendanceRecord).isEqualTo(previousRecord);
   }
 
 }

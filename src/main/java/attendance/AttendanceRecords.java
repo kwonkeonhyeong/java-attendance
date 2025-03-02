@@ -19,4 +19,7 @@ public class AttendanceRecords {
     }
   }
 
+  public AttendanceRecord modifyAttendanceRecord(AttendanceRecord updateAttendanceRecord) {
+    return null;
+  }
 }
