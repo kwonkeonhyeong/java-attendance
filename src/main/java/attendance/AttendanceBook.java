@@ -11,10 +11,10 @@ public class AttendanceBook {
     this.attendanceBook = attendanceBook;
   }
 
-  public AttendanceRecord checkAttendance (String nickname, LocalDateTime dateTime) {
+  public ExistentAttendanceRecord checkAttendance (String nickname, LocalDateTime dateTime) {
     Crew crew = new Crew(nickname);
     validateExistentCrew(crew);
-    return attendanceBook.get(crew).save(new AttendanceRecord(dateTime));
+    return attendanceBook.get(crew).save(new ExistentAttendanceRecord(dateTime));
   }
 
   private void validateExistentCrew(Crew crew) {

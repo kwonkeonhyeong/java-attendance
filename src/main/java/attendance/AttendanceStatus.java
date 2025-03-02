@@ -14,18 +14,19 @@ public enum AttendanceStatus {
   private static final long ATTENDANCE_APPROVAL_MINUTE = 5;
   private static final long LATE_APPROVAL_MINUTE = 30;
 
-  public static AttendanceStatus from(AttendanceRecord attendanceRecord) {
-    if (attendanceRecord.isMonday()) {
-      return judgeAttendanceManagement(attendanceRecord, mondayAttendanceStartTime);
+  public static AttendanceStatus from(ExistentAttendanceRecord existentAttendanceRecord) {
+    if (existentAttendanceRecord.isMonday()) {
+      return judgeAttendanceManagement(existentAttendanceRecord, mondayAttendanceStartTime);
     }
-    return judgeAttendanceManagement(attendanceRecord, weekdayAttendanceStartTime);
+    return judgeAttendanceManagement(existentAttendanceRecord, weekdayAttendanceStartTime);
   }
 
-  private static AttendanceStatus judgeAttendanceManagement(AttendanceRecord attendanceRecord, LocalTime startTime) {
-    if (attendanceRecord.isAttendance(startTime.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))) {
+  private static AttendanceStatus judgeAttendanceManagement(
+      ExistentAttendanceRecord existentAttendanceRecord, LocalTime startTime) {
+    if (existentAttendanceRecord.isAttendance(startTime.plusMinutes(ATTENDANCE_APPROVAL_MINUTE))) {
       return ATTENDANCE;
     }
-    if (attendanceRecord.isLate(startTime.plusMinutes(LATE_APPROVAL_MINUTE))) {
+    if (existentAttendanceRecord.isLate(startTime.plusMinutes(LATE_APPROVAL_MINUTE))) {
       return LATE;
     }
     return ABSENCE;

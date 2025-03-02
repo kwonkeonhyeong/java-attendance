@@ -36,19 +36,19 @@ public class AttendanceBookTest {
   @Test
   void checkAttendanceTest() {
     LocalDateTime dateTime = LocalDateTime.of(2025, 2, 28, 10, 0);
-    AttendanceRecord attendanceRecord = attendanceBook.checkAttendance("히포",
+    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
         LocalDateTime.of(2025, 2, 28, 10, 0));
 
-    assertThat(attendanceRecord.getDateTime()).isEqualTo(dateTime);
+    assertThat(existentAttendanceRecord.getDateTime()).isEqualTo(dateTime);
   }
 
   @DisplayName("출석_확인_시_해당_출석_상태_확인")
   @ParameterizedTest
   @MethodSource("createDateTimeAndAttendanceStatus")
   void checkAttendanceStatus(LocalDateTime dateTime, AttendanceStatus status) {
-    AttendanceRecord attendanceRecord = attendanceBook.checkAttendance("히포",
+    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
         dateTime);
-    assertThat(AttendanceStatus.from(attendanceRecord)).isEqualTo(status);
+    assertThat(AttendanceStatus.from(existentAttendanceRecord)).isEqualTo(status);
   }
 
   private static Stream<Arguments> createDateTimeAndAttendanceStatus() {
