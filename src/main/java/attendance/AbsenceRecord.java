@@ -37,6 +37,11 @@ public class AbsenceRecord implements AttendanceRecord{
   }
 
   @Override
+  public LocalDateTime getRecord() {
+    return LocalDateTime.of(date,LocalTime.of(0,0));
+  }
+
+  @Override
   public boolean equals(Object o) {
     if (o == null || getClass() != o.getClass()) {
       return false;

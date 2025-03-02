@@ -60,6 +60,11 @@ public class ExistentAttendanceRecord implements AttendanceRecord{
   }
 
   @Override
+  public LocalDateTime getRecord() {
+    return getDateTime();
+  }
+
+  @Override
   public boolean isExists() {
     return true;
   }

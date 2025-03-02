@@ -19,16 +19,15 @@ public class AttendanceRecords {
     }
   }
 
-  public AttendanceRecord modifyAttendanceRecord(
-      ExistentAttendanceRecord updateExistentAttendanceRecord) {
+  public AttendanceRecord modifyAttendanceRecord(ExistentAttendanceRecord updateAttendanceRecord) {
     AttendanceRecord previousRecord = attendanceRecords.stream()
-        .filter(record -> record.equals(updateExistentAttendanceRecord))
+        .filter(record -> record.equals(updateAttendanceRecord))
         .findFirst()
-        .orElse(new AbsenceRecord(updateExistentAttendanceRecord.getDateTime().toLocalDate()));
+        .orElse(new AbsenceRecord(updateAttendanceRecord.getDateTime().toLocalDate()));
     if (previousRecord.isExists()) {
       attendanceRecords.remove(previousRecord);
     }
-    attendanceRecords.add(updateExistentAttendanceRecord);
+    attendanceRecords.add(updateAttendanceRecord);
     return previousRecord;
   }
 }
