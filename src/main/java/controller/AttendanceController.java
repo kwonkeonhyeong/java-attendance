@@ -1,19 +1,23 @@
 package controller;
 
 import attendance.AttendanceBook;
+import attendance.AttendanceStatus;
+import attendance.ExistentAttendanceRecord;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import view.InputView;
 import view.OutputView;
 import view.io.CrewAttendanceRecordInitializer;
 
 public class AttendanceController {
 
-//  private static final LocalDate GLOBAL_DATE = LocalDate.now();
-  private static final LocalDate GLOBAL_DATE = LocalDate.of(2024,12,14);
+  //  private static final LocalDate GLOBAL_DATE = LocalDate.now();
+  public static final LocalDate GLOBAL_DATE = LocalDate.of(2024, 12, 13);
 
   private final InputView inputView;
   private final OutputView outputView;
-  private final AttendanceBook attendanceBook = new AttendanceBook(new CrewAttendanceRecordInitializer().initialize());
+  private final AttendanceBook attendanceBook = new AttendanceBook(
+      new CrewAttendanceRecordInitializer().initialize());
 
   public AttendanceController(InputView inputView, OutputView outputView) {
     this.inputView = inputView;
@@ -39,7 +43,15 @@ public class AttendanceController {
   }
 
   public void checkAttendance() {
-    System.out.println("출석 확인");
+    try {
+      String nickname = inputView.printInputCrewNickName();
+      LocalDateTime dateTime = inputView.printInputAttendanceTime();
+      ExistentAttendanceRecord checkedAttendanceRecord = attendanceBook.check(nickname, dateTime);
+      outputView.printCheckedAttendanceResult(checkedAttendanceRecord.getDateTime(),
+          AttendanceStatus.from(checkedAttendanceRecord));
+    } catch (RuntimeException exception) {
+      System.out.println(exception.getMessage());
+    }
   }
 
   public void modifyAttendance() {
