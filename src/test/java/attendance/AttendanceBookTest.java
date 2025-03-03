@@ -22,7 +22,10 @@ public class AttendanceBookTest {
   private final AttendanceBook attendanceBook = new AttendanceBook(
       new HashMap<>(
           Map.of(
-              new Crew("히포"), new AttendanceRecords()
+              new Crew("히포"), new AttendanceRecords(),
+              new Crew("이든"), new AttendanceRecords(),
+              new Crew("짱수"), new AttendanceRecords(),
+              new Crew("짱구"), new AttendanceRecords()
           )
       )
   );
@@ -183,5 +186,49 @@ public class AttendanceBookTest {
     expected.put(AttendanceStatus.LATE, 2);
     expected.put(AttendanceStatus.ABSENCE, 1);
     return expected;
+  }
+
+  @DisplayName("크루별_제적_위험_상태를_확인")
+  @Test
+  void checkManagementCrewsTest() {
+    setCrewsRecords();
+    Map<Crew, ManagementStatus> crewManagementStatusMap = attendanceBook.checkManagementCrews(
+        LocalDate.of(2025, 2, 11));
+    assertThat(crewManagementStatusMap).isEqualTo(createExpectedManagementStatus());
+  }
+
+  private Map<Crew, ManagementStatus> createExpectedManagementStatus() {
+    Map<Crew, ManagementStatus> expected = new HashMap<>();
+    expected.put(new Crew("히포"), ManagementStatus.WARNING);
+    expected.put(new Crew("이든"), ManagementStatus.EXPULSION);
+    expected.put(new Crew("짱수"), ManagementStatus.INTERVIEW);
+    expected.put(new Crew("짱구"), ManagementStatus.GENERAL);
+    return expected;
+  }
+
+  private void setCrewsRecords() {
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 3, 13, 6));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 4, 10, 7));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 5, 10, 8));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 6, 10, 9));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 7, 10, 10));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 10, 13, 11));
+
+    attendanceBook.check("이든", LocalDateTime.of(2025, 2, 3, 13, 31));
+    attendanceBook.check("이든", LocalDateTime.of(2025, 2, 4, 10, 35));
+    attendanceBook.check("이든", LocalDateTime.of(2025, 2, 5, 10, 31));
+    attendanceBook.check("이든", LocalDateTime.of(2025, 2, 6, 10, 38));
+
+    attendanceBook.check("짱수", LocalDateTime.of(2025, 2, 5, 10, 15));
+    attendanceBook.check("짱수", LocalDateTime.of(2025, 2, 6, 10, 13));
+    attendanceBook.check("짱수", LocalDateTime.of(2025, 2, 7, 10, 7));
+    attendanceBook.check("짱수", LocalDateTime.of(2025, 2, 10, 13, 5));
+
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 3, 13, 1));
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 4, 10, 2));
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 5, 10, 3));
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 6, 10, 4));
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 7, 10, 5));
+    attendanceBook.check("짱구", LocalDateTime.of(2025, 2, 10, 13, 1));
   }
 }
