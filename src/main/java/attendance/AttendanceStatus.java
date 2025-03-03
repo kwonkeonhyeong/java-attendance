@@ -14,7 +14,8 @@ public enum AttendanceStatus {
   private static final long ATTENDANCE_APPROVAL_MINUTE = 5;
   private static final long LATE_APPROVAL_MINUTE = 30;
 
-  public static AttendanceStatus from(ExistentAttendanceRecord existentAttendanceRecord) {
+  public static AttendanceStatus from(AttendanceRecord attendanceRecord) {
+    ExistentAttendanceRecord existentAttendanceRecord = (ExistentAttendanceRecord) attendanceRecord;
     if (existentAttendanceRecord.isMonday()) {
       return judgeAttendanceManagement(existentAttendanceRecord, mondayAttendanceStartTime);
     }

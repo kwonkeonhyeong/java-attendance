@@ -94,4 +94,5 @@ public class AttendanceBookTest {
     assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(existentAttendanceRecord.getRecord());
     assertThat(updatedAttendanceRecords.getValue().getRecord()).isEqualTo(updateDateTime);
   }
+
 }
