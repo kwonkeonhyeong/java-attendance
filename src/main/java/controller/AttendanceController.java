@@ -3,6 +3,7 @@ package controller;
 import attendance.AttendanceBook;
 import attendance.AttendanceRecord;
 import attendance.AttendanceStatus;
+import attendance.Crew;
 import attendance.ExistentAttendanceRecord;
 import attendance.ManagementStatus;
 import java.time.LocalDate;
@@ -90,7 +91,11 @@ public class AttendanceController {
   }
 
   public void checkManagementCrews() {
-    System.out.println("제적 위험자 확인");
+    Map<Crew, ManagementStatus> crewsManagementStatus = attendanceBook.checkManagementCrews(
+        GLOBAL_DATE);
+    Map<Crew, Map<AttendanceStatus, Integer>> crewsAttendanceResult = attendanceBook.calculateCrewsAttendanceResult(
+        GLOBAL_DATE);
+    outputView.printManagementCrews(crewsManagementStatus, crewsAttendanceResult);
   }
 
   public void quit() {

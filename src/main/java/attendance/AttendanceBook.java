@@ -59,31 +59,42 @@ public class AttendanceBook {
   }
 
   public Map<Crew, ManagementStatus> checkManagementCrews(LocalDate searchDate) {
-    return sortedManagementStatus(searchDate).entrySet().stream()
+    Map<Crew, ManagementStatus> checkedManagementCrewsResult = sortedManagementStatus(
+        searchDate).entrySet().stream()
         .collect(Collectors.toMap(
-            Map.Entry::getKey,
-            entry -> checkManagementCrew(entry.getValue())
+            Entry::getKey,
+            entry -> checkManagementCrew(entry.getValue()),
+            (existing, replacement) -> existing,
+            LinkedHashMap::new
         ));
+    checkedManagementCrewsResult.entrySet()
+        .removeIf(entry -> entry.getValue().equals(ManagementStatus.GENERAL));
+    return checkedManagementCrewsResult;
   }
+
 
   public ManagementStatus checkManagementCrew(Map<AttendanceStatus, Integer> result) {
     return ManagementStatus.from(applyAbsenceCountPolicy(result));
   }
 
   private Map<Crew, Map<AttendanceStatus, Integer>> sortedManagementStatus(LocalDate searchDate) {
-    return convertAttendanceRecordsToResult(searchDate).entrySet().stream()
+    return calculateCrewsAttendanceResult(searchDate).entrySet().stream()
         .sorted(
             Comparator.comparing(
+                    (Map.Entry<Crew, Map<AttendanceStatus, Integer>> entry) -> entry.getValue()
+                        .getOrDefault(AttendanceStatus.ABSENCE, Integer.MIN_VALUE), Comparator.reverseOrder())
+                .thenComparing(
                     (Map.Entry<Crew, Map<AttendanceStatus, Integer>> entry) -> applyAbsenceCountPolicy(
-                        entry.getValue()))
+                        entry.getValue()), Comparator.reverseOrder())
                 .thenComparing(entry -> entry.getKey().getName())
-        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+        )
+        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
             (e1, e2) -> e1,
             LinkedHashMap::new
         ));
   }
 
-  private Map<Crew, Map<AttendanceStatus, Integer>> convertAttendanceRecordsToResult(
+  public Map<Crew, Map<AttendanceStatus, Integer>> calculateCrewsAttendanceResult(
       LocalDate searchDate) {
     return attendanceBook.entrySet().stream()
         .collect(Collectors.toMap(
