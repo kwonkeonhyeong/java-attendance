@@ -4,6 +4,7 @@ import attendance.AttendanceBook;
 import java.time.LocalDate;
 import view.InputView;
 import view.OutputView;
+import view.io.CrewAttendanceRecordInitializer;
 
 public class AttendanceController {
 
@@ -12,6 +13,7 @@ public class AttendanceController {
 
   private final InputView inputView;
   private final OutputView outputView;
+  private final AttendanceBook attendanceBook = new AttendanceBook(new CrewAttendanceRecordInitializer().initialize());
 
   public AttendanceController(InputView inputView, OutputView outputView) {
     this.inputView = inputView;

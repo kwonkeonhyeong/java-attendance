@@ -6,7 +6,15 @@ import java.util.List;
 
 public class AttendanceRecords {
 
-  private final List<AttendanceRecord> attendanceRecords = new ArrayList<>();
+  private final List<AttendanceRecord> attendanceRecords;
+
+  public AttendanceRecords() {
+    this.attendanceRecords = new ArrayList<>();
+  }
+
+  public AttendanceRecords(List<AttendanceRecord> attendanceRecords) {
+    this.attendanceRecords = attendanceRecords;
+  }
 
   public ExistentAttendanceRecord save(ExistentAttendanceRecord existentAttendanceRecord) {
     validateExistentAttendanceRecord(existentAttendanceRecord);
