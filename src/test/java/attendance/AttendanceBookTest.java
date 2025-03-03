@@ -31,8 +31,8 @@ public class AttendanceBookTest {
   @Test
   void notExistsCrewTest() {
     Assertions.assertThatThrownBy(() ->
-      attendanceBook.checkAttendance("없는크루", LocalDateTime.of(2025,2,28,10,0))
-    ).isInstanceOf(IllegalArgumentException.class)
+            attendanceBook.checkAttendance("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
+        ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("등록되지 않은 크루입니다");
   }
 
@@ -76,7 +76,7 @@ public class AttendanceBookTest {
   @Test
   void validateExistentCrewTest() {
     assertThatThrownBy(
-        () -> attendanceBook.modifyAttendanceRecord("없는크루", LocalDateTime.of(2025,2,28,10,0))
+        () -> attendanceBook.modifyAttendanceRecord("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
     ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("등록되지 않은 크루입니다");
   }
@@ -87,23 +87,45 @@ public class AttendanceBookTest {
     ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
         LocalDateTime.of(2025, 2, 28, 10, 12));
 
-    LocalDateTime updateDateTime = LocalDateTime.of(2025,2,28,10,2);
+    LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 10, 2);
     Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modifyAttendanceRecord(
-        "히포",updateDateTime);
+        "히포", updateDateTime);
 
-    assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(existentAttendanceRecord.getRecord());
+    assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(
+        existentAttendanceRecord.getRecord());
     assertThat(updatedAttendanceRecords.getValue().getRecord()).isEqualTo(updateDateTime);
   }
 
   @DisplayName("출석_기록이_없는_경우에_대한_수정_전_기록과_수정_후_기록_반환")
   @Test
   void modifyAbsenceRecordReturnTest() {
-    LocalDateTime updateDateTime = LocalDateTime.of(2025,2,28,10,2);
+    LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 10, 2);
     Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modifyAttendanceRecord(
-        "히포",updateDateTime);
+        "히포", updateDateTime);
 
-    assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(LocalDateTime.of(2025,2,28,0,0));
+    assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(
+        LocalDateTime.of(2025, 2, 28, 0, 0));
     assertThat(updatedAttendanceRecords.getValue().getRecord()).isEqualTo(updateDateTime);
+  }
+
+  @DisplayName("출석_불가능한_날_수정_시도_시_예외_발생")
+  @Test
+  void modifyRecordToUnavailableDateTest() {
+    LocalDateTime updateDateTime = LocalDateTime.of(2025, 3, 1, 10, 2);
+    assertThatThrownBy(
+        () -> attendanceBook.modifyAttendanceRecord("히포", updateDateTime)
+    ).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("주말 또는 공휴일에는 운영하지 않습니다.");
+  }
+
+  @DisplayName("출석_불가능한_시간_수정_시도_시_예외_발생")
+  @Test
+  void modifyRecordToUnavailableTimeTest() {
+    LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 7, 2);
+    assertThatThrownBy(
+        () -> attendanceBook.modifyAttendanceRecord("히포", updateDateTime)
+    ).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("캠퍼스 운영 시간이 아닙니다");
   }
 
 }
