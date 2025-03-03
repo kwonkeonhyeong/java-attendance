@@ -194,6 +194,7 @@ public class AttendanceBookTest {
     setCrewsRecords();
     Map<Crew, ManagementStatus> crewManagementStatusMap = attendanceBook.checkManagementCrews(
         LocalDate.of(2025, 2, 11));
+    System.out.println(crewManagementStatusMap);
     assertThat(crewManagementStatusMap).isEqualTo(createExpectedManagementStatus());
   }
 
