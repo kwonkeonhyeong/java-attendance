@@ -85,7 +85,8 @@ public class AttendanceBook {
         .sorted(
             Comparator.comparing(
                     (Map.Entry<Crew, Map<AttendanceStatus, Integer>> entry) -> entry.getValue()
-                        .getOrDefault(AttendanceStatus.ABSENCE, Integer.MIN_VALUE), Comparator.reverseOrder())
+                        .getOrDefault(AttendanceStatus.ABSENCE, Integer.MIN_VALUE),
+                    Comparator.reverseOrder())
                 .thenComparing(
                     (Map.Entry<Crew, Map<AttendanceStatus, Integer>> entry) -> applyAbsenceCountPolicy(
                         entry.getValue()), Comparator.reverseOrder())
@@ -109,7 +110,8 @@ public class AttendanceBook {
   }
 
   private int applyAbsenceCountPolicy(Map<AttendanceStatus, Integer> result) {
-    return result.get(AttendanceStatus.ABSENCE) + (result.get(AttendanceStatus.LATE) / POLICY_CONDITION);
+    return result.get(AttendanceStatus.ABSENCE) + (result.get(AttendanceStatus.LATE)
+        / POLICY_CONDITION);
   }
 
   private List<AttendanceRecord> sorted(List<AttendanceRecord> attendanceRecords) {

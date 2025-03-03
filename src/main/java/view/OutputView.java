@@ -78,7 +78,7 @@ public class OutputView {
           attendanceResult.get(AttendanceStatus.ABSENCE),
           attendanceResult.get(AttendanceStatus.LATE),
           formatManagementStatus(managementResult.getValue())
-          );
+      );
     }
   }
 

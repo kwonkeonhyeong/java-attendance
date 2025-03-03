@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Objects;
 
-public class ExistentAttendanceRecord implements AttendanceRecord{
+public class ExistentAttendanceRecord implements AttendanceRecord {
 
   private static final LocalTime CAMPUS_OPEN_TIME = LocalTime.of(8, 0);
   private static final LocalTime CAMPUS_CLOSE_TIME = LocalTime.of(23, 0);
@@ -24,23 +24,23 @@ public class ExistentAttendanceRecord implements AttendanceRecord{
   }
 
   private void validateCampusOperatingTime(LocalTime time) {
-    if(time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
+    if (time.isBefore(CAMPUS_OPEN_TIME) || time.isAfter(CAMPUS_CLOSE_TIME)) {
       throw new IllegalArgumentException(CAMPUS_CLOSED_MESSAGE);
     }
   }
 
   private void validateCampusOperatingDate(LocalDateTime dateTime) {
     DayOfWeek dayOfWeek = dateTime.getDayOfWeek();
-    if(dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+    if (dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
       throw new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
     }
-    if(Holiday.contains(dateTime.toLocalDate())) {
-      throw  new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
+    if (Holiday.contains(dateTime.toLocalDate())) {
+      throw new IllegalArgumentException(NON_OPERATING_DAY_MESSAGE);
     }
   }
 
   public ExistentAttendanceRecord modifyTime(LocalTime time) {
-    return new ExistentAttendanceRecord(LocalDateTime.of(date,time));
+    return new ExistentAttendanceRecord(LocalDateTime.of(date, time));
   }
 
   public boolean isMonday() {

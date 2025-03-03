@@ -9,18 +9,18 @@ import java.util.List;
 
 public enum Calendar {
 
-  JANUARY(Month.JANUARY,31),
-  FEBRUARY(Month.FEBRUARY,28),
-  MARCH(Month.MARCH,31),
-  APRIL(Month.APRIL,30),
-  MAY(Month.MAY,31),
-  JUNE(Month.JUNE,30),
-  JULY(Month.JULY,31),
-  AUGUST(Month.AUGUST,31),
-  SEPTEMBER(Month.SEPTEMBER,30),
-  OCTOBER(Month.OCTOBER,31),
-  NOVEMBER(Month.NOVEMBER,30),
-  DECEMBER(Month.DECEMBER,31);
+  JANUARY(Month.JANUARY, 31),
+  FEBRUARY(Month.FEBRUARY, 28),
+  MARCH(Month.MARCH, 31),
+  APRIL(Month.APRIL, 30),
+  MAY(Month.MAY, 31),
+  JUNE(Month.JUNE, 30),
+  JULY(Month.JULY, 31),
+  AUGUST(Month.AUGUST, 31),
+  SEPTEMBER(Month.SEPTEMBER, 30),
+  OCTOBER(Month.OCTOBER, 31),
+  NOVEMBER(Month.NOVEMBER, 30),
+  DECEMBER(Month.DECEMBER, 31);
 
   private static final String NON_EXISTS_MONTH_MESSAGE = "입력한 날에 해당하는 달이 존재하지 않습니다";
 
@@ -56,7 +56,7 @@ public enum Calendar {
 
   private boolean isOperateDate(LocalDate date) {
     DayOfWeek dayOfWeek = date.getDayOfWeek();
-    if(dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
+    if (dayOfWeek.equals(DayOfWeek.SATURDAY) || dayOfWeek.equals(DayOfWeek.SUNDAY)) {
       return false;
     }
     return !Holiday.contains(date);

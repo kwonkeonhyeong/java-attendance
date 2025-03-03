@@ -47,7 +47,8 @@ public class CrewAttendanceRecordInitializer {
     String datetime = line.split(",")[1];
     LocalDateTime parsedDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
         .parse(datetime, LocalDateTime::from);
-    return new SimpleImmutableEntry<>(new Crew(line.split(",")[0]), new ExistentAttendanceRecord(parsedDateTime));
+    return new SimpleImmutableEntry<>(new Crew(line.split(",")[0]),
+        new ExistentAttendanceRecord(parsedDateTime));
   }
 
 }

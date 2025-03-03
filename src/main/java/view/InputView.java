@@ -41,7 +41,7 @@ public class InputView {
     System.out.printf("%n등교 시간을 입력해 주세요.%n");
     try {
       LocalTime localTime = LocalTime.parse(scanner.nextLine());
-      return LocalDateTime.of(GLOBAL_DATE,localTime);
+      return LocalDateTime.of(GLOBAL_DATE, localTime);
     } catch (DateTimeParseException exception) {
       throw new IllegalArgumentException("올바른 시간 형식이 아닙니다.");
     }

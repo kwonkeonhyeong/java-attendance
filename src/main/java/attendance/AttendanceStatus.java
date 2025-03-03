@@ -8,14 +8,14 @@ public enum AttendanceStatus {
   LATE,
   ABSENCE;
 
-  private static final LocalTime mondayAttendanceStartTime = LocalTime.of(13,0);
-  private static final LocalTime weekdayAttendanceStartTime = LocalTime.of(10,0);
+  private static final LocalTime mondayAttendanceStartTime = LocalTime.of(13, 0);
+  private static final LocalTime weekdayAttendanceStartTime = LocalTime.of(10, 0);
 
   private static final long ATTENDANCE_APPROVAL_MINUTE = 5;
   private static final long LATE_APPROVAL_MINUTE = 30;
 
   public static AttendanceStatus from(AttendanceRecord attendanceRecord) {
-    if(!attendanceRecord.isExists()) {
+    if (!attendanceRecord.isExists()) {
       return ABSENCE;
     }
     ExistentAttendanceRecord existentAttendanceRecord = (ExistentAttendanceRecord) attendanceRecord;

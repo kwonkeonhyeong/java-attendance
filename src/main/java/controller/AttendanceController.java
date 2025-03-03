@@ -69,7 +69,9 @@ public class AttendanceController {
       LocalTime time = inputView.printInputModifyTime();
       Entry<AttendanceRecord, AttendanceRecord> modified = attendanceBook.modify(nickName,
           LocalDateTime.of(date, time));
-      outputView.printModifiedAttendanceResult(modified.getKey().getRecord(), AttendanceStatus.from(modified.getKey()), modified.getValue().getRecord(), AttendanceStatus.from(modified.getValue()));
+      outputView.printModifiedAttendanceResult(modified.getKey().getRecord(),
+          AttendanceStatus.from(modified.getKey()), modified.getValue().getRecord(),
+          AttendanceStatus.from(modified.getValue()));
     } catch (RuntimeException exception) {
       System.out.println(exception.getMessage());
     }
@@ -83,7 +85,7 @@ public class AttendanceController {
       Map<AttendanceStatus, Integer> attendanceResult = attendanceBook.calculateAttendanceResult(
           nickName, GLOBAL_DATE);
       ManagementStatus managementStatus = attendanceBook.checkManagementCrew(attendanceResult);
-      outputView.printCrewAttendanceRecords(nickName,searched);
+      outputView.printCrewAttendanceRecords(nickName, searched);
       outputView.printCrewAttendanceResult(attendanceResult, managementStatus);
     } catch (IllegalArgumentException exception) {
       System.out.println(exception.getMessage());

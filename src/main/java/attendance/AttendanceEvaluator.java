@@ -12,7 +12,7 @@ public class AttendanceEvaluator {
     calculateResult.put(AttendanceStatus.ATTENDANCE, 0);
     calculateResult.put(AttendanceStatus.LATE, 0);
     calculateResult.put(AttendanceStatus.ABSENCE, 0);
-    for (AttendanceRecord attendanceRecord: searchedAttendanceRecords) {
+    for (AttendanceRecord attendanceRecord : searchedAttendanceRecords) {
       AttendanceStatus status = AttendanceStatus.from(attendanceRecord);
       calculateResult.put(status, calculateResult.get(status) + 1);
     }
