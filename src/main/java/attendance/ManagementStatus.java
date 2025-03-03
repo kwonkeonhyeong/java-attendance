@@ -1,9 +1,18 @@
 package attendance;
 
 public enum ManagementStatus {
-  EXPLUSION, INTERVIEW, WARNING, GENERAL;
+  EXPULSION, INTERVIEW, WARNING, GENERAL;
 
   public static ManagementStatus from(int absenceCont) {
-    return null;
+    if (absenceCont > 5) {
+      return EXPULSION;
+    }
+    if (absenceCont > 2) {
+      return INTERVIEW;
+    }
+    if (absenceCont == 2) {
+      return WARNING;
+    }
+    return GENERAL;
   }
 }

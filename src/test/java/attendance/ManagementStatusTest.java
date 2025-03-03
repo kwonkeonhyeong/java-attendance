@@ -17,7 +17,7 @@ public class ManagementStatusTest {
 
   static Stream<Arguments> createManagementStatus() {
     return Stream.of(
-        Arguments.arguments(6, ManagementStatus.EXPLUSION),
+        Arguments.arguments(6, ManagementStatus.EXPULSION),
         Arguments.arguments(5, ManagementStatus.INTERVIEW),
         Arguments.arguments(3, ManagementStatus.INTERVIEW),
         Arguments.arguments(2, ManagementStatus.WARNING),
