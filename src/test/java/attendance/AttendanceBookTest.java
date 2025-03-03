@@ -140,17 +140,21 @@ public class AttendanceBookTest {
   @DisplayName("출석_기록과_상태를_정렬하여_조회")
   @Test
   void searchedRecordTest() {
+    setRecords();
+
+    LinkedHashMap<LocalDateTime, AttendanceStatus> searched = attendanceBook.search("히포",
+        LocalDate.of(2025, 2, 11));
+
+    assertThat(searched).containsAllEntriesOf(createExpectedAttendanceRecord());
+  }
+
+  private void setRecords() {
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 3, 13, 6));
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 4, 10, 5));
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 5, 10, 31));
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 6, 10, 13));
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 7, 10, 5));
     attendanceBook.check("히포", LocalDateTime.of(2025, 2, 10, 13, 5));
-
-    LinkedHashMap<LocalDateTime, AttendanceStatus> searched = attendanceBook.search("히포",
-        LocalDate.of(2025, 2, 11));
-
-    assertThat(searched).containsAllEntriesOf(createExpectedAttendanceRecord());
   }
 
   private LinkedHashMap<LocalDateTime, AttendanceStatus> createExpectedAttendanceRecord() {
