@@ -1,8 +1,7 @@
 package attendance;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -33,5 +32,9 @@ public class AttendanceBook {
     if (!attendanceBook.containsKey(crew)) {
       throw new IllegalArgumentException("등록되지 않은 크루입니다");
     }
+  }
+
+  public LinkedHashMap<LocalDateTime, AttendanceStatus> search(String nickname) {
+    return null;
   }
 }
