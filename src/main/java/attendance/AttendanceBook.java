@@ -59,19 +59,38 @@ public class AttendanceBook {
   }
 
   public Map<Crew, ManagementStatus> checkManagementCrews(LocalDate searchDate) {
-    return attendanceBook.entrySet().stream()
+    return sortedManagementStatus(searchDate).entrySet().stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
-            entry -> {
-              Map<AttendanceStatus, Integer> attendanceResult = calculateAttendanceResult(
-                  entry.getKey().getName(), searchDate);
-              int absenceCount = applyAbsenceCountPolicy(attendanceResult);
-              return ManagementStatus.from(absenceCount);
-            }
+            entry -> ManagementStatus.from(applyAbsenceCountPolicy(entry.getValue()))
         ));
   }
 
-  public int applyAbsenceCountPolicy(Map<AttendanceStatus, Integer> result) {
+  private Map<Crew, Map<AttendanceStatus, Integer>> sortedManagementStatus(LocalDate searchDate) {
+    return convertAttendanceRecordsToResult(searchDate).entrySet().stream()
+        .sorted(
+            Comparator.comparing(
+                    (Map.Entry<Crew, Map<AttendanceStatus, Integer>> entry) -> applyAbsenceCountPolicy(
+                        entry.getValue()))
+                .thenComparing(entry -> entry.getKey().getName())
+        ).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+            (e1, e2) -> e1,
+            LinkedHashMap::new
+        ));
+  }
+
+  private Map<Crew, Map<AttendanceStatus, Integer>> convertAttendanceRecordsToResult(
+      LocalDate searchDate) {
+    return attendanceBook.entrySet().stream()
+        .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                entry ->
+                    calculateAttendanceResult(entry.getKey().getName(), searchDate)
+            )
+        );
+  }
+
+  private int applyAbsenceCountPolicy(Map<AttendanceStatus, Integer> result) {
     return result.get(AttendanceStatus.ABSENCE) + (result.get(AttendanceStatus.LATE) / 3);
   }
 
