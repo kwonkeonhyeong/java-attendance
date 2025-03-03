@@ -22,6 +22,8 @@ public enum Calendar {
   NOVEMBER(Month.NOVEMBER,30),
   DECEMBER(Month.DECEMBER,31);
 
+  private static final String NON_EXISTS_MONTH_MESSAGE = "입력한 날에 해당하는 달이 존재하지 않습니다";
+
   private final Month thisMonth;
   private final int endDay;
 
@@ -34,7 +36,7 @@ public enum Calendar {
     return Arrays.stream(Calendar.values())
         .filter(month -> month.thisMonth.equals(date.getMonth()))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("입력한 날에 해당하는 달이 존재하지 않습니다"));
+        .orElseThrow(() -> new IllegalArgumentException(NON_EXISTS_MONTH_MESSAGE));
   }
 
   public List<LocalDate> getAvailableDates(LocalDate searchDate) {

@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 
 public class AttendanceBook {
 
+  private static final String NOT_EXISTS_CREW_MESSAGE = "등록되지 않은 크루입니다";
+  private static final int POLICY_CONDITION = 3;
+
   private final Map<Crew, AttendanceRecords> attendanceBook;
 
   public AttendanceBook(Map<Crew, AttendanceRecords> attendanceBook) {
@@ -106,7 +109,7 @@ public class AttendanceBook {
   }
 
   private int applyAbsenceCountPolicy(Map<AttendanceStatus, Integer> result) {
-    return result.get(AttendanceStatus.ABSENCE) + (result.get(AttendanceStatus.LATE) / 3);
+    return result.get(AttendanceStatus.ABSENCE) + (result.get(AttendanceStatus.LATE) / POLICY_CONDITION);
   }
 
   private List<AttendanceRecord> sorted(List<AttendanceRecord> attendanceRecords) {
@@ -117,7 +120,7 @@ public class AttendanceBook {
 
   private void validateExistentCrew(Crew crew) {
     if (!attendanceBook.containsKey(crew)) {
-      throw new IllegalArgumentException("등록되지 않은 크루입니다");
+      throw new IllegalArgumentException(NOT_EXISTS_CREW_MESSAGE);
     }
   }
 }

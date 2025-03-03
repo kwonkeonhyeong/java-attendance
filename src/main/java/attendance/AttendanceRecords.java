@@ -6,6 +6,8 @@ import java.util.List;
 
 public class AttendanceRecords {
 
+  private static final String ALREADY_EXISTS_ATTENDANCE_RECORD_MESSAGE = "해당 일 출석 기록이 이미 존재합니다";
+
   private final List<AttendanceRecord> attendanceRecords;
 
   public AttendanceRecords() {
@@ -24,7 +26,7 @@ public class AttendanceRecords {
 
   private void validateExistentAttendanceRecord(ExistentAttendanceRecord existentAttendanceRecord) {
     if (attendanceRecords.contains(existentAttendanceRecord)) {
-      throw new IllegalArgumentException("해당 일 출석 기록이 이미 존재합니다");
+      throw new IllegalArgumentException(ALREADY_EXISTS_ATTENDANCE_RECORD_MESSAGE);
     }
   }
 

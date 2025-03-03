@@ -11,6 +11,7 @@ public enum Command {
   CHECK_MANAGEMENT_CREWS("4", AttendanceController::checkManagementCrews),
   QUIT("Q", AttendanceController::quit);
 
+  private static final String NOT_EXISTS_COMMAND_MESSAGE = "해당 기능은 존재하지 않습니다.";
   private final String option;
   private final Consumer<AttendanceController> command;
 
@@ -23,7 +24,7 @@ public enum Command {
     return Arrays.stream(Command.values())
         .filter(command -> command.option.equals(input))
         .findFirst()
-        .orElseThrow(() -> new IllegalArgumentException("해당 기능은 존재하지 않습니다."));
+        .orElseThrow(() -> new IllegalArgumentException(NOT_EXISTS_COMMAND_MESSAGE));
   }
 
   public void run(AttendanceController controller) {
