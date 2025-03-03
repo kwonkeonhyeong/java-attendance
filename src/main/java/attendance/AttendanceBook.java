@@ -62,8 +62,12 @@ public class AttendanceBook {
     return sortedManagementStatus(searchDate).entrySet().stream()
         .collect(Collectors.toMap(
             Map.Entry::getKey,
-            entry -> ManagementStatus.from(applyAbsenceCountPolicy(entry.getValue()))
+            entry -> checkManagementCrew(entry.getValue())
         ));
+  }
+
+  public ManagementStatus checkManagementCrew(Map<AttendanceStatus, Integer> result) {
+    return ManagementStatus.from(applyAbsenceCountPolicy(result));
   }
 
   private Map<Crew, Map<AttendanceStatus, Integer>> sortedManagementStatus(LocalDate searchDate) {
