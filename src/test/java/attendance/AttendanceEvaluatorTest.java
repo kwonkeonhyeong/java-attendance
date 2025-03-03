@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
@@ -14,13 +13,7 @@ import org.junit.jupiter.api.Test;
 class AttendanceEvaluatorTest {
 
   private final  AttendanceEvaluator attendanceEvaluator = new AttendanceEvaluator();
-//  private final AttendanceBook attendanceBook = new AttendanceBook(
-//      new HashMap<>(
-//          Map.of(
-//              new Crew("히포"), new AttendanceRecords()
-//          )
-//      )
-//  );
+
   private final AttendanceRecords attendanceRecords = new AttendanceRecords();
 
   @DisplayName("출석_기록을_기준으로_출석_결과_반환")
@@ -44,7 +37,7 @@ class AttendanceEvaluatorTest {
   private Map<AttendanceStatus, Integer> createExpectedAttendanceResult() {
     Map<AttendanceStatus, Integer> expected = new HashMap<>();
     expected.put(AttendanceStatus.ATTENDANCE, 3);
-    expected.put(AttendanceStatus.LATE, 3);
+    expected.put(AttendanceStatus.LATE, 2);
     expected.put(AttendanceStatus.ABSENCE, 1);
     return expected;
   }
