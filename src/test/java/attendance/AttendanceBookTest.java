@@ -132,9 +132,9 @@ public class AttendanceBookTest {
   @Test
   void notExistsCrewAttendanceRecordsSearchingTest() {
     assertThatThrownBy(() ->
-    attendanceBook.search("없는크루", LocalDate.of(2025, 2, 11))
-        ).isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("등록되지 않은 크루입니다");
+        attendanceBook.search("없는크루", LocalDate.of(2025, 2, 11))
+    ).isInstanceOf(IllegalArgumentException.class)
+        .hasMessage("등록되지 않은 크루입니다");
   }
 
   @DisplayName("출석_기록과_상태를_정렬하여_조회")
@@ -165,6 +165,23 @@ public class AttendanceBookTest {
     expected.put(LocalDateTime.of(2025, 2, 6, 10, 13), AttendanceStatus.LATE);
     expected.put(LocalDateTime.of(2025, 2, 7, 10, 5), AttendanceStatus.ATTENDANCE);
     expected.put(LocalDateTime.of(2025, 2, 10, 13, 5), AttendanceStatus.ATTENDANCE);
+    return expected;
+  }
+
+  @DisplayName("크루의_전날까지_출석_결과를_계산")
+  @Test
+  void calculateAttendanceResultTest() {
+    setRecords();
+    Map<AttendanceStatus, Integer> attendanceResult = attendanceBook.calculateAttendanceResult("히포",
+        LocalDate.of(2025, 2, 11));
+    assertThat(attendanceResult).isEqualTo(createExpectedAttendanceResult());
+  }
+
+  private Map<AttendanceStatus, Integer> createExpectedAttendanceResult() {
+    Map<AttendanceStatus, Integer> expected = new HashMap<>();
+    expected.put(AttendanceStatus.ATTENDANCE, 3);
+    expected.put(AttendanceStatus.LATE, 2);
+    expected.put(AttendanceStatus.ABSENCE, 1);
     return expected;
   }
 }

@@ -47,6 +47,14 @@ public class AttendanceBook {
         ));
   }
 
+  public Map<AttendanceStatus, Integer> calculateAttendanceResult(String nickname, LocalDate searchDate) {
+    Crew crew = new Crew(nickname);
+    validateExistentCrew(crew);
+    AttendanceRecords attendanceRecords = attendanceBook.get(crew);
+    AttendanceEvaluator attendanceEvaluator = new AttendanceEvaluator();
+    return attendanceEvaluator.calculateAttendanceResult(attendanceRecords.searchRecords(searchDate));
+  }
+
   private List<AttendanceRecord> sorted(List<AttendanceRecord> attendanceRecords) {
     return attendanceRecords.stream()
         .sorted(Comparator.comparing(AttendanceRecord::getRecord))
