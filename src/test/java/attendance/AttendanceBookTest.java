@@ -95,4 +95,15 @@ public class AttendanceBookTest {
     assertThat(updatedAttendanceRecords.getValue().getRecord()).isEqualTo(updateDateTime);
   }
 
+  @DisplayName("출석_기록이_없는_경우에_대한_수정_전_기록과_수정_후_기록_반환")
+  @Test
+  void modifyAbsenceRecordReturnTest() {
+    LocalDateTime updateDateTime = LocalDateTime.of(2025,2,28,10,2);
+    Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modifyAttendanceRecord(
+        "히포",updateDateTime);
+
+    assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(LocalDateTime.of(2025,2,28,0,0));
+    assertThat(updatedAttendanceRecords.getValue().getRecord()).isEqualTo(updateDateTime);
+  }
+
 }
