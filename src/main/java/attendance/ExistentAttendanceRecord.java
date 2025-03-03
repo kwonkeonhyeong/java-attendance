@@ -60,6 +60,16 @@ public class ExistentAttendanceRecord implements AttendanceRecord{
   }
 
   @Override
+  public boolean isSameYearAndMonth(LocalDate searchDate) {
+    return date.getMonth().equals(searchDate.getMonth());
+  }
+
+  @Override
+  public boolean isSameDate(LocalDate searchDate) {
+    return date.equals(searchDate);
+  }
+
+  @Override
   public LocalDateTime getRecord() {
     return getDateTime();
   }

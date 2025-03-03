@@ -32,6 +32,16 @@ public class AbsenceRecord implements AttendanceRecord{
   }
 
   @Override
+  public boolean isSameYearAndMonth(LocalDate searchDate) {
+    return (date.getYear() == searchDate.getYear()) && date.getMonth().equals(searchDate.getMonth());
+  }
+
+  @Override
+  public boolean isSameDate(LocalDate searchDate) {
+    return date.equals(searchDate);
+  }
+
+  @Override
   public boolean isExists() {
     return false;
   }

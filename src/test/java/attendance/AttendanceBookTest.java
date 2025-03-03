@@ -5,14 +5,11 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Stream;
-import net.bytebuddy.build.ToStringPlugin.Enhance;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,16 +31,16 @@ public class AttendanceBookTest {
   @Test
   void notExistsCrewTest() {
     Assertions.assertThatThrownBy(() ->
-            attendanceBook.checkAttendance("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
+            attendanceBook.check("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
         ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("등록되지 않은 크루입니다");
   }
 
   @DisplayName("출석_확인_시_저장된_출석_기록_반환")
   @Test
-  void checkAttendanceTest() {
+  void checkTest() {
     LocalDateTime dateTime = LocalDateTime.of(2025, 2, 28, 10, 0);
-    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
+    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.check("히포",
         LocalDateTime.of(2025, 2, 28, 10, 0));
 
     assertThat(existentAttendanceRecord.getDateTime()).isEqualTo(dateTime);
@@ -52,8 +49,8 @@ public class AttendanceBookTest {
   @DisplayName("출석_확인_시_해당_출석_상태_확인")
   @ParameterizedTest
   @MethodSource("createDateTimeAndAttendanceStatus")
-  void checkAttendanceStatus(LocalDateTime dateTime, AttendanceStatus status) {
-    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
+  void checkStatus(LocalDateTime dateTime, AttendanceStatus status) {
+    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.check("히포",
         dateTime);
     assertThat(AttendanceStatus.from(existentAttendanceRecord)).isEqualTo(status);
   }
@@ -79,7 +76,7 @@ public class AttendanceBookTest {
   @Test
   void validateExistentCrewTest() {
     assertThatThrownBy(
-        () -> attendanceBook.modifyAttendanceRecord("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
+        () -> attendanceBook.modify("없는크루", LocalDateTime.of(2025, 2, 28, 10, 0))
     ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("등록되지 않은 크루입니다");
   }
@@ -87,11 +84,11 @@ public class AttendanceBookTest {
   @DisplayName("출석_수정_시_수정_전_기록과_수정_후_기록_반환")
   @Test
   void modifyRecordReturnTest() {
-    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.checkAttendance("히포",
+    ExistentAttendanceRecord existentAttendanceRecord = attendanceBook.check("히포",
         LocalDateTime.of(2025, 2, 28, 10, 12));
 
     LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 10, 2);
-    Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modifyAttendanceRecord(
+    Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modify(
         "히포", updateDateTime);
 
     assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(
@@ -103,7 +100,7 @@ public class AttendanceBookTest {
   @Test
   void modifyAbsenceRecordReturnTest() {
     LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 10, 2);
-    Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modifyAttendanceRecord(
+    Entry<AttendanceRecord, AttendanceRecord> updatedAttendanceRecords = attendanceBook.modify(
         "히포", updateDateTime);
 
     assertThat(updatedAttendanceRecords.getKey().getRecord()).isEqualTo(
@@ -116,7 +113,7 @@ public class AttendanceBookTest {
   void modifyRecordToUnavailableDateTest() {
     LocalDateTime updateDateTime = LocalDateTime.of(2025, 3, 1, 10, 2);
     assertThatThrownBy(
-        () -> attendanceBook.modifyAttendanceRecord("히포", updateDateTime)
+        () -> attendanceBook.modify("히포", updateDateTime)
     ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("주말 또는 공휴일에는 운영하지 않습니다.");
   }
@@ -126,7 +123,7 @@ public class AttendanceBookTest {
   void modifyRecordToUnavailableTimeTest() {
     LocalDateTime updateDateTime = LocalDateTime.of(2025, 2, 28, 7, 2);
     assertThatThrownBy(
-        () -> attendanceBook.modifyAttendanceRecord("히포", updateDateTime)
+        () -> attendanceBook.modify("히포", updateDateTime)
     ).isInstanceOf(IllegalArgumentException.class)
         .hasMessage("캠퍼스 운영 시간이 아닙니다");
   }
@@ -134,8 +131,36 @@ public class AttendanceBookTest {
   @DisplayName("등록되지_않은_크루_출석_조회_시_예외_발생")
   @Test
   void notExistsCrewAttendanceRecordsSearchingTest() {
-    LinkedHashMap<LocalDateTime, AttendanceStatus> attendanceRecords = attendanceBook.search("히포");
-
+    assertThatThrownBy(() ->
+    attendanceBook.search("없는크루", LocalDate.of(2025, 2, 11))
+        ).isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("등록되지 않은 크루입니다");
   }
 
+  @DisplayName("출석_기록과_상태를_정렬하여_조회")
+  @Test
+  void searchedRecordTest() {
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 3, 13, 6));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 4, 10, 5));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 5, 10, 31));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 6, 10, 13));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 7, 10, 5));
+    attendanceBook.check("히포", LocalDateTime.of(2025, 2, 10, 13, 5));
+
+    LinkedHashMap<LocalDateTime, AttendanceStatus> searched = attendanceBook.search("히포",
+        LocalDate.of(2025, 2, 11));
+
+    assertThat(searched).containsAllEntriesOf(createExpectedAttendanceRecord());
+  }
+
+  private LinkedHashMap<LocalDateTime, AttendanceStatus> createExpectedAttendanceRecord() {
+    LinkedHashMap<LocalDateTime, AttendanceStatus> expected = new LinkedHashMap<>();
+    expected.put(LocalDateTime.of(2025, 2, 3, 13, 6), AttendanceStatus.LATE);
+    expected.put(LocalDateTime.of(2025, 2, 4, 10, 5), AttendanceStatus.ATTENDANCE);
+    expected.put(LocalDateTime.of(2025, 2, 5, 10, 31), AttendanceStatus.ABSENCE);
+    expected.put(LocalDateTime.of(2025, 2, 6, 10, 13), AttendanceStatus.LATE);
+    expected.put(LocalDateTime.of(2025, 2, 7, 10, 5), AttendanceStatus.ATTENDANCE);
+    expected.put(LocalDateTime.of(2025, 2, 10, 13, 5), AttendanceStatus.ATTENDANCE);
+    return expected;
+  }
 }

@@ -1,5 +1,6 @@
 package attendance;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,4 +31,31 @@ public class AttendanceRecords {
     attendanceRecords.add(updateAttendanceRecord);
     return previousRecord;
   }
+
+  public List<AttendanceRecord> searchRecords(LocalDate searchDate) {
+    List<AttendanceRecord> searchedAttendanceRecords = new ArrayList<>();
+    for (LocalDate availableDate : filterAvailableDates(searchDate)) {
+      searchedAttendanceRecords.add(findAttendanceRecordBy(availableDate));
+    }
+    return searchedAttendanceRecords;
+  }
+
+  private AttendanceRecord findAttendanceRecordBy(LocalDate searchDate) {
+    return filterSameYearAndMonthRecords(searchDate).stream()
+        .filter(record -> record.isSameDate(searchDate))
+        .findFirst()
+        .orElse(new AbsenceRecord(searchDate));
+  }
+
+  private List<LocalDate> filterAvailableDates(LocalDate searchDate) {
+    Calendar searchMonth = Calendar.from(searchDate);
+    return searchMonth.getAvailableDates(searchDate);
+  }
+
+  private List<AttendanceRecord> filterSameYearAndMonthRecords(LocalDate searchDate) {
+    return attendanceRecords.stream()
+        .filter(record -> record.isSameYearAndMonth(searchDate))
+        .toList();
+  }
+
 }
