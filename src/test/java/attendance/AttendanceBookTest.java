@@ -199,11 +199,10 @@ public class AttendanceBookTest {
   }
 
   private Map<Crew, ManagementStatus> createExpectedManagementStatus() {
-    Map<Crew, ManagementStatus> expected = new HashMap<>();
-    expected.put(new Crew("히포"), ManagementStatus.WARNING);
+    Map<Crew, ManagementStatus> expected = new LinkedHashMap<>();
     expected.put(new Crew("이든"), ManagementStatus.EXPULSION);
     expected.put(new Crew("짱수"), ManagementStatus.INTERVIEW);
-    expected.put(new Crew("짱구"), ManagementStatus.GENERAL);
+    expected.put(new Crew("히포"), ManagementStatus.WARNING);
     return expected;
   }
 
