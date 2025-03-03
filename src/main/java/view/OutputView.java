@@ -19,11 +19,27 @@ public class OutputView {
     );
   }
 
+  public void printModifiedAttendanceResult(LocalDateTime previousDateTime,
+      AttendanceStatus preciousStatus, LocalDateTime modifiedDateTime, AttendanceStatus modifiedStatus) {
+    System.out.printf(
+        "%n%d월 %d일 %s %02d:%02d (%s) -> %02d:%02d (%s)%n",
+        previousDateTime.getMonthValue(),
+        previousDateTime.getDayOfMonth(),
+        previousDateTime.getDayOfWeek().getDisplayName(TextStyle.FULL, Locale.KOREAN),
+        previousDateTime.getHour(),
+        previousDateTime.getMinute(),
+        formatAttendanceStatus(preciousStatus),
+        modifiedDateTime.getHour(),
+        modifiedDateTime.getMinute(),
+        formatAttendanceStatus(modifiedStatus)
+    );
+  }
+
   private String formatAttendanceStatus(AttendanceStatus status) {
-    if(status.equals(AttendanceStatus.ATTENDANCE)) {
+    if (status.equals(AttendanceStatus.ATTENDANCE)) {
       return "출석";
     }
-    if(status.equals(AttendanceStatus.LATE)) {
+    if (status.equals(AttendanceStatus.LATE)) {
       return "지각";
     }
     return "결석";

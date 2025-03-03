@@ -1,10 +1,13 @@
 package controller;
 
 import attendance.AttendanceBook;
+import attendance.AttendanceRecord;
 import attendance.AttendanceStatus;
 import attendance.ExistentAttendanceRecord;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Map.Entry;
 import view.InputView;
 import view.OutputView;
 import view.io.CrewAttendanceRecordInitializer;
@@ -55,7 +58,16 @@ public class AttendanceController {
   }
 
   public void modifyAttendance() {
-    System.out.println("출석 수정");
+    String nickName = inputView.printInputCrewNickName();
+    int day = inputView.printInputModifyDate();
+    LocalDate date = LocalDate.of(GLOBAL_DATE.getYear(), GLOBAL_DATE.getMonth(), day);
+    LocalTime time = inputView.printInputModifyTime();
+    Entry<AttendanceRecord, AttendanceRecord> modified = attendanceBook.modify(nickName,
+        LocalDateTime.of(date, time));
+    outputView.printModifiedAttendanceResult(
+        modified.getKey().getRecord(), AttendanceStatus.from(modified.getKey()),
+        modified.getValue().getRecord(), AttendanceStatus.from(modified.getValue())
+    );
   }
 
   public void searchAttendanceRecords() {

@@ -31,14 +31,14 @@ public class InputView {
   }
 
   public String printInputCrewNickName() {
-    System.out.println("%n닉네임을 입력해 주세요.%n");
+    System.out.printf("%n닉네임을 입력해 주세요.%n");
     String nickname = scanner.nextLine();
-    inputValidator(nickname);
+    validateInputEmpty(nickname);
     return nickname;
   }
 
   public LocalDateTime printInputAttendanceTime() {
-    System.out.println("%n등교 시간을 입력해 주세요.%n");
+    System.out.printf("%n등교 시간을 입력해 주세요.%n");
     try {
       LocalTime localTime = LocalTime.parse(scanner.nextLine());
       return LocalDateTime.of(GLOBAL_DATE,localTime);
@@ -47,9 +47,32 @@ public class InputView {
     }
   }
 
-  private void inputValidator(String input) {
+  public int printInputModifyDate() {
+    System.out.printf("%n수정하려는 날짜(일)를 입력해 주세요.%n");
+    String date = scanner.nextLine();
+    validateNumeric(date);
+    return Integer.parseInt(date);
+  }
+
+  public LocalTime printInputModifyTime() {
+    System.out.printf("%n언제로 변경하겠습니까?%n");
+    try {
+      return LocalTime.parse(scanner.nextLine());
+    } catch (DateTimeParseException exception) {
+      throw new IllegalArgumentException("올바른 시간 형식이 아닙니다.");
+    }
+  }
+
+  private void validateInputEmpty(String input) {
     if (input == null || input.isBlank()) {
       throw new IllegalArgumentException("입력 형식을 확인해주세요");
     }
   }
+
+  private void validateNumeric(String input) {
+    if (!input.matches("^-?\\d+$")) {
+      throw new IllegalArgumentException("입력 형식을 확인해주세요");
+    }
+  }
+
 }
